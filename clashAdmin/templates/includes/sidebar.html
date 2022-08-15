@@ -1,0 +1,65 @@
+
+
+    <div class="sidebar">
+      <div class="sidebar-wrapper">
+        <div class="logo logo-menu">
+          <a href="{% url 'home' %}"
+              class="simple-text logo-normal">
+            Clash Admin
+          </a>
+        </div>
+
+        <ul class="nav">
+          <li class="">
+            <a href="{% url 'clashdata:clans' %}">
+              <i class="tim-icons icon-bank"></i>
+              <p>Clas</p>
+            </a>
+          </li>
+          <li class="">
+            <a href="{% url 'clashdata:members' %}">
+              <i class="tim-icons icon-badge"></i>
+              <p>Membros</p>
+            </a>
+          </li>
+          <!--
+          <li class="">
+            <a href="#">
+              <i class="tim-icons icon-chart-bar-32"></i>
+              <p>Média Atual</p>
+            </a>
+          </li>
+          <li class="">
+            <a href="#">
+              <i class="tim-icons icon-chart-pie-36"></i>
+              <p>Desempenho</p>
+            </a>
+          </li>
+          <li class="">
+            <a href="#">
+              <i class="tim-icons icon-user-run"></i>
+              <p>Rivais Temporada</p>
+            </a>
+          </li>
+          -->
+          {% if user.is_authenticated %}
+          <li>
+            <a href="{% url 'logout' %}" >
+              <i class="tim-icons icon-button-power"></i>
+              <p>Logout</p>
+            </a>
+          </li>
+          {% else %}
+          <li>
+            <a  
+               href="{% url 'accounts:login' %}">
+              <i class="tim-icons icon-single-02"></i>
+              <p>Login</p>
+            </a>
+          </li>   
+          {% endif %}
+                    
+        </ul>
+        
+      </div>
+    </div>

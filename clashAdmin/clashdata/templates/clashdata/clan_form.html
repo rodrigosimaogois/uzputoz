@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+
+        <form role="form" method="post" action="">
+        
+        {% csrf_token %} 
+
+        <div class="card-header">
+            <h5 class="title">Clã</h5>
+
+            <h6 class="card-category">
+                Dados do clã 
+            </h6>
+        </div>
+
+        <div class="card-body">
+            {% bootstrap_form form %}   
+            <button type="submit" name="add" class="btn btn-fill btn-default">Salvar</button>           
+        </div>
+
+        </form>
+
+    </div>
+  </div>
+</div>  
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+    #id_clan{
+      background-color: #27293D;
+    }
+
+    .medalhas {
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto; 
+    }
+    
+    .leaguePhoto {
+          width: 30%; 
+    }
+
+    .cargoPhoto {
+        width: 30%; 
+  }
+
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+      
+    <!-- Modal -->
+    <div class="modal fade" id="confirmDeleteMember" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id= "modal-confirm" method="POST" action="{% url 'clashdata:deletemember' pk=-1 %}" >
+                  {% csrf_token %}
+                  <input type="submit" value="Confirm Delete" class="btn btn-danger btn-large">
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Membros</h4>
+        </div>
+        <div class="card-body">
+            <h5>Filtro</h5>
+            <input id="searchFilter" type="text" placeholder="Procurar..">
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table" id="">
+              <thead class=" text-primary">
+                <tr>
+                    <!--<th>Tag</th>-->
+                    <th>Nome</th>
+                    <th>Clan</th>
+                    <th class="text-center">Cargo</th>
+                    <th class="text-center">Média</th>
+                    {% if user.is_authenticated %}
+                        <th class="text-right">Ações</th>
+                    {% endif %}
+                </tr>
+              </thead>
+              <tbody id="myTable">
+                {% for clanmember in clanmembers %}
+                    <tr>
+                        <!--<td>{{ clanmember.tag }}</td>-->
+                        <td>{{ clanmember.name }}</td>
+                        <td style="display:none;">{{ clanmember.clan.name }}</td>
+                        <td class="nosearch">
+                            {% if user.is_authenticated %}
+                            <select name="clan" class="form-control clanSelection" onchange="changeClan(this, {{ clanmember.id }})" title="" required="" id="id_clan">
+                                {% for clan in clans %}
+                                    <option class="optionvalue" {% if clan.id == clanmember.clan.id %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% else %}
+                            {{ clanmember.clan.name }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="photo">
+                                <img src=
+                                    {% if clanmember.cargo == 6 %}
+                                        "/static/assets/img/cargos/skeleton-king.png"
+                                    {% elif clanmember.cargo == 5 %}
+                                        "/static/assets/img/cargos/golden-knight.png"
+                                    {% elif clanmember.cargo == 4 %}
+                                        "/static/assets/img/cargos/mighty-miner.png"
+                                    {% elif clanmember.cargo == 3 %}
+                                        "/static/assets/img/cargos/mega-knight.png"
+                                    {% elif clanmember.cargo == 2 %}
+                                        "/static/assets/img/cargos/pekka.png"
+                                    {% elif clanmember.cargo == 1 %}
+                                        "/static/assets/img/cargos/prince.png"
+                                    {% else %}
+                                        "/static/assets/img/cargos/elite-barbarians.png"
+                                    {% endif %}
+                                    >
+                            </div>
+                        </td>
+                        <td>
+                            <div class="photo">
+                                <img src=
+                                    {% if clanmember.media > 200 %}
+                                        "/static/assets/img/leagues/league10-fs8.png"
+                                    {% elif clanmember.media > 190 %}
+                                        "/static/assets/img/leagues/league9-fs8.png"
+                                    {% elif clanmember.media > 180 %}
+                                        "/static/assets/img/leagues/league8-fs8.png"
+                                    {% elif clanmember.media > 170 %}
+                                        "/static/assets/img/leagues/league7-fs8.png"
+                                    {% elif clanmember.media > 160 %}
+                                        "/static/assets/img/leagues/league6-fs8.png"
+                                    {% elif clanmember.media > 150 %}
+                                        "/static/assets/img/leagues/league5-fs8.png"
+                                    {% elif clanmember.media > 140 %}
+                                        "/static/assets/img/leagues/league4-fs8.png"
+                                    {% elif clanmember.media > 130 %}
+                                        "/static/assets/img/leagues/league3-fs8.png"
+                                    {% elif clanmember.media > 120 %}
+                                        "/static/assets/img/leagues/league2-fs8.png"
+                                    {% else %}
+                                        "/static/assets/img/leagues/league1-fs8.png"
+                                    {% endif %}
+                                    >
+                        </td>
+                        {% if user.is_authenticated %}
+                            <td class="td-actions text-right">
+                                <button onclick="window.location.href='{% url 'clashdata:editmember' pk=clanmember.id %}';" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm">
+                                    <i class="tim-icons icon-single-02"></i>
+                                </button>
+                                <button data-toggle="modal" data-target="#confirmDeleteMember" data-clanmembername="{{ clanmember.name }}" data-clanmemberid="{{ clanmember.id }}" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                </button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% if user.is_authenticated %}
+            <a href="{% url 'clashdata:createmember' %}" class="btn btn-primary" role="button">Novo</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+$('#confirmDeleteMember').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var clanmemberid = button.data('clanmemberid');
+    var clanmembername = button.data('clanmembername');
+    var modal = $(this);
+
+    console.log("test");
+    console.log(clanmembername);
+
+    modal.find('.modal-title').text('Gostaria realmente de remover ' + clanmembername + ' ?');
+    var x = modal.find('#modal-confirm').attr("action");
+
+    let result = x.replace("-1", clanmemberid);
+    modal.find('#modal-confirm').attr("action", result);   
+  });
+
+function changeClan(selectObject, clanMemberId) {
+    var value = selectObject.value;  
+    window.location.href = "changeClan/" + clanMemberId + "/" + value
+}
+
+$(document).ready(function(){
+    $("#searchFilter").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+      
+        $("#myTable tr").filter(function(i, obj) {
+            var line = "";
+
+            $(this).find('td').not('.nosearch').each (function() {
+                line = line + " " + $(this).text();
+            });
+
+            $(this).toggle(line.toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+
+</script>
+
+{% endblock javascripts %}
