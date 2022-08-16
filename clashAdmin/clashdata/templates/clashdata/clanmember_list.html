@@ -4,8 +4,12 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 <style>
-    #id_clan{
+    .form_control_clan{
       background-color: #27293D;
+    }
+
+    #clanFilter{
+        background-color: #27293D;
     }
 
     .filter_clan{
@@ -30,10 +34,16 @@
         width: 30%; 
     }
 
+    #filter_card{
+        margin-bottom:0px;
+        padding-bottom: 0%;
+    }
+
 </style>
 {% endblock stylesheets %}
 
 {% block content %}
+
 
 <div class="row">
     <div class="col-md-12">
@@ -58,22 +68,26 @@
         </div>
         </div>
     </div>
-    
     <div class="card">
-        <div class="card-body">
-            <h5>Filtros</h5>
-            <h5 class="form-check form-check-inline">Pesquisar: </h5>
-            <input class="form-check form-check-inline" id="searchFilter" type="text" placeholder="Procurar..">
-            <h5 class="form-check form-check-inline">Clã: </h5>
-            <form class="form-check form-check-inline" method="get" action="{% url 'clashdata:members' %}">
-                <select class="form-select" id="clanFilter" name="filter" onchange="this.form.submit()">
-                    <option class="optionvalue" {% if "all" == filter %} selected {% endif %} value="all">Todos</option>
-                    {% for clan in clans %}
-                        <option class="optionvalue" {% if clan.id|slugify == filter %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
-                    {% endfor %}
-                </select>
-            </form>
-                     
+        <div class="card-body" id="filter_card">
+            <h6 class="card-title">Filtros</h6>
+            <div class="d-flex flex-nowrap">
+                <div class="order-1 p-2">
+                    <label for="searchFilter">Procurar</label>
+                    <input class="form-control" id="searchFilter" type="text" placeholder="Procurar..">
+                </div>
+                <div class="order-2 p-2">
+                    <form class="" method="get" action="{% url 'clashdata:members' %}">
+                        <label for="clanFilter">Clã</label>
+                        <select class="form-control" id="clanFilter" name="filter" onchange="this.form.submit()">
+                            <option class="optionvalue" {% if "all" == filter %} selected {% endif %} value="all">Todos</option>
+                            {% for clan in clans %}
+                                <option class="optionvalue" {% if clan.id|slugify == filter %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -102,9 +116,10 @@
                         <!--<td>{{ clanmember.tag }}</td>-->
                         <td>{{ clanmember.name }}</td>
                         <td style="display:none;">{{ clanmember.clan.name }}</td>
+                        <td style="display:none;">{{ clanmember.tag }}</td>
                         <td class="nosearch">
                             {% if user.is_authenticated %}
-                            <select name="clan" class="form-control clanSelection" onchange="changeClan(this, {{ clanmember.id }})" title="" required="" id="id_clan">
+                            <select name="clan" class="form-control" onchange="changeClan(this, {{ clanmember.id }})" title="" required="" id="id_clan">
                                 {% for clan in clans %}
                                     <option class="optionvalue" {% if clan.id == clanmember.clan.id %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
                                 {% endfor %}
