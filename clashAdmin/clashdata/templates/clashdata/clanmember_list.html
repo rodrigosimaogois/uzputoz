@@ -8,6 +8,10 @@
       background-color: #27293D;
     }
 
+    .filter_clan{
+        max-width: fit-content;
+    }
+
     .medalhas {
         align-items: center;
         justify-content: center;
@@ -20,7 +24,11 @@
 
     .cargoPhoto {
         width: 30%; 
-  }
+    }
+
+    .cargoPhoto {
+        width: 30%; 
+    }
 
 </style>
 {% endblock stylesheets %}
@@ -44,20 +52,34 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <form id= "modal-confirm" method="POST" action="{% url 'clashdata:deletemember' pk=-1 %}" >
                   {% csrf_token %}
-                  <input type="submit" value="Confirm Delete" class="btn btn-danger btn-large">
+                  <input type="submit" value="Confirmar Remoção" class="btn btn-danger btn-large">
                 </form>
             </div>
         </div>
         </div>
     </div>
     
+    <div class="card">
+        <div class="card-body">
+            <h5>Filtros</h5>
+            <h5 class="form-check form-check-inline">Pesquisar: </h5>
+            <input class="form-check form-check-inline" id="searchFilter" type="text" placeholder="Procurar..">
+            <h5 class="form-check form-check-inline">Clã: </h5>
+            <form class="form-check form-check-inline" method="get" action="{% url 'clashdata:members' %}">
+                <select class="form-select" id="clanFilter" name="filter" onchange="this.form.submit()">
+                    <option class="optionvalue" {% if "all" == filter %} selected {% endif %} value="all">Todos</option>
+                    {% for clan in clans %}
+                        <option class="optionvalue" {% if clan.id|slugify == filter %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+                     
+        </div>
+    </div>
+
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title">Membros</h4>
-        </div>
-        <div class="card-body">
-            <h5>Filtro</h5>
-            <input id="searchFilter" type="text" placeholder="Procurar..">
+          <h4 class="card-title">Membros (<span id="membrosCount">{{ object_list|length }}</span>)</h4>
         </div>
         <div class="card-body">
           <div class="table-responsive">
@@ -66,7 +88,7 @@
                 <tr>
                     <!--<th>Tag</th>-->
                     <th>Nome</th>
-                    <th>Clan</th>
+                    <th>Clã</th>
                     <th class="text-center">Cargo</th>
                     <th class="text-center">Média</th>
                     {% if user.is_authenticated %}
@@ -75,7 +97,7 @@
                 </tr>
               </thead>
               <tbody id="myTable">
-                {% for clanmember in clanmembers %}
+                {% for clanmember in object_list %}
                     <tr>
                         <!--<td>{{ clanmember.tag }}</td>-->
                         <td>{{ clanmember.name }}</td>
@@ -190,7 +212,8 @@ function changeClan(selectObject, clanMemberId) {
 $(document).ready(function(){
     $("#searchFilter").on("keyup", function() {
         var value = $(this).val().toLowerCase();
-      
+        var count = 0;
+
         $("#myTable tr").filter(function(i, obj) {
             var line = "";
 
@@ -198,8 +221,16 @@ $(document).ready(function(){
                 line = line + " " + $(this).text();
             });
 
-            $(this).toggle(line.toLowerCase().indexOf(value) > -1)
+            var res = line.toLowerCase().indexOf(value) > -1;
+            
+            if (res) {
+                count++;
+            }
+
+            $(this).toggle(res);
         });
+
+        $("#membrosCount").text(count);
     });
 });
 

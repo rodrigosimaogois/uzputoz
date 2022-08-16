@@ -42,7 +42,7 @@ class ClanMember(models.Model):
         return reverse("members")
     
     class Meta:
-        ordering = ["clan", "name"]
+        ordering = ["clan", "-media"]
 
     def changeClan(self, newClan):
         self.clan = newClan
