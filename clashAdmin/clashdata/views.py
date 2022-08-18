@@ -45,7 +45,7 @@ class DeleteClanMember(LoginRequiredMixin, generic.DeleteView):
 
 class ListMembers(generic.ListView):
     model = models.ClanMember
-    paginate_by = 25
+    paginate_by = 50
 
     def get_queryset(self):
         filter_val = self.request.GET.get('filter', 'all')
@@ -65,11 +65,14 @@ class ListMembers(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['filter'] = self.request.GET.get('filter', 'all')
         context['clans'] = models.Clan.objects.all()
+        context['totalSize'] = self.get_queryset().count()
+        
         return context
 
 @login_required
-def changeClan(request, pk, newclan):
+def changeClan(request, pk, newclan, currentfilter):
     member = get_object_or_404(models.ClanMember, pk=pk)
     clan = get_object_or_404(models.Clan, pk=newclan)
     member.changeClan(clan)
-    return redirect('clashdata:members')
+    return redirect('/clashdata/memberList/?filter=' + currentfilter)
+    

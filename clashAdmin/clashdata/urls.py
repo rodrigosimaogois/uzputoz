@@ -16,5 +16,5 @@ urlpatterns = [
     path("newMember/", views.CreateClanMember.as_view(), name="createmember"),
     path("editMember/<pk>/",views.UpdateClanMember.as_view(),name="editmember"),
     path("deleteMember/<pk>/",views.DeleteClanMember.as_view(),name="deletemember"),
-    path('memberList/changeClan/<pk>/<newclan>/', views.changeClan, name='changeclan'),
+    path('memberList/changeClan/<pk>/<newclan>/<currentfilter>/', views.changeClan, name='changeclan'),
 ]

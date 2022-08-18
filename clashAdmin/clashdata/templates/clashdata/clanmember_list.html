@@ -4,11 +4,12 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 <style>
-    .form_control_clan{
-      background-color: #27293D;
-    }
 
     #clanFilter{
+        background-color: #27293D;
+    }
+
+    #clanSelection{
         background-color: #27293D;
     }
 
@@ -79,7 +80,7 @@
                 <div class="order-2 p-2">
                     <form class="" method="get" action="{% url 'clashdata:members' %}">
                         <label for="clanFilter">Clã</label>
-                        <select class="form-control" id="clanFilter" name="filter" onchange="this.form.submit()">
+                        <select class="form-control clanSelection" id="clanFilter" name="filter" onchange="this.form.submit()">
                             <option class="optionvalue" {% if "all" == filter %} selected {% endif %} value="all">Todos</option>
                             {% for clan in clans %}
                                 <option class="optionvalue" {% if clan.id|slugify == filter %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
@@ -93,7 +94,7 @@
 
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title">Membros (<span id="membrosCount">{{ object_list|length }}</span>)</h4>
+          <h4 class="card-title">Membros ( <span id="membrosCount">{{ object_list|length }}</span> / {{ totalSize }} )</h4>
         </div>
         <div class="card-body">
           <div class="table-responsive">
@@ -113,13 +114,12 @@
               <tbody id="myTable">
                 {% for clanmember in object_list %}
                     <tr>
-                        <!--<td>{{ clanmember.tag }}</td>-->
                         <td>{{ clanmember.name }}</td>
                         <td style="display:none;">{{ clanmember.clan.name }}</td>
                         <td style="display:none;">{{ clanmember.tag }}</td>
                         <td class="nosearch">
                             {% if user.is_authenticated %}
-                            <select name="clan" class="form-control" onchange="changeClan(this, {{ clanmember.id }})" title="" required="" id="id_clan">
+                            <select name="clan" class="form-control" onchange="changeClan(this, {{ clanmember.id }})" title="" required="" id="clanSelection">
                                 {% for clan in clans %}
                                     <option class="optionvalue" {% if clan.id == clanmember.clan.id %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
                                 {% endfor %}
@@ -220,8 +220,9 @@ $('#confirmDeleteMember').on('show.bs.modal', function (event) {
   });
 
 function changeClan(selectObject, clanMemberId) {
-    var value = selectObject.value;  
-    window.location.href = "changeClan/" + clanMemberId + "/" + value
+    var value = selectObject.value; 
+    var currentfilter = "{{ filter }}";
+    window.location.href = "changeClan/" + clanMemberId + "/" + value + "/" + currentfilter
 }
 
 $(document).ready(function(){
