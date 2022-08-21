@@ -45,6 +45,7 @@ class DeleteClanMember(LoginRequiredMixin, generic.DeleteView):
 
 class ListMembers(generic.ListView):
     model = models.ClanMember
+    paginate_by = 50
 
     def get_queryset(self):
         filter_val = self.request.GET.get('filter', 'all')
