@@ -96,7 +96,7 @@ def missingMembers(request):
     clans = models.Clan.objects.all()
 
     if selectedClanId is None:
-        return render(request, "clashdata\whoisout.html", {'clans': clans})
+        return render(request, "clashdata/whoisout.html", {'clans': clans})
     else:
 
         def callEndPoint(url):
