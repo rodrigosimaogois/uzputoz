@@ -45,12 +45,12 @@ class DeleteClanMember(LoginRequiredMixin, generic.DeleteView):
 
 class ListMembers(generic.ListView):
     model = models.ClanMember
-    paginate_by = 50
-
+    
     def get_queryset(self):
         filter_val = self.request.GET.get('filter', 'all')
 
         if filter_val == 'all':
+            self.paginate_by = 50
             return models.ClanMember.objects.all()
         else:
             new_context = models.ClanMember.objects.filter(
