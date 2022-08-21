@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="row">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header">
+          <h4 class="card-title">Histórico</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table tablesorter " id="">
+              <thead class=" text-primary">
+                <tr>
+                  <th>Nome</th>
+                  <th>Origem</th>
+                  <th>Destino</th>
+                  <th>Data (Sao Paulo)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for obj in object_list %}
+                    <tr>
+                        <td>{{ obj.clanMember.name }}</td>
+                        <td><span style="color:#FF726F;">{{ obj.clanSource.name }}</span></td>
+                        <td><span style="color:#00B050;">{{ obj.clanDestiny.name }}</span></td>
+                        <td>{{ obj.date|date:'d/m/Y H:i:s' }}</td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table> 
+          </div>
+        </div>
+    </div>
+</div> 
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+
+
+{% endblock javascripts %}
