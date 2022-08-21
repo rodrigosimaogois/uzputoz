@@ -19,9 +19,17 @@
           <li class="">
             <a href="{% url 'clashdata:members' %}">
               <i class="tim-icons icon-badge"></i>
-              <p>Membros</p>
+              <p>Lines</p>
             </a>
           </li>
+          {% if user.is_authenticated %}
+          <li class="">
+            <a href="{% url 'clashdata:whoisout' %}">
+              <i class="tim-icons icon-delivery-fast"></i>
+              <p>Quem está fora da line?</p>
+            </a>
+          </li>
+          {% endif %}
           <li class="">
             <a href="{% url 'clashdata:clanHistory' %}">
               <i class="tim-icons icon-watch-time"></i>

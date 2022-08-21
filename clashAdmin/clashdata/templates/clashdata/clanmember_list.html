@@ -74,15 +74,13 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <h6 class="card-title">Opções</h6>
+                <h6 class="card-title">Filtros</h6>
                 <div class="row">
                     <div class="col">
-                        <label for="searchFilter">Procurar</label>
                         <input class="form-control" id="searchFilter" type="text" placeholder="Procurar..">
                     </div>
                     <div class="col">
                         <form class="" method="get" action="{% url 'clashdata:members' %}">
-                            <label for="clanFilter">Clã</label>
                             <select class="form-control clanSelection" id="clanFilter" name="filter" onchange="this.form.submit()">
                                 <option class="optionvalue" {% if "all" == filter %} selected {% endif %} value="all">Todos</option>
                                 {% for clan in clans %}

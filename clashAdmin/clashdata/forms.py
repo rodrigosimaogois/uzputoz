@@ -6,7 +6,7 @@ from django import forms
 
 class ClanCreateForm(forms.ModelForm):
     class Meta:
-        fields = ("name",)
+        fields = ("name", "tag")
         model = models.Clan
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:

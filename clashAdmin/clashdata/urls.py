@@ -18,4 +18,5 @@ urlpatterns = [
     path("deleteMember/<pk>/",views.DeleteClanMember.as_view(),name="deletemember"),
     path('memberList/changeClan/<pk>/<newclan>/<currentfilter>/', views.changeClan, name='changeclan'),
     path("history/", views.ListClanHistory.as_view(), name="clanHistory"),
+    path("whoisout/", views.missingMembers, name="whoisout"),
 ]

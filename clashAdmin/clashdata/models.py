@@ -9,7 +9,7 @@ User = get_user_model()
 
 class Clan(models.Model):
     name = models.CharField(max_length=255)
-    #tag = models.CharField(max_length=255, blank=True)
+    tag = models.CharField(max_length=255, blank=True)
 
     def __str__(self) -> str:
         return self.name
@@ -78,7 +78,9 @@ class ClanMemberHistory(models.Model):
         self.clanDestiny = ClanMember.clan
         self.save()
 
-    
+class RoyaleApiConfig(models.Model):
+    ip = models.CharField(max_length=255)
+    key = models.TextField()
     
 
 
