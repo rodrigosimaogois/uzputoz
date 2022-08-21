@@ -104,23 +104,27 @@ def missingMembers(request):
             #api = models.RoyaleApiConfig.objects.all()
 
             headers = {
-                        'Accept': 'application/json',
-                        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjY4NjgyNDU1LThkOGMtNGQ4Ny1hZGFmLTE1ZjI4MDM1ZDIwOCIsImlhdCI6MTY1OTYyNzg5Mywic3ViIjoiZGV2ZWxvcGVyLzUwODc3ODg3LTdiZTktZGU3MC05MWNkLTkzOTNkY2M1ZWUyMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3OC40Mi4xMDcuMTM4Il0sInR5cGUiOiJjbGllbnQifV19.lS1ECsYhV0OhscL4bAYvthg0UQiZgEHJBfID1TJKkGaG1fF8hpELXOjznM4Vd6qACegTqZ2X9QK6GG2KPD7X7Q'
-                    }
+                'Accept': 'application/json',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjY4NjgyNDU1LThkOGMtNGQ4Ny1hZGFmLTE1ZjI4MDM1ZDIwOCIsImlhdCI6MTY1OTYyNzg5Mywic3ViIjoiZGV2ZWxvcGVyLzUwODc3ODg3LTdiZTktZGU3MC05MWNkLTkzOTNkY2M1ZWUyMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3OC40Mi4xMDcuMTM4Il0sInR5cGUiOiJjbGllbnQifV19.lS1ECsYhV0OhscL4bAYvthg0UQiZgEHJBfID1TJKkGaG1fF8hpELXOjznM4Vd6qACegTqZ2X9QK6GG2KPD7X7Q'
+            }
 
             print(url)
             response = requests.get(url,headers=headers)
-
-            if response.status_code != 200:
-                print(f"error: {response.status_code}: {response._content}")
                 
-            return response.json()
+            return response
 
         clanTag = get_object_or_404(models.Clan, pk=selectedClanId)
         tag = clanTag.tag.replace("#","")
 
+        jsonResponse = callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/members")
+
+        if jsonResponse.status_code != 200:
+            print(f"error: {jsonResponse.status_code}: {jsonResponse._content}")
+            return render(request, "clashdata/whoisout.html", {'clans': clans, 'status_code': jsonResponse.status_code, 'context': jsonResponse._content})
+
+        currentMembers = jsonResponse.json()["items"]
+
         missingMembers = []
-        currentMembers = callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/members")["items"]
 
         line = models.ClanMember.objects.values('tag', 'name').filter(clan=selectedClanId)
 
