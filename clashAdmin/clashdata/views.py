@@ -133,7 +133,7 @@ def missingMembers(request):
             if len(found) == 0:
                 missingMembers.append({"name": expectedMember["name"], "tag": expectedMember["tag"]})
 
-        return render(request, "clashdata\whoisout.html", {'missing_members': missingMembers, 'clans': clans})
+        return render(request, "clashdata/whoisout.html", {'missing_members': missingMembers, 'clans': clans})
 
 
 
