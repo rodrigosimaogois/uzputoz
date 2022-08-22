@@ -38,14 +38,14 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h6 class="card-title">Quem está fora do clã?</h6>
+                <h6 class="card-title">Divergências Line</h6>
             </div>
             <div class="card-body">   
                 <div>
                     <form class="" method="get" action="{% url 'clashdata:members' %}">
                         <select class="form-control clanSelection test" id="whoisout_clan_filter" name="filter">
                             {% for clan in clans %}
-                                <option class="optionvalue" {% if clan.id|slugify == filter %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
+                                <option class="optionvalue" {% if clan.id|slugify == sel_clan_id %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
                             {% endfor %}
                         </select>
                     </form>
@@ -59,9 +59,11 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
       <div class="card">
-        
+        <div class="card-header">
+            <h6 class="card-title">Fora do clã</h6>
+        </div>
         <div class="card-body">
             <div class="table-responsive">
               <table class="table tablesorter" id="">
@@ -84,6 +86,33 @@
           </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">A mais no clã</h6>
+            </div>
+          <div class="card-body">
+              <div class="table-responsive">
+                <table class="table tablesorter" id="">
+                  <thead class=" text-primary">
+                    <tr>
+                      <th>Nome</th>
+                      <th>Tag</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% for member in exceeded_members %}
+                          <tr>
+                              <td>{{ member.name }}</td>
+                              <td>{{ member.tag }}</td>
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+                </table> 
+              </div>
+            </div>
+          </div>
+      </div>
 </div>
 
 {% endblock content %}

@@ -108,6 +108,11 @@ def missingMembers(request):
                 'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjM0MDczMTA4LThlNDUtNDBjOS1hYzVjLTY0ZTIzODM4OGJhNiIsImlhdCI6MTY2MTExMDY2Niwic3ViIjoiZGV2ZWxvcGVyLzUwODc3ODg3LTdiZTktZGU3MC05MWNkLTkzOTNkY2M1ZWUyMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIzLjkxLjE1Ny4xOTQiXSwidHlwZSI6ImNsaWVudCJ9XX0.iQvBaGASK55tFjEl4F4SLJUNE-zdbzV7tj5TaC8z7zmBGrJJJPECPsG-YnuDjvq99PxH7zGLA3D8NOvY9s_6EA'
             }
 
+            # headers = {
+            #     'Accept': 'application/json',
+            #     'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjY4NjgyNDU1LThkOGMtNGQ4Ny1hZGFmLTE1ZjI4MDM1ZDIwOCIsImlhdCI6MTY1OTYyNzg5Mywic3ViIjoiZGV2ZWxvcGVyLzUwODc3ODg3LTdiZTktZGU3MC05MWNkLTkzOTNkY2M1ZWUyMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3OC40Mi4xMDcuMTM4Il0sInR5cGUiOiJjbGllbnQifV19.lS1ECsYhV0OhscL4bAYvthg0UQiZgEHJBfID1TJKkGaG1fF8hpELXOjznM4Vd6qACegTqZ2X9QK6GG2KPD7X7Q'
+            # }
+
             print(url)
             response = requests.get(url,headers=headers)
                 
@@ -125,6 +130,7 @@ def missingMembers(request):
         currentMembers = jsonResponse.json()["items"]
 
         missingMembers = []
+        exceededMembers = []
 
         line = models.ClanMember.objects.values('tag', 'name').filter(clan=selectedClanId)
 
@@ -133,7 +139,13 @@ def missingMembers(request):
             if len(found) == 0:
                 missingMembers.append({"name": expectedMember["name"], "tag": expectedMember["tag"]})
 
-        return render(request, "clashdata/whoisout.html", {'missing_members': missingMembers, 'clans': clans})
+        for member in currentMembers:
+            found = [x for x in line if x["tag"] == member["tag"]]
+            if len(found) == 0:
+                exceededMembers.append({"name": member["name"], "tag": member["tag"]})
+
+        return render(request, "clashdata/whoisout.html", {'missing_members': missingMembers, 'exceeded_members': exceededMembers, 
+                                                                                'clans': clans, 'sel_clan_id': selectedClanId})
 
 
 
