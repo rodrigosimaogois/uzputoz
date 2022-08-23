@@ -77,7 +77,7 @@ class ClanMemberHistory(models.Model):
     date = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return self.clanMember
+        return self.name
 
     def add(self, name, tag, oldClanName, newClanName):
         self.name = name
