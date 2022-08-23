@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 from datetime import datetime
+from model_utils import FieldTracker
 # Create your models here.
 
 from django.contrib.auth import get_user_model
@@ -33,22 +34,25 @@ class ClanMember(models.Model):
     creation_time = models.DateTimeField(auto_now=True)
     contato = models.CharField(max_length=255, blank=True)
 
+    tracker = FieldTracker()
+
     def __str__(self) -> str:
         return f"{self.name} ({self.tag})"
 
     def save(self, *args, **kwargs):
+        changedClan = self.tracker.has_changed('clan_id')
         super().save(args, kwargs)
-        history = ClanMemberHistory()
-        history.add(self, kwargs.get('oldClan', None))
+
+        oldClan = kwargs.get('oldClan', '')
+
+        if changedClan:
+            history = ClanMemberHistory()
+            history.add(self.name, self.tag, oldClan, self.clan.name)
  
-    # def delete(self, *args, **kwargs):
-
-    #     #print(self.name)
-    #     #print(self.clan)
-
-    #     super().delete(args, kwargs)
-        #history = ClanMemberHistory()
-        #history.add(self, kwargs.get('oldClan', self.clan))
+    def delete(self, *args, **kwargs):
+        super().delete(args, kwargs)
+        history = ClanMemberHistory()
+        history.add(self.name, self.tag, self.clan.name, '')
       
     def get_absolute_url(self):
         return reverse("members")
@@ -66,21 +70,28 @@ class ClanMemberHistory(models.Model):
     class Meta:
         ordering = ["-date"]
 
-    clanMember = models.ForeignKey(ClanMember, related_name='member_histories', on_delete=models.CASCADE)
-    operation = models.IntegerField(default=0) # 0 add, 1 change, 2 remove
-    clanSource = models.ForeignKey(Clan, related_name='member_clan_source', on_delete=models.CASCADE, null=True)
-    clanDestiny = models.ForeignKey(Clan, related_name='member_clan_destiny', on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=255, blank=True)
+    tag = models.CharField(max_length=255, blank=True)
+    clanSource = models.CharField(max_length=255, blank=True)
+    clanDestiny = models.CharField(max_length=255, blank=True)
     date = models.DateTimeField(auto_now=True)
 
-    def add(self, ClanMember, OldClan):
-        self.clanMember = ClanMember
-        self.clanSource = OldClan
-        self.clanDestiny = ClanMember.clan
+    def __str__(self) -> str:
+        return self.clanMember
+
+    def add(self, name, tag, oldClanName, newClanName):
+        self.name = name
+        self.tag = tag
+        self.clanSource = oldClanName
+        self.clanDestiny = newClanName
         self.save()
 
-class RoyaleApiConfig(models.Model):
-    ip = models.CharField(max_length=255)
-    key = models.TextField()
-    
+class Config(models.Model):
+    name = models.CharField(max_length=255)
+    value = models.TextField()
+
+    def __str__(self) -> str:
+        return self.name  
+
 
 

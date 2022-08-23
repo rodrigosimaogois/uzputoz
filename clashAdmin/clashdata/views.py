@@ -6,10 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMixin)
 
-from . import forms, models
-
-import requests
-import json
+from . import forms, models, clashapi
 
 # Create your views here.
 
@@ -70,15 +67,6 @@ class ListMembers(generic.ListView):
         
         return context
 
-@login_required
-def changeClan(request, pk, newclan, currentfilter):
-    member = get_object_or_404(models.ClanMember, pk=pk)
-    clan = get_object_or_404(models.Clan, pk=newclan)
-    member.changeClan(clan)
-    return redirect('/clashdata/memberList/?filter=' + currentfilter)
-
-from datetime import datetime
-
 class ListClanHistory(generic.ListView):
     model = models.ClanMemberHistory
     paginate_by = 50
@@ -91,47 +79,30 @@ class ListClanHistory(generic.ListView):
         return context
 
 
+@login_required
+def changeClan(request, pk, newclan, currentfilter):
+    member = get_object_or_404(models.ClanMember, pk=pk)
+    clan = get_object_or_404(models.Clan, pk=newclan)
+    member.changeClan(clan)
+    return redirect('/clashdata/memberList/?filter=' + currentfilter)
+
 def missingMembers(request):
     selectedClanId = request.GET.get('clan_filter_who_is_out', None)
     clans = models.Clan.objects.all()
 
     if selectedClanId is None:
-        return render(request, "clashdata/whoisout.html", {'clans': clans})
+        return render(request, "clashdata/whoisout.html", {'clans': clans, 'sel_clan_id': selectedClanId})
     else:
-
-        def callEndPoint(url):
-
-            #api = models.RoyaleApiConfig.objects.all()
-
-            headers = {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjM0MDczMTA4LThlNDUtNDBjOS1hYzVjLTY0ZTIzODM4OGJhNiIsImlhdCI6MTY2MTExMDY2Niwic3ViIjoiZGV2ZWxvcGVyLzUwODc3ODg3LTdiZTktZGU3MC05MWNkLTkzOTNkY2M1ZWUyMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyIzLjkxLjE1Ny4xOTQiXSwidHlwZSI6ImNsaWVudCJ9XX0.iQvBaGASK55tFjEl4F4SLJUNE-zdbzV7tj5TaC8z7zmBGrJJJPECPsG-YnuDjvq99PxH7zGLA3D8NOvY9s_6EA'
-            }
-
-            # headers = {
-            #     'Accept': 'application/json',
-            #     'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjY4NjgyNDU1LThkOGMtNGQ4Ny1hZGFmLTE1ZjI4MDM1ZDIwOCIsImlhdCI6MTY1OTYyNzg5Mywic3ViIjoiZGV2ZWxvcGVyLzUwODc3ODg3LTdiZTktZGU3MC05MWNkLTkzOTNkY2M1ZWUyMiIsInNjb3BlcyI6WyJyb3lhbGUiXSwibGltaXRzIjpbeyJ0aWVyIjoiZGV2ZWxvcGVyL3NpbHZlciIsInR5cGUiOiJ0aHJvdHRsaW5nIn0seyJjaWRycyI6WyI3OC40Mi4xMDcuMTM4Il0sInR5cGUiOiJjbGllbnQifV19.lS1ECsYhV0OhscL4bAYvthg0UQiZgEHJBfID1TJKkGaG1fF8hpELXOjznM4Vd6qACegTqZ2X9QK6GG2KPD7X7Q'
-            # }
-
-            print(url)
-            response = requests.get(url,headers=headers)
-                
-            return response
-
-        clanTag = get_object_or_404(models.Clan, pk=selectedClanId)
-        tag = clanTag.tag.replace("#","")
-
-        jsonResponse = callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/members")
-
-        if jsonResponse.status_code != 200:
-            print(f"error: {jsonResponse.status_code}: {jsonResponse._content}")
-            return render(request, "clashdata/whoisout.html", {'clans': clans, 'status_code': jsonResponse.status_code, 'context': jsonResponse._content})
-
-        currentMembers = jsonResponse.json()["items"]
-
+        try:
+            clanTag = get_object_or_404(models.Clan, pk=selectedClanId)
+            currentMembers = clashapi.getClanMembers(clanTag)
+            print(currentMembers)
+        except Exception as error:
+            print(error.args)
+            return render(request, "clashdata/whoisout.html", {'clans': clans, 'error': error.args, 'sel_clan_id': selectedClanId})
+        
         missingMembers = []
         exceededMembers = []
-
         line = models.ClanMember.objects.values('tag', 'name').filter(clan=selectedClanId)
 
         for expectedMember in line:

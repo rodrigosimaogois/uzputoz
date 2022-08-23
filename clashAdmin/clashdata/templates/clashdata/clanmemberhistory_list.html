@@ -21,15 +21,15 @@
                   <th>Nome</th>
                   <th>Origem</th>
                   <th>Destino</th>
-                  <th>Data (Sao Paulo)</th>
+                  <th>Data</th>
                 </tr>
               </thead>
               <tbody>
                 {% for obj in object_list %}
                     <tr>
-                        <td>{{ obj.clanMember.name }}</td>
-                        <td><span style="color:#FF726F;">{{ obj.clanSource.name }}</span></td>
-                        <td><span style="color:#00B050;">{{ obj.clanDestiny.name }}</span></td>
+                        <td>{{ obj.name }}</td>
+                        <td><span style="color:#FF726F;">{{ obj.clanSource }}</span></td>
+                        <td><span style="color:#00B050;">{{ obj.clanDestiny }}</span></td>
                         <td>{{ obj.date|date:'d/m/Y H:i:s' }}</td>
                     </tr>
                 {% endfor %}
