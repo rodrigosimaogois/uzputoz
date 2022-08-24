@@ -13,6 +13,10 @@
         background-color: #27293D;
     }
 
+    #id_clan{
+        background-color: #27293D;
+    }
+
     .filter_clan{
         max-width: fit-content;
     }
@@ -70,35 +74,30 @@
     </div>
 </div>
 
-<div class="row">
+<p>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="collapseExample">
+      Filtros
+    </button>
+    {% if user.is_authenticated %}
+        <a href="{% url 'clashdata:createmember' %}" class="btn btn-primary" role="button">Novo</a>
+    {% endif %}
+</p>
+
+<div class="row collapse" id="filters">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <h6 class="card-title">Filtros</h6>
-                <div class="row">
-                    <div class="col">
-                        <input class="form-control" id="searchFilter" type="text" placeholder="Procurar..">
-                    </div>
-                    <div class="col">
-                        <form class="" method="get" action="{% url 'clashdata:members' %}">
-                            <select class="form-control clanSelection" id="clanFilter" name="filter" onchange="this.form.submit()">
-                                <option class="optionvalue" {% if "all" == filter %} selected {% endif %} value="all">Todos</option>
-                                {% for clan in clans %}
-                                    <option class="optionvalue" {% if clan.id|slugify == filter %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </form>
-                    </div>
-                    <div class="col">
-                        <div class="container">
-                            {% if user.is_authenticated %}
-                            <a href="{% url 'clashdata:createmember' %}" class="btn btn-primary" role="button">Novo</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="card ">
+        <div class="card-header">
+          <h5 class="card-title">Filtros</h5>
         </div>
+        <div class="card-body">
+          <form method="GET">
+            {% bootstrap_form filter.form layout='inline'  %}
+                <div>
+                    <button type="submit" class="btn btn-outline-success btn-sm">Filtrar</button>
+                </div>
+          </form>
+        </div>
+      </div>
     </div>
 </div>
 
@@ -106,7 +105,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title">Membros ( <span id="membrosCount">{{ object_list|length }}</span> / {{ totalSize }} )</h4>
+          <h4 class="card-title">Membros ( <span id="membrosCount">{{ filter.qs|length }}</span> / {{ totalSize }} )</h4>
         </div>
         <div class="card-body">
           <div class="table-responsive">
@@ -124,7 +123,7 @@
                 </tr>
               </thead>
               <tbody id="myTable">
-                {% for clanmember in object_list %}
+                {% for clanmember in filter.qs %}
                     <tr>
                         <td>{{ clanmember.name }}</td>
                         <td style="display:none;">{{ clanmember.clan.name }}</td>

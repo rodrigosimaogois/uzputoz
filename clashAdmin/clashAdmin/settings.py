@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',
     'accounts',
-    'clashdata'
+    'clashdata',
+    'django_filters'
 ]
 
 MIDDLEWARE = [

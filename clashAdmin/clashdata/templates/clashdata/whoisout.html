@@ -58,9 +58,12 @@
     </div>
 </div>
 
-{% if total %}
-<div class="col-md-12">
-    <h5>Total na line: {{ total }} / 50</h5>
+{% if total_line %}
+<div class="row">
+    <div class="col-md-12">
+      <h5><span style="color:#00B050"> Line: {{ total_line }} / 50 </span>|
+        <span style="color:#8064A2"> Clã: {{ total_clan }} / 50 </span></h5>
+    </div>
 </div>
 {% endif %}
 

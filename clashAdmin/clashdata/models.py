@@ -26,9 +26,9 @@ class Clan(models.Model):
 
 class ClanMember(models.Model):
     clan = models.ForeignKey(Clan, related_name='clan_memberships', on_delete=models.CASCADE)
-    
+
+    name = models.CharField(max_length=255)    
     tag = models.CharField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
     cargo = models.IntegerField(default=0)
     media = models.FloatField(default=0.0)
     creation_time = models.DateTimeField(auto_now=True)

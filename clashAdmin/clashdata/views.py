@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMixin)
 
-from . import forms, models, clashapi
+from . import forms, models, clashapi, filters
 
 # Create your views here.
 
@@ -45,37 +45,38 @@ class DeleteClanMember(LoginRequiredMixin, generic.DeleteView):
 
 class ListMembers(generic.ListView):
     model = models.ClanMember
-    
-    def get_queryset(self):
-        filter_val = self.request.GET.get('filter', 'all')
 
-        if filter_val == 'all':
-            self.paginate_by = 50
-            return models.ClanMember.objects.all()
-        else:
-            new_context = models.ClanMember.objects.filter(
-                clan=filter_val,
-            )
+    # def get_queryset(self):
+    #     filter_val = self.request.GET.get('filter', 'all')
 
-            return new_context
+    #     # if filter_val == 'all':
+    #     #     self.paginate_by = 50
+    #     #     return models.ClanMember.objects.all()
+    #     # else:
+        
+    #     new_context = models.ClanMember.objects.filter(
+    #             name="UZP I Simao",
+    #         )
+
+    #     return new_context
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = self.request.GET.get('filter', 'all')
         context['clans'] = models.Clan.objects.all()
-        context['totalSize'] = self.get_queryset().count()
-        
+        context['totalSize'] = len(self.get_queryset())
+        context['filter'] = filters.ClanMemberFilter(self.request.GET, queryset=self.get_queryset())
+
         return context
 
 class ListClanHistory(generic.ListView):
     model = models.ClanMemberHistory
-    paginate_by = 50
     
     def get_queryset(self):
         return models.ClanMemberHistory.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['filter'] = filters.ClanHistoryFilter(self.request.GET, queryset=self.get_queryset())
         return context
 
 
@@ -116,7 +117,8 @@ def missingMembers(request):
                 exceededMembers.append({"name": member["name"], "tag": member["tag"]})
 
         return render(request, "clashdata/whoisout.html", {'missing_members': missingMembers, 'exceeded_members': exceededMembers, 
-                                                                                'clans': clans, 'sel_clan_id': selectedClanId, "total": line.count()})
+                                                                                'clans': clans, 'sel_clan_id': selectedClanId, 
+                                                                                'total_line': line.count(), 'total_clan': len(currentMembers)})
 
 
 
