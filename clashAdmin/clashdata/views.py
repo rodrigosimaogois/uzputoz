@@ -116,7 +116,7 @@ def missingMembers(request):
                 exceededMembers.append({"name": member["name"], "tag": member["tag"]})
 
         return render(request, "clashdata/whoisout.html", {'missing_members': missingMembers, 'exceeded_members': exceededMembers, 
-                                                                                'clans': clans, 'sel_clan_id': selectedClanId})
+                                                                                'clans': clans, 'sel_clan_id': selectedClanId, "total": line.count()})
 
 
 

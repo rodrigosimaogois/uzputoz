@@ -19,6 +19,7 @@
               <thead class=" text-primary">
                 <tr>
                   <th>Nome</th>
+                  <th>Tag</th>
                   <th>Origem</th>
                   <th>Destino</th>
                   <th>Data</th>
@@ -28,6 +29,7 @@
                 {% for obj in object_list %}
                     <tr>
                         <td>{{ obj.name }}</td>
+                        <td>{{ obj.tag }}</td>
                         <td><span style="color:#FF726F;">{{ obj.clanSource }}</span></td>
                         <td><span style="color:#00B050;">{{ obj.clanDestiny }}</span></td>
                         <td>{{ obj.date|date:'d/m/Y H:i:s' }}</td>
