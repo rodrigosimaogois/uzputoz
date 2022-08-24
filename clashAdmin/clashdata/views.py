@@ -45,8 +45,11 @@ class DeleteClanMember(LoginRequiredMixin, generic.DeleteView):
 
 class ListMembers(generic.ListView):
     model = models.ClanMember
+    paginate_by = 60
 
-    # def get_queryset(self):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return filters.ClanMemberFilter(self.request.GET, queryset=queryset).qs
     #     filter_val = self.request.GET.get('filter', 'all')
 
     #     # if filter_val == 'all':
@@ -60,6 +63,7 @@ class ListMembers(generic.ListView):
 
     #     return new_context
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['clans'] = models.Clan.objects.all()
@@ -70,9 +74,11 @@ class ListMembers(generic.ListView):
 
 class ListClanHistory(generic.ListView):
     model = models.ClanMemberHistory
+    paginate_by = 50
     
     def get_queryset(self):
-        return models.ClanMemberHistory.objects.all()
+        queryset = super().get_queryset()
+        return filters.ClanHistoryFilter(self.request.GET, queryset=queryset).qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
