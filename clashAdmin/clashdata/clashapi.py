@@ -25,3 +25,4 @@ def getClanMembers(clanTag):
     print(jsonResponse)
     currentMembers = jsonResponse["items"]
     return currentMembers
+
