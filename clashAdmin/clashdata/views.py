@@ -126,5 +126,20 @@ def missingMembers(request):
                                                                                 'clans': clans, 'sel_clan_id': selectedClanId, 
                                                                                 'total_line': line.count(), 'total_clan': len(currentMembers)})
 
+from time import time
+from django.http import JsonResponse
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
+class CurrentWar(generic.View):
+
+    def get(self, request):
+        if is_ajax(request):
+            clanTag = request.GET.get('tag_id')
+            clanInfo = clashapi.getCurrentWarInfo(clanTag)
+            print(clanInfo)
+            return JsonResponse({'clanInfo': clanInfo}, status=200)
+        
+        clanTags = models.Clan.objects.exclude(tag__exact='')
+        return render(request, "clashdata/currentwar.html", { 'clanTags': clanTags})

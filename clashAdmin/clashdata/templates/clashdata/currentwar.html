@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<style>
+    .table > tbody > tr > td 
+    {
+        font-size: 0.8em; 
+    }
+
+    .table > thead > tr > th 
+    {
+        font-size: 0.8em;
+        color: #E14ECA !important; 
+    }
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+{% if error %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">Erro</h6>
+            </div>
+            <div class="card-body">   
+                <h6 style="color:#FF726F;">{{ error }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+    <h5>Carregando...</h5>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+    </div></div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+    $(document).ready(function () {
+
+        var count = {{ clanTags|length }};
+        var eachProgress = 100;
+
+        if(count > 0){
+            eachProgress = 100/count;
+        }
+
+        const bar = document.querySelector(".progress-bar");
+        let currentProgress = 0;
+
+        {% for clan in clanTags %}
+
+            $.ajax({
+                url: "{% url 'clashdata:currentwar' %}",
+                type: "GET",
+                data: {
+                    tag_id: "{{ clan.tag }}"
+                },
+                error: function(response){
+                    console.log("error");
+                },
+                success: function(response){
+                    currentProgress = currentProgress + eachProgress;
+                    
+                    if (currentProgress > 100){
+                        currentProgress = 100;
+                    }
+
+                    bar.style.width = currentProgress + "%";
+              	    bar.innerText = currentProgress + "%";
+
+                    if (currentProgress >= 100){
+                        $(".progress").css("display", "none");
+                        $("h5").css("display", "none");
+                    }
+
+                    let clanRows = ''
+
+                    response.clanInfo.forEach(function(item, index, arr){
+                        console.log(item.Name)
+                        clanRow = '<tr> \
+                                    <td>' + item.Name + '</td> \
+                                    <td class="text-center" >' + item.PlayersToday + '</td> \
+                                    <td class="text-center">' + item.DecksToday + '</td> \
+                                    <td class="text-center">' + item.MissingAttacksToday + '</td> \
+                                    <td class="text-center">' + item.Average + '</td> \
+                                    <td class="text-center">' + item.Total + '</td> \
+                                    <td class="text-center">' + item.MinPoints + '</td> \
+                                    <td class="text-center">' + item.MaxPoints + '</td> \
+                                    <td class="text-center">' + item.Estimation + '</td> \
+                                   </tr>';
+                        
+                        clanRows = clanRows + clanRow;
+                    });
+
+                    let openTable = '<div class="row"> \
+                                        <div class="col-md-12"> \
+                                            <div class="card"> \
+                                                <div class="card-body"> \
+                                                    <div class="table-responsive"> \
+                                                        <table class="table table-sm" id=""> \
+                                                            <thead class=""> \
+                                                                <tr> \
+                                                                    <th>Nome</th> \
+                                                                    <th class="text-center">Jog.</th> \
+                                                                    <th class="text-center">Atq</th> \
+                                                                    <th class="text-center">Falt.</th> \
+                                                                    <th class="text-center">Média</th> \
+                                                                    <th class="text-center">Atual</th> \
+                                                                    <th class="text-center">Min</th> \
+                                                                    <th class="text-center">Max</th> \
+                                                                    <th class="text-center">Est</th> \
+                                                                </tr> \
+                                                            </thead> \
+                                                            <tbody>';
+                    let closeTable = '</tbody></table></div></div></div></div></div>';
+                    let newTable = openTable + clanRows + closeTable;
+                    $(".content").append(newTable);                    
+                }
+            });
+
+        {% endfor %}        
+          
+
+        /*$.ajax({
+            url: "{% url 'clashdata:currentwar' %}",
+            type: "GET",
+            data: {
+                button_text: $(this).text()
+            },
+            success: function(response){
+
+                setTimeout(() => {
+                    console.log("primeiro");
+                    $("#seconds").append("<li>" + response.seconds +"</li>")
+                }, "3000");
+            }
+        });
+
+        $.ajax({
+            url: "{% url 'clashdata:currentwar' %}",
+            type: "GET",
+            data: {
+                button_text: $(this).text()
+            },
+            success: function(response){
+                console.log("segundo")
+                $("#seconds").append("<li>" + response.seconds +"</li>")
+            }
+        });
+
+        $.ajax({
+            url: "{% url 'clashdata:currentwar' %}",
+            type: "GET",
+            data: {
+                button_text: $(this).text()
+            },
+            success: function(response){
+                console.log("terceiro")
+                $("#seconds").append("<li>" + response.seconds +"</li>")
+            }
+        });*/
+
+        $(".btn").click(function(){
+            console.log("a");
+
+            $.ajax({
+                url: "{% url 'clashdata:currentwar' %}",
+                type: "GET",
+                data: {
+                    button_text: $(this).text()
+                },
+                success: function(response){
+                    console.log("ddsad")
+                    $("#seconds").append("<li>" + response.seconds +"</li>")
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock javascripts %}
