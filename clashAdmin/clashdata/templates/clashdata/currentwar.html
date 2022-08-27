@@ -5,15 +5,25 @@
 {% block stylesheets %}
 
 <style>
-    .table > tbody > tr > td 
-    {
-        font-size: 0.8em; 
+    td > div > img {
+        height: 1em;
+        width: auto;
+        display: inline-block;
     }
 
     .table > thead > tr > th 
     {
-        font-size: 0.8em;
-        color: #E14ECA !important; 
+        font-size: 0.9em;
+    }
+
+    .table > tbody > tr > td 
+    {
+        font-size: 0.9em;
+    }
+
+    .rowcolor
+    {
+        background-color:#2C3F50;
     }
 
 </style>
@@ -45,152 +55,200 @@
     </div></div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="card test">
+            <div class="card-body">
+                <h4 class="card-title text-center">UZPUTOZ</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                      <thead>
+                        <tr>
+                          <th class="">Nome</th>
+                          <th class="text-center">Atual</th>
+                          <th class="text-center">Decks</th>
+                          <th class="text-center">Perspectivas</th>
+                        </tr>
+                      </thead>
+                      <tbody id="uzputozContent">
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card test">
+            <div class="card-body">
+                <h4 class="card-title text-center">BRJP.FR.ELITE</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                      <thead>
+                        <tr>
+                          <th class="">Nome</th>
+                          <th class="text-center">Atual</th>
+                          <th class="text-center">Decks</th>
+                          <th class="text-center">Perspectivas</th>
+                        </tr>
+                      </thead>
+                      <tbody id="brjpContent">
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card test">
+            <div class="card-body">
+                <h4 class="card-title text-center">Bisturi</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                      <thead>
+                        <tr>
+                          <th class="">Nome</th>
+                          <th class="text-center">Atual</th>
+                          <th class="text-center">Decks</th>
+                          <th class="text-center">Perspectivas</th>
+                        </tr>
+                      </thead>
+                      <tbody id="bisturiContent">
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card test">
+            <div class="card-body">
+                <h4 class="card-title text-center">Get Øut Alive</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                      <thead>
+                        <tr>
+                          <th class="">Nome</th>
+                          <th class="text-center">Atual</th>
+                          <th class="text-center">Decks</th>
+                          <th class="text-center">Perspectivas</th>
+                        </tr>
+                      </thead>
+                      <tbody id="goaContent">
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card test">
+            <div class="card-body">
+                <h4 class="card-title text-center">Bisturi Access</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                      <thead>
+                        <tr>
+                          <th class="">Nome</th>
+                          <th class="text-center">Atual</th>
+                          <th class="text-center">Decks</th>
+                          <th class="text-center">Perspectivas</th>
+                        </tr>
+                      </thead>
+                      <tbody id="bisturiAccessContent">
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
 <script>
-    $(document).ready(function () {
 
-        var count = {{ clanTags|length }};
-        var eachProgress = 100;
+    const bar = document.querySelector(".progress-bar");
+    let currentProgress = 0;
 
-        if(count > 0){
-            eachProgress = 100/count;
+    function setProgressBar(){
+        currentProgress = currentProgress + 20;
+        if (currentProgress > 100){
+            currentProgress = 100;
         }
 
-        const bar = document.querySelector(".progress-bar");
-        let currentProgress = 0;
+        bar.style.width = currentProgress + "%";
+        bar.innerText = currentProgress + "%";
 
-        {% for clan in clanTags %}
+        if (currentProgress >= 100){
+            $(".progress").css("display", "none");
+            $("h5").css("display", "none");
+        }
+    }
 
-            $.ajax({
-                url: "{% url 'clashdata:currentwar' %}",
-                type: "GET",
-                data: {
-                    tag_id: "{{ clan.tag }}"
-                },
-                error: function(response){
-                    console.log("error");
-                },
-                success: function(response){
-                    currentProgress = currentProgress + eachProgress;
+    function myFunction(tag, id){
+        $.ajax({
+            url: "{% url 'clashdata:currentwar' %}",
+            type: "GET",
+            data: {
+                tag_id: tag
+            },
+            error: function(response){
+                console.log("error");
+            },
+            success: function(response){
+                let clanRows = ''
+
+                response.clanInfo.forEach(function(item, index, arr){
+                    console.log(item.Name)
+                    clanRow = '<tr class="rowcolor"> \
+                                <td class="col-3">' + item.Name + '</td> \
+                                <td class="col-3 text-nowrap text-center"> \
+                                    <div><img src="/static/assets/img/medals.png"/> ' + item.Total + '</div> \
+                                    <div style="font-weight: bold;">' + item.Average + '</div> \
+                                </td>\
+                                <td class="col-3 text-nowrap text-center"> \
+                                    <div><img src="/static/assets/img/contact.png"/> ' + item.PlayersToday + '/50</div> \
+                                    <div><img src="/static/assets/img/green_check.png"/> ' + item.DecksToday + '</div> \
+                                    <div><img src="/static/assets/img/red_clock.png"/> ' + item.MissingAttacksToday +  '</div> \
+                                </td> \
+                                <td class="col-3 text-nowrap text-center"> \
+                                    <div><img src="/static/assets/img/yellow_ball.png"/> ' + item.Estimation + '</div> \
+                                    <div><img src="/static/assets/img/red_ball.png"/> ' + item.MinPoints + '</div> \
+                                    <div><img src="/static/assets/img/green_ball.png"/> ' + item.MaxPoints + '</div> \
+                                </td> \
+                               </tr>;';
                     
-                    if (currentProgress > 100){
-                        currentProgress = 100;
-                    }
+                    clanRows = clanRows + clanRow;
+                });
 
-                    bar.style.width = currentProgress + "%";
-              	    bar.innerText = currentProgress + "%";
-
-                    if (currentProgress >= 100){
-                        $(".progress").css("display", "none");
-                        $("h5").css("display", "none");
-                    }
-
-                    let clanRows = ''
-
-                    response.clanInfo.forEach(function(item, index, arr){
-                        console.log(item.Name)
-                        clanRow = '<tr> \
-                                    <td>' + item.Name + '</td> \
-                                    <td class="text-center" >' + item.PlayersToday + '</td> \
-                                    <td class="text-center">' + item.DecksToday + '</td> \
-                                    <td class="text-center">' + item.MissingAttacksToday + '</td> \
-                                    <td class="text-center">' + item.Average + '</td> \
-                                    <td class="text-center">' + item.Total + '</td> \
-                                    <td class="text-center">' + item.MinPoints + '</td> \
-                                    <td class="text-center">' + item.MaxPoints + '</td> \
-                                    <td class="text-center">' + item.Estimation + '</td> \
-                                   </tr>';
-                        
-                        clanRows = clanRows + clanRow;
-                    });
-
-                    let openTable = '<div class="row"> \
-                                        <div class="col-md-12"> \
-                                            <div class="card"> \
-                                                <div class="card-body"> \
-                                                    <div class="table-responsive"> \
-                                                        <table class="table table-sm" id=""> \
-                                                            <thead class=""> \
-                                                                <tr> \
-                                                                    <th>Nome</th> \
-                                                                    <th class="text-center">Jog.</th> \
-                                                                    <th class="text-center">Atq</th> \
-                                                                    <th class="text-center">Falt.</th> \
-                                                                    <th class="text-center">Média</th> \
-                                                                    <th class="text-center">Atual</th> \
-                                                                    <th class="text-center">Min</th> \
-                                                                    <th class="text-center">Max</th> \
-                                                                    <th class="text-center">Est</th> \
-                                                                </tr> \
-                                                            </thead> \
-                                                            <tbody>';
-                    let closeTable = '</tbody></table></div></div></div></div></div>';
-                    let newTable = openTable + clanRows + closeTable;
-                    $(".content").append(newTable);                    
-                }
-            });
-
-        {% endfor %}        
-          
-
-        /*$.ajax({
-            url: "{% url 'clashdata:currentwar' %}",
-            type: "GET",
-            data: {
-                button_text: $(this).text()
-            },
-            success: function(response){
-
-                setTimeout(() => {
-                    console.log("primeiro");
-                    $("#seconds").append("<li>" + response.seconds +"</li>")
-                }, "3000");
+                $(id).append(clanRows);
+                setProgressBar();
             }
         });
+    }
 
-        $.ajax({
-            url: "{% url 'clashdata:currentwar' %}",
-            type: "GET",
-            data: {
-                button_text: $(this).text()
-            },
-            success: function(response){
-                console.log("segundo")
-                $("#seconds").append("<li>" + response.seconds +"</li>")
-            }
-        });
-
-        $.ajax({
-            url: "{% url 'clashdata:currentwar' %}",
-            type: "GET",
-            data: {
-                button_text: $(this).text()
-            },
-            success: function(response){
-                console.log("terceiro")
-                $("#seconds").append("<li>" + response.seconds +"</li>")
-            }
-        });*/
-
-        $(".btn").click(function(){
-            console.log("a");
-
-            $.ajax({
-                url: "{% url 'clashdata:currentwar' %}",
-                type: "GET",
-                data: {
-                    button_text: $(this).text()
-                },
-                success: function(response){
-                    console.log("ddsad")
-                    $("#seconds").append("<li>" + response.seconds +"</li>")
-                }
-            });
-        });
+    $(document).ready(function () {
+        myFunction("#20RGVR8", "#uzputozContent");
+        myFunction("#9PGQJCRR", "#brjpContent");
+        myFunction("#YPU0GJUV", "#bisturiContent");
+        myFunction("#PULQCRCP", "#goaContent");
+        myFunction("#YYQGVLV9", "#bisturiAccessContent");                
     });
 </script>
 
