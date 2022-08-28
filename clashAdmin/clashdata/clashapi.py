@@ -68,6 +68,7 @@ def __getClanInfo(clanData, maxAttacks):
         clanInfo = { 
                 "Tag": clanData["tag"], 
                 "Name": clanData["name"],
+                "Fame": clanData["fame"],
                 "Total": periodPoints,
                 "TotalDecks": totalUsedDecksWithoutTrainingDecks,
                 "DecksToday": usedDecksTodayCount,

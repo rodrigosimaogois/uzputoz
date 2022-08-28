@@ -55,9 +55,10 @@
                       <thead>
                         <tr>
                           <th class="">Nome</th>
-                          <th class="text-center">Atual</th>
-                          <th class="text-center">Decks</th>
-                          <th class="text-center">Perspectivas</th>
+                          <th class="">Atual</th>
+                          <th class="">Decks</th>
+                          <th class="">Persp.</th>
+                          <th class="text-right text-md-center">Geral</th>
                         </tr>
                       </thead>
                       <tbody id="uzputozContent">
@@ -79,9 +80,10 @@
                       <thead>
                         <tr>
                           <th class="">Nome</th>
-                          <th class="text-center">Atual</th>
-                          <th class="text-center">Decks</th>
-                          <th class="text-center">Perspectivas</th>
+                          <th class="">Atual</th>
+                          <th class="">Decks</th>
+                          <th class="">Persp.</th>
+                          <th class="text-right text-md-center">Geral</th>
                         </tr>
                       </thead>
                       <tbody id="brjpContent">
@@ -103,9 +105,10 @@
                       <thead>
                         <tr>
                           <th class="">Nome</th>
-                          <th class="text-center">Atual</th>
-                          <th class="text-center">Decks</th>
-                          <th class="text-center">Perspectivas</th>
+                          <th class="">Atual</th>
+                          <th class="">Decks</th>
+                          <th class="">Persp.</th>
+                          <th class="text-right text-md-center">Geral</th>
                         </tr>
                       </thead>
                       <tbody id="bisturiContent">
@@ -127,9 +130,10 @@
                       <thead>
                         <tr>
                           <th class="">Nome</th>
-                          <th class="text-center">Atual</th>
-                          <th class="text-center">Decks</th>
-                          <th class="text-center">Perspectivas</th>
+                          <th class="">Atual</th>
+                          <th class="">Decks</th>
+                          <th class="">Persp.</th>
+                          <th class="text-right text-md-center">Geral</th>
                         </tr>
                       </thead>
                       <tbody id="goaContent">
@@ -151,9 +155,10 @@
                       <thead>
                         <tr>
                           <th class="">Nome</th>
-                          <th class="text-center">Atual</th>
-                          <th class="text-center">Decks</th>
-                          <th class="text-center">Perspectivas</th>
+                          <th class="">Atual</th>
+                          <th class="">Decks</th>
+                          <th class="">Persp.</th>
+                          <th class="text-right text-md-center">Geral</th>
                         </tr>
                       </thead>
                       <tbody id="bisturiAccessContent">
@@ -203,24 +208,31 @@
             },
             success: function(response){
                 let clanRows = ''
+                let points = [3000, 1800, 1000, 600, 400];
 
                 response.clanInfo.forEach(function(item, index, arr){
                     console.log(item.Name)
+                    let total = parseInt(item.Fame) + points[index]
                     clanRow = '<tr class="rowcolor"> \
-                                <td class="col-3">' + item.Name + '</td> \
-                                <td class="col-3 text-nowrap text-center"> \
+                                <td class="col-2">' + item.Name + '</td> \
+                                <td class="col-2 text-nowrap"> \
                                     <div><img src="/static/assets/img/medals.png"/> ' + item.Total + '</div> \
                                     <div style="font-weight: bold;">' + item.Average + '</div> \
                                 </td>\
-                                <td class="col-3 text-nowrap text-center"> \
+                                <td class="col-2 text-nowrap"> \
                                     <div><img src="/static/assets/img/contact.png"/> ' + item.PlayersToday + '/50</div> \
                                     <div><img src="/static/assets/img/green_check.png"/> ' + item.DecksToday + '</div> \
                                     <div><img src="/static/assets/img/red_clock.png"/> ' + item.MissingAttacksToday +  '</div> \
                                 </td> \
-                                <td class="col-3 text-nowrap text-center"> \
+                                <td class="col-2 text-nowrap"> \
                                     <div><img src="/static/assets/img/yellow_ball.png"/> ' + item.Estimation + '</div> \
                                     <div><img src="/static/assets/img/red_ball.png"/> ' + item.MinPoints + '</div> \
                                     <div><img src="/static/assets/img/green_ball.png"/> ' + item.MaxPoints + '</div> \
+                                </td> \
+                                <td class="col-2 text-nowrap text-right text-md-center"> \
+                                    <div><img src="/static/assets/img/green_check.png"/> ' + item.Fame + '</div> \
+                                    <div>+' + points[index] + '</div> \
+                                    <div><img src="/static/assets/img/red_clock.png"/> ' + total + '</div> \
                                 </td> \
                                </tr>;';
                     
