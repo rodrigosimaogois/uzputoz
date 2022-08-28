@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMixin)
 
 from . import forms, models, clashapi, filters
+from django.core import serializers
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -138,8 +140,23 @@ class CurrentWar(generic.View):
         if is_ajax(request):
             clanTag = request.GET.get('tag_id')
             clanInfo = clashapi.getCurrentWarInfo(clanTag)
-            print(clanInfo)
             return JsonResponse({'clanInfo': clanInfo}, status=200)
         
         clanTags = models.Clan.objects.exclude(tag__exact='')
         return render(request, "clashdata/currentwar.html", { 'clanTags': clanTags})
+
+def getLines(request):
+    line = models.ClanMember.objects.all().order_by("clan_id")
+    clanInfo = {}
+
+    #print(line)
+    for i in line:
+        clanName = i.clan.name
+        tag = i.tag
+
+        if clanName in clanInfo:
+            clanInfo[clanName].append(tag)
+        else:
+            clanInfo[clanName] = [tag]
+
+    return JsonResponse({'json': clanInfo}, status=200)

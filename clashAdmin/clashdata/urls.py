@@ -20,4 +20,5 @@ urlpatterns = [
     path("history/", views.ListClanHistory.as_view(), name="clanHistory"),
     path("whoisout/", views.missingMembers, name="whoisout"),
     path("currentwar/", views.CurrentWar.as_view(), name="currentwar"),
+    path("getLines/", views.getLines, name="getLines"),
 ]
