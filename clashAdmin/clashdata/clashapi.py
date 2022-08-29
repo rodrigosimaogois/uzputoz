@@ -102,5 +102,5 @@ def getCurrentWarInfo(clanTag):
             clanInfo = __getClanInfo(clan, maxAttacks)
             clansInfos.append(clanInfo)
         
-        clansInfos.sort(key=lambda x: x["Estimation"], reverse=True)
+        clansInfos.sort(key=lambda x: x["Total"], reverse=True)
         return clansInfos
