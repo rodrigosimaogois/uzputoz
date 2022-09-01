@@ -58,7 +58,9 @@
                           <th class="">Atual</th>
                           <th class="">Decks</th>
                           <th class="">Persp.</th>
-                          <th class="text-right text-md-center">Geral</th>
+                          {% if not isColosseum %}
+                            <th class="text-right text-md-center">Geral</th>
+                          {% endif %}
                         </tr>
                       </thead>
                       <tbody id="uzputozContent">
@@ -83,7 +85,9 @@
                           <th class="">Atual</th>
                           <th class="">Decks</th>
                           <th class="">Persp.</th>
-                          <th class="text-right text-md-center">Geral</th>
+                          {% if not isColosseum %}
+                            <th class="text-right text-md-center">Geral</th>
+                          {% endif %}
                         </tr>
                       </thead>
                       <tbody id="brjpContent">
@@ -108,7 +112,9 @@
                           <th class="">Atual</th>
                           <th class="">Decks</th>
                           <th class="">Persp.</th>
-                          <th class="text-right text-md-center">Geral</th>
+                          {% if not isColosseum %}
+                            <th class="text-right text-md-center">Geral</th>
+                          {% endif %}
                         </tr>
                       </thead>
                       <tbody id="bisturiContent">
@@ -133,7 +139,9 @@
                           <th class="">Atual</th>
                           <th class="">Decks</th>
                           <th class="">Persp.</th>
-                          <th class="text-right text-md-center">Geral</th>
+                          {% if not isColosseum %}
+                            <th class="text-right text-md-center">Geral</th>
+                          {% endif %}
                         </tr>
                       </thead>
                       <tbody id="goaContent">
@@ -158,7 +166,9 @@
                           <th class="">Atual</th>
                           <th class="">Decks</th>
                           <th class="">Persp.</th>
-                          <th class="text-right text-md-center">Geral</th>
+                          {% if not isColosseum %}
+                            <th class="text-right text-md-center">Geral</th>
+                          {% endif %}
                         </tr>
                       </thead>
                       <tbody id="bisturiAccessContent">
@@ -209,9 +219,12 @@
             success: function(response){
                 let clanRows = ''
                 let points = [3000, 1800, 1000, 600, 400];
+                let colosseum = response.warInfo.colosseum;
 
-                response.clanInfo.forEach(function(item, index, arr){
-                    console.log(item.Name)
+                //console.log(colosseum);
+
+                response.warInfo.clansInfos.forEach(function(item, index, arr){
+                    //console.log(item.Name)
                     let total = parseInt(item.Fame) + points[index]
                     clanRow = '<tr class="rowcolor"> \
                                 <td class="col-2">' + item.Name + '</td> \
@@ -228,15 +241,18 @@
                                     <div><img src="/static/assets/img/yellow_ball.png"/> ' + item.Estimation + '</div> \
                                     <div><img src="/static/assets/img/red_ball.png"/> ' + item.MinPoints + '</div> \
                                     <div><img src="/static/assets/img/green_ball.png"/> ' + item.MaxPoints + '</div> \
-                                </td> \
-                                <td class="text-nowrap text-right text-md-center"> \
-                                    <div><img src="/static/assets/img/green_check.png"/> ' + item.Fame + '</div> \
-                                    <div>+' + points[index] + '</div> \
-                                    <div><img src="/static/assets/img/red_clock.png"/> ' + total + '</div> \
-                                </td> \
-                               </tr>;';
+                                </td>';
                     
-                    clanRows = clanRows + clanRow;
+                    if(!colosseum){
+                        clanRow += '<td class="text-nowrap text-right text-md-center"> \
+                                        <div><img src="/static/assets/img/green_check.png"/> ' + item.Fame + '</div> \
+                                        <div>+' + points[index] + '</div> \
+                                        <div><img src="/static/assets/img/red_clock.png"/> ' + total + '</div> \
+                                    </td>';
+                    }
+
+                    closeTr = '</tr>';
+                    clanRows = clanRows + clanRow + closeTr;
                 });
 
                 $(id).append(clanRows);

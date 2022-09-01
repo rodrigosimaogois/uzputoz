@@ -139,11 +139,12 @@ class CurrentWar(generic.View):
     def get(self, request):
         if is_ajax(request):
             clanTag = request.GET.get('tag_id')
-            clanInfo = clashapi.getCurrentWarInfo(clanTag)
-            return JsonResponse({'clanInfo': clanInfo}, status=200)
+            warInfo = clashapi.getCurrentWarInfo(clanTag)
+            return JsonResponse({'warInfo': warInfo}, status=200)
         
+        isColosseum = clashapi.isColosseum()
         clanTags = models.Clan.objects.exclude(tag__exact='')
-        return render(request, "clashdata/currentwar.html", { 'clanTags': clanTags})
+        return render(request, "clashdata/currentwar.html", { 'clanTags': clanTags, 'isColosseum': isColosseum})
 
 def getLines(request):
     line = models.ClanMember.objects.all().order_by("clan_id")

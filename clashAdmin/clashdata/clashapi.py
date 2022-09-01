@@ -26,7 +26,7 @@ def getClanMembers(clanTag):
     currentMembers = jsonResponse["items"]
     return currentMembers
 
-def __getClanInfo(clanData, maxAttacks):
+def __getClanInfo(clanData, maxAttacks, isColosseum):
         usedDecksCount = 0
         usedDecksTodayCount = 0
         peopleTodayCount = 0
@@ -50,6 +50,9 @@ def __getClanInfo(clanData, maxAttacks):
  
         totalUsedDecksWithoutTrainingDecks = 0
         totalUsedDecksWithoutTrainingDecks = maxAttacks + usedDecksTodayCount
+
+        if isColosseum:
+            periodPoints = totalFame
 
         if not periodPoints == 0:
             if totalUsedDecksWithoutTrainingDecks == 0:
@@ -99,8 +102,19 @@ def getCurrentWarInfo(clanTag):
             maxAttacks = 0
 
         for clan in currentRiverRace["clans"]:
-            clanInfo = __getClanInfo(clan, maxAttacks)
+            clanInfo = __getClanInfo(clan, maxAttacks, isColosseum)
             clansInfos.append(clanInfo)
         
         clansInfos.sort(key=lambda x: x["Total"], reverse=True)
-        return clansInfos
+
+        warInfo = {
+            "colosseum": isColosseum,
+            "clansInfos":  clansInfos
+        }
+
+        return warInfo
+
+def isColosseum():
+    currentRiverRace = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%2320RGVR8/currentriverrace")
+    isColosseum = currentRiverRace["periodType"] == "colosseum"
+    return isColosseum
