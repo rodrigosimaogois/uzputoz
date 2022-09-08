@@ -93,7 +93,7 @@ def changeClan(request, pk, newclan, currentfilter):
     member = get_object_or_404(models.ClanMember, pk=pk)
     clan = get_object_or_404(models.Clan, pk=newclan)
     member.changeClan(clan)
-    return redirect('/clashdata/memberList/?filter=' + currentfilter)
+    return redirect('/clashdata/memberList/?' + currentfilter)
 
 def missingMembers(request):
     selectedClanId = request.GET.get('clan_filter_who_is_out', None)

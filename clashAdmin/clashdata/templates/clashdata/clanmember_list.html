@@ -265,35 +265,9 @@ $('#confirmDeleteMember').on('show.bs.modal', function (event) {
   });
 
 function changeClan(selectObject, clanMemberId) {
-    var value = selectObject.value; 
-    var currentfilter = "{{ filter }}";
-    window.location.href = "changeClan/" + clanMemberId + "/" + value + "/" + currentfilter
+    var value = selectObject.value;
+    window.location.href = "changeClan/" + clanMemberId + "/" + value + "/" + window.location.search.substr(1)
 }
-
-$(document).ready(function(){
-    $("#searchFilter").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        var count = 0;
-
-        $("#myTable tr").filter(function(i, obj) {
-            var line = "";
-
-            $(this).find('td').not('.nosearch').each (function() {
-                line = line + " " + $(this).text();
-            });
-
-            var res = line.toLowerCase().indexOf(value) > -1;
-            
-            if (res) {
-                count++;
-            }
-
-            $(this).toggle(res);
-        });
-
-        $("#membrosCount").text(count);
-    });
-});
 
 </script>
 
