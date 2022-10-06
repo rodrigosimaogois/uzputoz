@@ -224,10 +224,13 @@
                 //console.log(colosseum);
 
                 response.warInfo.clansInfos.forEach(function(item, index, arr){
-                    //console.log(item.Name)
+                    //console.log(item.ClanScore)
                     let total = parseInt(item.Fame) + points[index]
                     clanRow = '<tr class="rowcolor"> \
-                                <td class="col-2">' + item.Name + '</td> \
+                                <td class="col-2"> \
+                                    <div>' + item.Name + '</div> \
+                                    <div><img src="/static/assets/img/trophy.png"/> ' + item.ClanScore + '</div> \
+                                </td> \
                                 <td class="text-nowrap"> \
                                     <div><img src="/static/assets/img/medals.png"/> ' + item.Total + '</div> \
                                     <div style="font-weight: bold;">' + item.Average + '</div> \

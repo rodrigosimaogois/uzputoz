@@ -71,6 +71,7 @@ def __getClanInfo(clanData, maxAttacks, isColosseum):
         clanInfo = { 
                 "Tag": clanData["tag"], 
                 "Name": clanData["name"],
+                "ClanScore": clanData["clanScore"],
                 "Fame": clanData["fame"],
                 "Total": periodPoints,
                 "TotalDecks": totalUsedDecksWithoutTrainingDecks,
