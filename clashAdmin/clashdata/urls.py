@@ -21,4 +21,5 @@ urlpatterns = [
     path("whoisout/", views.missingMembers, name="whoisout"),
     path("currentwar/", views.CurrentWar.as_view(), name="currentwar"),
     path("getLines/", views.getLines, name="getLines"),
+    path("currentwarrival/", views.CurrentWarRival.as_view(), name="currentwarrival"),
 ]

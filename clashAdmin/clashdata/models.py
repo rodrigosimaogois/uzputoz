@@ -93,5 +93,10 @@ class Config(models.Model):
     def __str__(self) -> str:
         return self.name  
 
+class Rival(models.Model):
+    tag = models.CharField(max_length=255, blank=True)
+
+    def __str__(self) -> str:
+        return self.tag
 
 

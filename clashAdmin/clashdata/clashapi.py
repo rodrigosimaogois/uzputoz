@@ -109,6 +109,7 @@ def getCurrentWarInfo(clanTag):
         clansInfos.sort(key=lambda x: x["Total"], reverse=True)
 
         warInfo = {
+            "clanName": currentRiverRace["clan"]["name"],
             "colosseum": isColosseum,
             "clansInfos":  clansInfos
         }

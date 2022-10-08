@@ -146,6 +146,18 @@ class CurrentWar(generic.View):
         clanTags = models.Clan.objects.exclude(tag__exact='')
         return render(request, "clashdata/currentwar.html", { 'clanTags': clanTags, 'isColosseum': isColosseum})
 
+class CurrentWarRival(generic.View):
+
+    def get(self, request):
+        if is_ajax(request):
+            clanTag = request.GET.get('tag_id')
+            warInfo = clashapi.getCurrentWarInfo(clanTag)
+            return JsonResponse({'warInfo': warInfo}, status=200)
+        
+        isColosseum = clashapi.isColosseum()
+        clanTags = models.Rival.objects.exclude(tag__exact='')
+        return render(request, "clashdata/currentwarrival.html", { 'clanTags': clanTags, 'isColosseum': isColosseum})
+
 def getLines(request):
     line = models.ClanMember.objects.all().order_by("clan_id")
     clanInfo = {}
