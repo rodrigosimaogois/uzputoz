@@ -152,11 +152,23 @@ class CurrentWarRival(generic.View):
         if is_ajax(request):
             clanTag = request.GET.get('tag_id')
             warInfo = clashapi.getCurrentWarInfo(clanTag)
+
             return JsonResponse({'warInfo': warInfo}, status=200)
         
         isColosseum = clashapi.isColosseum()
         clanTags = models.Rival.objects.exclude(tag__exact='')
         return render(request, "clashdata/currentwarrival.html", { 'clanTags': clanTags, 'isColosseum': isColosseum})
+
+class MissingPlayers(generic.View):
+
+    def get(self, request):
+        if is_ajax(request):
+            clanTag = request.GET.get('tag_id')
+            missing = clashapi.whoIsMissing(clanTag)
+            return JsonResponse({'missingInfo': missing}, status=200)
+        
+        clanTags = models.Clan.objects.exclude(tag__exact='')
+        return render(request, "clashdata/missing_players.html", { 'clanTags': clanTags })
 
 def getLines(request):
     line = models.ClanMember.objects.all().order_by("clan_id")

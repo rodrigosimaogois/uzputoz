@@ -2,6 +2,7 @@ import requests
 import json
 from . import models
 from django.shortcuts import get_object_or_404
+from datetime import datetime
 
 def __callEndPoint(url):
     token = get_object_or_404(models.Config, name="clashapi")
@@ -120,3 +121,74 @@ def isColosseum():
     currentRiverRace = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%2320RGVR8/currentriverrace")
     isColosseum = currentRiverRace["periodType"] == "colosseum"
     return isColosseum
+
+def whoIsMissing(clanTag):
+    tag = clanTag.replace("#","")
+
+    currentMembers = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/members")
+    currentRiverRace = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace")
+    
+    if currentRiverRace["clan"]["fame"] > 10000:
+        return {
+            "clanName": currentRiverRace["clan"]["name"],
+            "totalDecks": 200,
+            "totalMissing": 0,
+            "totalMissingParticipants": 0,
+            "missingPlayers": []
+        }
+
+    totalUsedDecks = 0
+    totalParticipants = 0
+
+    for participant in currentRiverRace["clan"]["participants"]:
+        totalUsedDecks += participant["decksUsedToday"]
+        if participant["decksUsedToday"] > 0:
+            totalParticipants = totalParticipants + 1
+
+    totalMissingParticipants = 50 - totalParticipants
+
+    decksMissingParticipants = totalMissingParticipants * 4
+    totalMissingDecks = 200 - decksMissingParticipants - totalUsedDecks
+
+    missingPlayers = []
+
+    for participant in currentRiverRace["clan"]["participants"]:
+        decksUsedToday = participant["decksUsedToday"]
+
+        if decksUsedToday == 4: 
+            continue
+
+        found = [x for x in currentMembers["items"] if x["tag"] == participant["tag"]]
+
+        if len(found) > 0:
+
+            lastSeen = found[0]["lastSeen"]
+            dt_obj = datetime.strptime(lastSeen, '%Y%m%dT%H%M%S.%fZ')
+
+            missingPlayers.append({
+                "name": participant["name"],
+                "missingDecks": 4 - participant["decksUsedToday"],
+                "lastSeen": dt_obj.strftime("%d-%m-%Y %H:%M:%S"),
+                "inClan": True
+            })
+        else:
+            if decksUsedToday > 0:
+                missingPlayers.append({
+                    "name": participant["name"],
+                    "missingDecks": 4 - participant["decksUsedToday"],
+                    "lastSeen": {},
+                    "inClan": False
+                })
+
+                
+    missingPlayers.sort(key=lambda x: x["missingDecks"], reverse=False)
+
+    clanInfo = {
+        "clanName": currentRiverRace["clan"]["name"],
+        "totalDecks": totalUsedDecks,
+        "totalMissing": totalMissingDecks,
+        "totalMissingParticipants": totalMissingParticipants,
+        "missingPlayers": missingPlayers
+    }
+
+    return clanInfo

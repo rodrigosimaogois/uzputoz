@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<style>
+    td > div > img {
+        height: 1em;
+        width: auto;
+        display: inline-block;
+    }
+
+    .rowcolor
+    {
+        background-color:#2C3F50;
+    }
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+{% if error %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">Erro</h6>
+            </div>
+            <div class="card-body">   
+                <h6 style="color:#FF726F;">{{ error }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+    <h5>Carregando...</h5>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+    </div></div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">UZPUTOZ<span id="uzputozMissing"></span></h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                        <th class="col4">Nome</th>
+                        <th class="col2">Decks</th>
+                        <th class="col4">Online</th>
+                        </tr>
+                    </thead>
+                    <tbody id="uzputozContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">BRJP.FR.ELITE<span id="brjpMissing"></span></h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                        <th class="col4">Nome</th>
+                        <th class="col2">Decks</th>
+                        <th class="col4">Online</th>
+                        </tr>
+                    </thead>
+                    <tbody id="brjpContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">BisTuRi<span id="bisturiMissing"></span></h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                        <th class="col4">Nome</th>
+                        <th class="col2">Decks</th>
+                        <th class="col4">Online</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bisturiContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">Get Øut Alive<span id="goaMissing"></span></h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                        <th class="col4">Nome</th>
+                        <th class="col2">Decks</th>
+                        <th class="col4">Online</th>
+                        </tr>
+                    </thead>
+                    <tbody id="goaContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">BisTuRi Access<span id="bisturiAccessMissing"></span></h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                        <th class="col4">Nome</th>
+                        <th class="col2">Decks</th>
+                        <th class="col4">Online</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bisturiAccessContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+
+    const bar = document.querySelector(".progress-bar");
+    let currentProgress = 0;
+
+    function setProgressBar(){
+        currentProgress = currentProgress + 20;
+        if (currentProgress > 100){
+            currentProgress = 100;
+        }
+
+        bar.style.width = currentProgress + "%";
+        bar.innerText = currentProgress + "%";
+
+        if (currentProgress >= 100){
+            $(".progress").css("display", "none");
+            $("h5").css("display", "none");
+        }
+    }
+
+    function myFunction(tag, id){
+        $.ajax({
+            url: "{% url 'clashdata:missingplayers' %}",
+            type: "GET",
+            data: {
+                tag_id: tag
+            },
+            error: function(response){
+                console.log("error");
+            },
+            success: function(response){
+                let rows = ''
+                
+                response.missingInfo.missingPlayers.forEach(function(item, index, arr){
+                    let row = '<tr class="rowcolor"> \
+                        <td class="col-4"> \
+                            <div>' + item.name + '</div> \
+                        </td> \
+                        <td class="col-2"> \
+                            <div>' + item.missingDecks + '</div> \
+                        </td>';
+                    
+                    if(item.inClan){
+                        row += '<td class="col-4"> \
+                                    <div>' + item.lastSeen + '</div> \
+                                </td>';
+                    } else {
+                        row += '<td class="col-4"> \
+                            <div>' + "saiu" + '</div> \
+                        </td>';
+                    }
+
+                    closeTr = '</tr>'; 
+                    rows += row + closeTr;
+                });
+
+                $(id+"Missing").text(" - Faltam " + response.missingInfo.totalMissingParticipants + " jog. + " + response.missingInfo.totalMissing + " decks");
+                $(id+"Content").append(rows);
+                setProgressBar();
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        myFunction("#20RGVR8", "#uzputoz");
+        myFunction("#9PGQJCRR", "#brjp");
+        myFunction("#YPU0GJUV", "#bisturi");
+        myFunction("#PULQCRCP", "#goa");
+        myFunction("#YYQGVLV9", "#bisturiAccess");                
+    });
+</script>
+
+{% endblock javascripts %}
