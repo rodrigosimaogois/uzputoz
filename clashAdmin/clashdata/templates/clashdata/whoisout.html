@@ -13,6 +13,10 @@
         vertical-align:bottom;
     }
 
+    #clanSelection{
+        background-color: #27293D;
+    }
+
 </style>
 
 {% endblock stylesheets %}
@@ -80,6 +84,8 @@
                   <tr>
                     <th>Nome</th>
                     <th>Tag</th>
+                    <th>Clã</th>
+                    <th class="text-right">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -87,6 +93,26 @@
                         <tr>
                             <td>{{ member.name }}</td>
                             <td>{{ member.tag }}</td>
+                            <td>
+                                <form name='changeMissingMember' method="POST" action={{submit}}>
+                                    {% csrf_token %} 
+                                    <select name="clan" class="form-control" onchange="this.form.submit()" title="" required="" id="clanSelection">
+                                        {% for clan in clans %}
+                                            <option class="optionvalue" {% if clan.id|slugify == sel_clan_id %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="hidden" name="name" value="{{ member.name }}"/>
+                                    <input type="hidden" name="tag" value="{{ member.tag }}"/>
+                                </form>
+                            </td>
+                            <td class="td-actions text-right">
+                                <a class="btn btn-info btn-link btn-icon btn-sm" href="https://royaleapi.com/player/{{ member.tag | slice:"1:" }}" target="_blank">
+                                    <i class="tim-icons icon-single-02"></i>
+                                </a>
+                                {% comment %} <button data-toggle="modal" data-target="#confirmDeleteMember" data-clanmembername="{{ clanmember.name }}" data-clanmemberid="{{ clanmember.id }}"      type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                </button> {% endcomment %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -107,6 +133,8 @@
                     <tr>
                       <th>Nome</th>
                       <th>Tag</th>
+                      <th>Clã</th>
+                      <th class="text-right">Ações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -114,6 +142,31 @@
                           <tr>
                               <td>{{ member.name }}</td>
                               <td>{{ member.tag }}</td>
+                              <td>
+                                <form name='changeExceededMember' method="POST" action={{submit}}> 
+                                    {% csrf_token %}
+                                    <select name="clan" onchange="this.form.submit()" class="form-control" title="" required="" id="clanSelection">
+                                        {% if member.clanId == 0 %}
+                                            <option disabled selected value></option>
+                                        {% endif %}
+                                        {% for clan in clans %}
+                                            <option class="optionvalue" {% if clan.id == member.clanId %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="hidden" name="name" value="{{ member.name }}"/>
+                                    <input type="hidden" name="tag" value="{{ member.tag }}"/>
+                                </form>
+                            </td>
+                            <td class="td-actions text-right">
+                                <a class="btn btn-info btn-link btn-icon btn-sm" href="https://royaleapi.com/player/{{ member.tag | slice:"1:" }}" target="_blank">
+                                    <i class="tim-icons icon-single-02"></i>
+                                </a>
+                                {% if member.clanId != 0 %}
+                                    {% comment %} <button data-toggle="modal" data-target="#confirmDeleteMember" data-clanmembername="{{ clanmember.name }}" data-clanmemberid="{{ clanmember.id }}"      type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
+                                        <i class="tim-icons icon-simple-remove"></i>
+                                    </button> {% endcomment %}
+                                {% endif %}
+                            </td>
                           </tr>
                       {% endfor %}
                   </tbody>
@@ -133,6 +186,25 @@
         var selectedClan = $('#whoisout_clan_filter').val();
         window.location.href = "?clan_filter_who_is_out=" + selectedClan
     })
+
+    function changeClan(selectObject, member) {
+        var value = selectObject.value;
+        var filter = window.location.search.substr(1)
+    
+        console.log(value)
+        console.log(member.name)
+        console.log(member.tag)
+        console.log(filter)
+        
+        //if(filter)
+        //{
+            //window.location.href = "changeClan/" + clanMemberId + "/" + value + "/" + filter
+        //}
+        //else
+        //{
+            //window.location.href = "changeClan/" + clanMemberId + "/" + value + "/" + "clan=&name=&tag="
+        //}
+    }
 
 </script>
 

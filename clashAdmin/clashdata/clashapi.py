@@ -27,7 +27,6 @@ def __callEndPoint(url):
 def getClanMembers(clanTag):
     tag = clanTag.tag.replace("#","")
     jsonResponse = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/members")
-    print(jsonResponse)
     currentMembers = jsonResponse["items"]
     return currentMembers
 
@@ -211,3 +210,17 @@ def whoIsMissing(clanTag, currentLine):
     }
 
     return clanInfo
+
+def getPlayerInfo(playerTag):
+    try:
+        tag = playerTag.replace("#","")
+        playerInfo = __callEndPoint(f"https://api.clashroyale.com/v1/players/%23{tag}")
+        return playerInfo
+    except Exception as error:
+        print("ban")
+        return {
+            "clan": { 
+                "name": "banido" 
+            }
+        }
+    

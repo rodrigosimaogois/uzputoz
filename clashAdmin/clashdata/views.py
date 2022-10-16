@@ -95,7 +95,25 @@ def changeClan(request, pk, newclan, currentfilter):
     member.changeClan(clan)
     return redirect('/clashdata/memberList/?' + currentfilter)
 
+def changeOrAddToClan(name, tag, clan):
+    member_qs = models.ClanMember.objects.values().filter(tag=tag)
+    clan = get_object_or_404(models.Clan, pk=clan)
+
+    if len(member_qs) > 0:
+        member = get_object_or_404(models.ClanMember, tag=tag)
+        member.changeClan(clan)
+    else:
+        newMember = models.ClanMember(clan=clan, name=name, tag=tag)
+        newMember.save()
+
 def missingMembers(request):
+    
+    if request.method == 'POST':
+        name = request.POST.get('name', None)
+        tag = request.POST.get('tag', None)
+        clan = request.POST.get('clan', None)
+        changeOrAddToClan(name, tag, clan)
+    
     selectedClanId = request.GET.get('clan_filter_who_is_out', None)
     clans = models.Clan.objects.all()
 
@@ -105,7 +123,6 @@ def missingMembers(request):
         try:
             clanTag = get_object_or_404(models.Clan, pk=selectedClanId)
             currentMembers = clashapi.getClanMembers(clanTag)
-            print(currentMembers)
         except Exception as error:
             print(error.args)
             return render(request, "clashdata/whoisout.html", {'clans': clans, 'error': error.args, 'sel_clan_id': selectedClanId})
@@ -122,7 +139,12 @@ def missingMembers(request):
         for member in currentMembers:
             found = [x for x in line if x["tag"] == member["tag"]]
             if len(found) == 0:
-                exceededMembers.append({"name": member["name"], "tag": member["tag"]})
+                clan_qs = models.ClanMember.objects.values('clan').filter(tag=member["tag"])
+                clanId = 0
+                if len(clan_qs) > 0:
+                    clanId = clan_qs[0]['clan']
+
+                exceededMembers.append({"name": member["name"], "tag": member["tag"], "clanId": clanId})
 
         return render(request, "clashdata/whoisout.html", {'missing_members': missingMembers, 'exceeded_members': exceededMembers, 
                                                                                 'clans': clans, 'sel_clan_id': selectedClanId, 
