@@ -3,6 +3,10 @@ import json
 from . import models
 from django.shortcuts import get_object_or_404
 from datetime import datetime
+from dateutil import tz
+
+from_zone = tz.gettz('UTC')
+to_zone = tz.gettz('America/Sao_Paulo')
 
 def __callEndPoint(url):
     token = get_object_or_404(models.Config, name="clashapi")
@@ -122,7 +126,7 @@ def isColosseum():
     isColosseum = currentRiverRace["periodType"] == "colosseum"
     return isColosseum
 
-def whoIsMissing(clanTag):
+def whoIsMissing(clanTag, currentLine):
     tag = clanTag.replace("#","")
 
     currentMembers = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/members")
@@ -140,6 +144,8 @@ def whoIsMissing(clanTag):
     totalUsedDecks = 0
     totalParticipants = 0
 
+    allConsideredPlayers = []
+
     for participant in currentRiverRace["clan"]["participants"]:
         totalUsedDecks += participant["decksUsedToday"]
         if participant["decksUsedToday"] > 0:
@@ -155,24 +161,29 @@ def whoIsMissing(clanTag):
     for participant in currentRiverRace["clan"]["participants"]:
         decksUsedToday = participant["decksUsedToday"]
 
-        if decksUsedToday == 4: 
+        if decksUsedToday == 4:
+            allConsideredPlayers.append(participant["tag"])
             continue
 
         found = [x for x in currentMembers["items"] if x["tag"] == participant["tag"]]
 
         if len(found) > 0:
-
             lastSeen = found[0]["lastSeen"]
             dt_obj = datetime.strptime(lastSeen, '%Y%m%dT%H%M%S.%fZ')
 
+            utc = dt_obj.replace(tzinfo=from_zone)
+            local = utc.astimezone(to_zone)
+
+            allConsideredPlayers.append(participant["tag"])
             missingPlayers.append({
                 "name": participant["name"],
                 "missingDecks": 4 - participant["decksUsedToday"],
-                "lastSeen": dt_obj.strftime("%d-%m-%Y %H:%M:%S"),
+                "lastSeen": local.strftime("%d-%m-%Y %H:%M:%S"),
                 "inClan": True
             })
         else:
             if decksUsedToday > 0:
+                allConsideredPlayers.append(participant["tag"])
                 missingPlayers.append({
                     "name": participant["name"],
                     "missingDecks": 4 - participant["decksUsedToday"],
@@ -180,6 +191,14 @@ def whoIsMissing(clanTag):
                     "inClan": False
                 })
 
+    for expectedMember in currentLine:
+        if not expectedMember["tag"] in allConsideredPlayers:
+            missingPlayers.append({
+                "name": expectedMember["name"],
+                "missingDecks": 4,
+                "lastSeen": {},
+                "inClan": False
+            })
                 
     missingPlayers.sort(key=lambda x: x["missingDecks"], reverse=False)
 

@@ -164,7 +164,9 @@ class MissingPlayers(generic.View):
     def get(self, request):
         if is_ajax(request):
             clanTag = request.GET.get('tag_id')
-            missing = clashapi.whoIsMissing(clanTag)
+            line = models.ClanMember.objects.values('tag', 'name').filter(clan__tag=clanTag)
+            missing = clashapi.whoIsMissing(clanTag, line)
+
             return JsonResponse({'missingInfo': missing}, status=200)
         
         clanTags = models.Clan.objects.exclude(tag__exact='')
