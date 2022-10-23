@@ -23,4 +23,5 @@ urlpatterns = [
     path("getLines/", views.getLines, name="getLines"),
     path("currentwarrival/", views.CurrentWarRival.as_view(), name="currentwarrival"),
     path("missingplayers/", views.MissingPlayers.as_view(), name="missingplayers"),
+    path("tournament/", views.Tournament.as_view(), name="tournament"),
 ]

@@ -209,3 +209,8 @@ def getLines(request):
             clanInfo[clanName] = [tag]
 
     return JsonResponse({'json': clanInfo}, status=200)
+
+class Tournament(generic.View):
+    
+    def get(self, request):
+        return render(request, "clashdata/tournament.html")

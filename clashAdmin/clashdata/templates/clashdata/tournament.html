@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+    <link rel="stylesheet" href="{% static 'assets/css/jquery.bracket.min.css' %}">
+
+    <style>
+        
+    </style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="title text-center">Rei da Guerra - Outubro 2022</h2>
+      <div class="card">
+        <div class="card-header">
+            <h4 class="title text-center">Semana 2</h4>
+        </div>
+        <div class="card-body center">
+            <div id="week2" class="card-text"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title text-center">Semana 3</h4>
+        </div>
+        <div class="card-body center">
+            <div id="week3" class="card-text"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title text-center">Semana 4</h4>
+        </div>
+        <div class="card-body center">
+            <div id="week4" class="card-text"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title text-center">Coliseu</h4>
+        </div>
+        <div class="card-body center">
+            <div id="week5" class="card-text"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="title text-center">Finais</h4>
+        </div>
+        <div class="card-body center">
+            <div id="finals" class="card-text"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+
+    var week2 = {
+        teams : [
+            ["fabricioyoutube", "mc Mirella"],
+            ["LmT FmOak", "Raridade"],
+            ["Joao Paulo", "Nando Clash"],
+            ["JRGW", "Skull"],
+        ],
+        results : [[ /* WINNER BRACKET */
+            [ [1,2], [0,2], [1,2], [2,0] ],
+            [ [0,2], [null,null] ],
+            [ [null,null] ]
+        ]]
+    }
+
+    var notDefined = {
+        teams : [
+            ["1º Acessos", "1º UZP"],
+            ["2º UZP", "3º UZP"],
+            ["1º BTR", "1º BRJP"],
+            ["2º BTR", "3º BTR"],
+        ],
+        results : [[ /* WINNER BRACKET */
+            [ [null,null], [null,null], [null,null], [null,null] ],
+            [ [null,null], [null,null] ],
+            [ [null,null] ]
+        ]]
+    }
+
+    var finals = {
+        teams : [
+            ["vencedor 1", "vencedor 2"],
+            ["vencedor 3", "vencedor 4"],
+        ],
+        results : [[ /* WINNER BRACKET */
+            [ [null,null], [null,null] ],
+            [ [null,null] ]
+        ]]
+    }
+
+    $(document).ready(function () {
+        $('#week2').bracket({
+            centerConnectors: true,
+            disableHighlight: false,
+            skipConsolationRound: true,
+            teamWidth: 90,
+            scoreWidth: 20,
+            matchMargin: 30,
+            roundMargin: 30,
+
+            init: week2 
+        })
+
+        $('#week3').bracket({
+            centerConnectors: true,
+            disableHighlight: false,
+            skipConsolationRound: true,
+            teamWidth: 90,
+            scoreWidth: 20,
+            matchMargin: 30,
+            roundMargin: 30,
+
+            init: notDefined 
+        })
+
+        $('#week4').bracket({
+            centerConnectors: true,
+            disableHighlight: false,
+            skipConsolationRound: true,
+            teamWidth: 90,
+            scoreWidth: 20,
+            matchMargin: 30,
+            roundMargin: 30,
+
+            init: notDefined 
+        })
+
+        $('#week5').bracket({
+            centerConnectors: true,
+            disableHighlight: false,
+            skipConsolationRound: true,
+            teamWidth: 90,
+            scoreWidth: 20,
+            matchMargin: 30,
+            roundMargin: 30,
+
+            init: notDefined 
+        })
+
+        $('#finals').bracket({
+            centerConnectors: true,
+            disableHighlight: false,
+            skipConsolationRound: true,
+            teamWidth: 90,
+            scoreWidth: 20,
+            matchMargin: 30,
+            roundMargin: 30,
+
+            init: finals 
+        })
+    })
+
+</script>
+{% endblock javascripts %}
