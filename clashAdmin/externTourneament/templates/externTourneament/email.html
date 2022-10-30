@@ -1,0 +1,9 @@
+{% autoescape off %}  
+Olá,  
+Clique no link abaixo para confirmar sua inscrição,  
+http://{{ domain }}{% url 'externTourneament:confirmRegistration' token=token %}
+
+Obrigado
+Família Bisturi x Uzputoz
+
+{% endautoescape %} 

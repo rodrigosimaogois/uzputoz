@@ -217,10 +217,10 @@ def getPlayerInfo(playerTag):
         playerInfo = __callEndPoint(f"https://api.clashroyale.com/v1/players/%23{tag}")
         return playerInfo
     except Exception as error:
-        print("ban")
         return {
+            "name": "",
             "clan": { 
-                "name": "banido" 
+                "name": "banned" 
             }
         }
     

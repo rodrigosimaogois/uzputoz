@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<style>
+#email{
+  font-weight: bold;
+  color: #8064A2;
+}
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h4>Um email foi enviado para <span id="email">{{ to }}</span> !</h4>
+    <h4>Clique no link de confirmação em seu email para finalizar sua inscrição !!!</h4> 
+  </div>
+</div>  
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
