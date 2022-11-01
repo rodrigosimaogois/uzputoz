@@ -8,64 +8,94 @@
             Clash Admin
           </a>
         </div>
-
         <ul class="nav">
-          <li class="">
-            <a href="{% url 'externTourneament:register' %}">
-              <i class="tim-icons icon-coins"></i>
-              <p>GLADIATORS</p>
+          <li class="collapsible">
+            <a data-toggle="collapse" href="#admin" role="button" aria-expanded="false" aria-controls="admin">
+              <p>Administração</p>
             </a>
           </li>
+          <div class="collapse" id="admin">
+            <li>
+              <a href="{% url 'clashdata:clans' %}">
+                <i class="tim-icons icon-bank"></i>
+                <p id="test">Clas</p>
+              </a>
+            </li>
+            <li class="">
+              <a href="{% url 'clashdata:members' %}">
+                <i class="tim-icons icon-badge"></i>
+                <p>Lines</p>
+              </a>
+            </li>
+            {% if user.is_authenticated %}
+              <li class="">
+                <a href="{% url 'clashdata:whoisout' %}">
+                  <i class="tim-icons icon-delivery-fast"></i>
+                  <p>Divergências Line</p>
+                </a>
+              </li>
+            {% endif %}
+            <li class="">
+              <a href="{% url 'clashdata:clanHistory' %}">
+                <i class="tim-icons icon-watch-time"></i>
+                <p>Histórico Membros</p>
+              </a>
+            </li>
+          </div>
+          
           <li class="">
-            <a href="{% url 'clashdata:clans' %}">
-              <i class="tim-icons icon-bank"></i>
-              <p>Clas</p>
+            <a data-toggle="collapse" href="#war" role="button" aria-expanded="false" aria-controls="war">
+              <p>Guerras</p>
             </a>
           </li>
+          <div class="collapse" id="war">
+            <li class="">
+              <a href="{% url 'clashdata:currentwar' %}">
+                <i class="tim-icons icon-chart-bar-32"></i>
+                <p>Guerra Atual</p>
+              </a>
+            </li>
+            <li class="">
+              <a href="{% url 'clashdata:missingplayers' %}">
+                <i class="tim-icons icon-single-02"></i>
+                <p>Quem Falta na Guerra?</p>
+              </a>
+            </li>
+            <li class="">
+              <a href="{% url 'clashdata:currentwarrival' %}">
+                <i class="tim-icons icon-atom"></i>
+                <p>Guerra Atual Rivais</p>
+              </a>
+            </li>
+          </div>
+          
           <li class="">
-            <a href="{% url 'clashdata:members' %}">
+            <a data-toggle="collapse" href="#tournament" role="button" aria-expanded="false" aria-controls="tournament">
+              <p>Torneios</p>
+            </a>
+          </li>
+          <div class="collapse" id="tournament">
+            <li class="">
+              <a href="{% url 'externTourneament:register' %}">
+                <i class="tim-icons icon-globe-2"></i>
+                <p>GLADIATORS</p>
+              </a>
+            </li>
+            <li class="">
+              <a href="{% url 'clashdata:tournament' %}">
+                <i class="tim-icons icon-coins"></i>
+                <p>Rei da Guerra</p>
+              </a>
+            </li>
+          </div>
+          
+          <!--<li class="">
+            <a data-toggle="collapse" href="#join" role="button" aria-expanded="false" aria-controls="join">
               <i class="tim-icons icon-badge"></i>
-              <p>Lines</p>
+              <p>Faça Parte</p>
             </a>
-          </li>
-          {% if user.is_authenticated %}
-          <li class="">
-            <a href="{% url 'clashdata:whoisout' %}">
-              <i class="tim-icons icon-delivery-fast"></i>
-              <p>Divergências Line</p>
-            </a>
-          </li>
-          {% endif %}
-          <li class="">
-            <a href="{% url 'clashdata:clanHistory' %}">
-              <i class="tim-icons icon-watch-time"></i>
-              <p>Histórico Membros</p>
-            </a>
-          </li>
-          <li class="">
-            <a href="{% url 'clashdata:currentwar' %}">
-              <i class="tim-icons icon-chart-bar-32"></i>
-              <p>Guerra Atual</p>
-            </a>
-          </li>
-          <li class="">
-            <a href="{% url 'clashdata:missingplayers' %}">
-              <i class="tim-icons icon-single-02"></i>
-              <p>Quem Falta na Guerra?</p>
-            </a>
-          </li>
-          <li class="">
-            <a href="{% url 'clashdata:currentwarrival' %}">
-              <i class="tim-icons icon-atom"></i>
-              <p>Guerra Atual Rivais</p>
-            </a>
-          </li>
-          <li class="">
-            <a href="{% url 'clashdata:tournament' %}">
-              <i class="tim-icons icon-globe-2"></i>
-              <p>Rei da Guerra</p>
-            </a>
-          </li>
+          </li>-->
+
           <!--
           <li class="">
             <a href="#">
@@ -89,7 +119,6 @@
           {% if user.is_authenticated %}
           <li>
             <a href="{% url 'logout' %}" >
-              <i class="tim-icons icon-button-power"></i>
               <p>Logout</p>
             </a>
           </li>
@@ -97,7 +126,6 @@
           <li>
             <a  
                href="{% url 'accounts:login' %}">
-              <i class="tim-icons icon-single-02"></i>
               <p>Login</p>
             </a>
           </li>   

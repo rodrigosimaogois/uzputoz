@@ -220,7 +220,7 @@ def getPlayerInfo(playerTag):
         return {
             "name": "",
             "clan": { 
-                "name": "banned" 
+                "name": "" 
             }
         }
     

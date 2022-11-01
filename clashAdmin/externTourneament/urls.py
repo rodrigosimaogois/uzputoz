@@ -7,6 +7,6 @@ app_name = 'externTourneament'
 
 urlpatterns = [
     path('', views.RegisterParticipantView.as_view(), name='register'),
-    path('confirm/<token>/', views.confirm, name='confirmRegistration'),
-    path('email/<to>/', views.email, name='email'),
+    #path('confirm/<token>/', views.confirm, name='confirmRegistration'),
+    #path('email/<to>/', views.email, name='email'),
 ]

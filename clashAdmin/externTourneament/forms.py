@@ -10,16 +10,20 @@ from clashdata import clashapi
   
 class RegisteredPlayerForm(forms.ModelForm):
     class Meta:
-        fields = ('nickname', 'tag', 'email', 'whatsapp')
+        fields = ('name', 'nickname', 'clan', 'tag', 'email', 'whatsapp', 'wantInfo')
         model = RegisteredPlayers
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.fields['nickname'].widget = HiddenInput()
         self.fields['nickname'].initial = "-"
+        self.fields['clan'].widget = HiddenInput()
+        self.fields['clan'].initial = "-"
+        self.fields['name'].label = 'Nome'
         self.fields['tag'].label = 'Tag'
         self.fields['email'].label = 'Email'
         self.fields['whatsapp'].label = 'WhatsApp (ex +5511971213334)'
+        self.fields['wantInfo'].label = 'Gostaria de receber informações sobre eventos futuros por email ou whatsapp ?'
 
     def clean(self):
         super(RegisteredPlayerForm, self).clean()
@@ -32,17 +36,18 @@ class RegisteredPlayerForm(forms.ModelForm):
         else:
             playerInfo = clashapi.getPlayerInfo(tag)
             name = playerInfo["name"]
+            self.cleaned_data['clan'] = playerInfo["clan"]["name"]
 
             if name == "":
                 self._errors['tag'] = self.error_class(['Tag inválida'])
             else:
-                self.cleaned_data['nickname'] = name
+                self.cleaned_data['nickname'] = name            
 
-        email = self.cleaned_data.get('email')
-        player_qs = models.RegisteredPlayers.objects.values().filter(email=email)
+        #email = self.cleaned_data.get('email')
+        #player_qs = models.RegisteredPlayers.objects.values().filter(email=email)
    
-        if len(player_qs) > 0:
-            self._errors['email'] = self.error_class(['Email já registrado'])
+        #if len(player_qs) > 0:
+            #self._errors['email'] = self.error_class(['Email já registrado'])
 
         whatsapp = self.cleaned_data.get('whatsapp')
 
