@@ -36,7 +36,11 @@ class RegisteredPlayerForm(forms.ModelForm):
         else:
             playerInfo = clashapi.getPlayerInfo(tag)
             name = playerInfo["name"]
-            self.cleaned_data['clan'] = playerInfo["clan"]["name"]
+            
+            if "clan" in playerInfo:
+                self.cleaned_data['clan'] = playerInfo["clan"]["name"]
+            else:
+                self.cleaned_data['clan'] = ""
 
             if name == "":
                 self._errors['tag'] = self.error_class(['Tag inválida'])
