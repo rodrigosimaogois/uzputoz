@@ -9,12 +9,12 @@
           </a>
         </div>
         <ul class="nav">
-          <li class="collapsible">
+          <!-- <li class="">
             <a data-toggle="collapse" href="#admin" role="button" aria-expanded="false" aria-controls="admin">
               <p>Administração</p>
             </a>
-          </li>
-          <div class="collapse" id="admin">
+          </li> -->
+          <!-- <div class="collapse" id="admin"> -->
             <li>
               <a href="{% url 'clashdata:clans' %}">
                 <i class="tim-icons icon-bank"></i>
@@ -41,14 +41,14 @@
                 <p>Histórico Membros</p>
               </a>
             </li>
-          </div>
+          <!-- </div> -->
           
-          <li class="">
+          <!-- <li class="">
             <a data-toggle="collapse" href="#war" role="button" aria-expanded="false" aria-controls="war">
               <p>Guerras</p>
             </a>
           </li>
-          <div class="collapse" id="war">
+          <div class="collapse" id="war"> -->
             <li class="">
               <a href="{% url 'clashdata:currentwar' %}">
                 <i class="tim-icons icon-chart-bar-32"></i>
@@ -67,14 +67,14 @@
                 <p>Guerra Atual Rivais</p>
               </a>
             </li>
-          </div>
+          <!-- </div> -->
           
-          <li class="">
+          <!-- <li class="">
             <a data-toggle="collapse" href="#tournament" role="button" aria-expanded="false" aria-controls="tournament">
               <p>Torneios</p>
             </a>
           </li>
-          <div class="collapse" id="tournament">
+          <div class="collapse" id="tournament"> -->
             <li class="">
               <a href="{% url 'externTourneament:register' %}">
                 <i class="tim-icons icon-globe-2"></i>
@@ -87,7 +87,7 @@
                 <p>Rei da Guerra</p>
               </a>
             </li>
-          </div>
+          <!-- </div> -->
           
           <!--<li class="">
             <a data-toggle="collapse" href="#join" role="button" aria-expanded="false" aria-controls="join">
@@ -119,6 +119,7 @@
           {% if user.is_authenticated %}
           <li>
             <a href="{% url 'logout' %}" >
+              <i class="tim-icons icon-button-power"></i>
               <p>Logout</p>
             </a>
           </li>
@@ -126,6 +127,7 @@
           <li>
             <a  
                href="{% url 'accounts:login' %}">
+              <i class="tim-icons icon-single-02"></i>
               <p>Login</p>
             </a>
           </li>   
