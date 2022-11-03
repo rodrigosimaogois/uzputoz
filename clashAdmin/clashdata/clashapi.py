@@ -130,8 +130,10 @@ def whoIsMissing(clanTag, currentLine):
 
     currentMembers = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/members")
     currentRiverRace = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace")
-    
-    if currentRiverRace["clan"]["fame"] > 10000:
+
+    isColosseum = currentRiverRace["periodType"] == "colosseum"
+
+    if currentRiverRace["clan"]["fame"] > 10000 and not isColosseum:
         return {
             "clanName": currentRiverRace["clan"]["name"],
             "totalDecks": 200,
