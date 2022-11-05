@@ -5,10 +5,22 @@
 {% block stylesheets %}
 
 <style>
-img {
+.logo {
   max-width: 100%;
   max-height: 100%;
   margin-bottom: 15px;
+}
+
+.win {
+  max-width: 50%;
+  max-height: 50%;
+  margin-bottom: 2px;
+  margin-top: 5px;
+}
+
+#name{
+  font-weight: bold;
+  color: #e14eca;
 }
 </style>
 {% endblock stylesheets %}
@@ -17,7 +29,48 @@ img {
 
 <div class="row">
   <div class="col-md-12">
-    <img src="/static/assets/img/gladiators_logo.png"/>
+    <img class="logo" src="/static/assets/img/gladiators_logo.png"/>
+
+    <div class="card">      
+
+      <div class="card-header">
+          <h5 class="title">Regras</h5>
+      </div>
+
+      <div class="card-body">
+        <h5>1º Classificatória - 12/11/2022 - 19H (Brasília GMT-3):</h5>
+          <ul>
+            <li>Nome do Torneio: <span id="name">Gladiators YT BoB Caster</span>. *Não haverá senha</li>
+            <li>Torneio será aberto pelo Panda BR às 18H e terá início as 19H. Será transmitido no canal do Youtube <a href="https://www.youtube.com/c/BoBCaster" target="_blank">BobCaster</a></li>
+            <li>Duração: 1H</li>
+            <li>Modo: Elixir Duplo com um limite de 5 derrotas</li>
+            <li>Cartas são niveladas no level 11</li>
+            <li>Os 8 melhores estão classificados para grande final</li>
+          </ul>      
+          <h5>2º Classificatória - 19/11/2022 - 19H (Brasília GMT-3):</h5>
+          <ul>
+            <li>Nome do Torneio: <span id="name">Gladiators YT Panda BR</span>. *Não haverá senha</li>
+            <li>Torneio será aberto pelo BoB Caster às 18H e terá início as 19H. Será transmitido no canal do Youtube <a href="https://www.youtube.com/channel/UC0BAOBvJe_RzWV2PhP3EqSg" target="_blank">Panda BR</a></li>
+            <li>Duração: 1H</li>
+            <li>Cartas são niveladas no level 11</li>
+            <li>Modo: Normal com limite de 5 derrotas</li>
+            <li>Os 8 melhores estão classificados para grande final</li>
+          </ul>
+          <h5>Mata-Mata - 21/11/2022 a 25/11 (Brasília GMT-3):</h5>
+          <ul>
+            <li>Partida MD3 modo Duelo</li>
+          </ul>
+          <h5>Semi-final e Final - 26/11/2022 às 19H (Brasília GMT-3):</h5>
+          <ul>
+            <li>As partidas serao transmitidas no canal do Youtube <a href="https://www.youtube.com/channel/UC0BAOBvJe_RzWV2PhP3EqSg" target="_blank">Panda BR</a></li>
+            <li>Modo MD5 sem poder repetir cartas de win condition. Caso contrário, desclassificado</li>
+            <li>Classificados tem o limite de 10 minutos para se apresentarem as partidas</li>
+            <li>Cartas são niveladas no level 11</li>
+            <li>Cartas que não podem ser repetidas:</li>
+            <img class="win" src="/static/assets/img/win_condition.png"/>
+          </ul> 
+      </div>
+  </div>
 
     <div class="card">
         <form role="form" method="post" action="">
@@ -25,7 +78,7 @@ img {
         {% csrf_token %} 
 
         <div class="card-header">
-            <h5 class="title">Torneio Gladiadores</h5>
+            <h5 class="title">Inscrever-se</h5>
 
             <h6 class="card-category">
                 Dados 
@@ -34,7 +87,7 @@ img {
 
         <div class="card-body">
             {% bootstrap_form form %}   
-            <button type="submit" name="add" class="btn btn-fill btn-primary">Registrar</button>           
+            <button type="submit" name="add" class="btn btn-fill btn-primary">Inscrever</button>           
         </div>
 
         </form>
