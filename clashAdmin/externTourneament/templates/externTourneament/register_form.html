@@ -2,14 +2,24 @@
 {% load bootstrap3 %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+
+<style>
+img {
+  max-width: 100%;
+  max-height: 100%;
+  margin-bottom: 15px;
+}
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
 <div class="row">
   <div class="col-md-12">
-    <div class="card">
+    <img src="/static/assets/img/gladiators_logo.png"/>
 
+    <div class="card">
         <form role="form" method="post" action="">
         
         {% csrf_token %} 
@@ -33,7 +43,6 @@
     <br>
     <small>* Caso tenha algum problema, entre em contato com o email torneiogladiadores@gmail.com</small>
   </div>
-  
 </div>  
 
 {% endblock content %}
