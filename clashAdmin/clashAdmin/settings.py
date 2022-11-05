@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'clashdata',
     'externTourneament',
+    'recrut',
     'django_filters'
 ]
 

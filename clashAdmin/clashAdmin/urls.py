@@ -26,4 +26,5 @@ urlpatterns = [
     path('accounts/', include("django.contrib.auth.urls")),
     path('clashdata/', include("clashdata.urls")),
     path('gladiators/', include("externTourneament.urls")),
+    path('recrut/', include("recrut.urls")),
 ]

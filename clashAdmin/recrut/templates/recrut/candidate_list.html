@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="confirmDeleteCandidate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <form id= "modal-confirm" method="POST" action="{% url 'recrut:deletecandidate' pk=-1 %}" >
+                {% csrf_token %}
+                <input type="submit" value="Confirmar Remoção" class="btn btn-danger btn-large">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="collapseExample">
+      Filtros
+    </button>
+</p>
+
+<div class="row collapse" id="filters">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header">
+          <h5 class="card-title">Filtros</h5>
+        </div>
+        <div class="card-body">
+          <form method="GET">
+            {% bootstrap_form filter.form layout='inline'  %}
+                <div>
+                    <button type="submit" class="btn btn-outline-success btn-sm">Filtrar</button>
+                </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Candidatos ( {{ object_list|length }} / {{ totalSize }} )</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table" id="">
+              <thead class=" text-primary">
+                <tr>
+                    <th>Nome</th>
+                    <th>Tag</th>
+                    <th>WhatsApp</th>
+                    {% if user.is_authenticated %}
+                        <th class="text-right">Ações</th>
+                    {% endif %}
+                </tr>
+              </thead>
+              <tbody id="myTable">
+                {% for candidate in object_list %}
+                    <tr>
+                        <td>{{ candidate.nickname }}</td>
+                        <td>{{ candidate.tag }}</td>
+                        {% if user.is_authenticated %}
+                            <td>{{ candidate.whatsapp }}</td>
+            
+                            <td class="td-actions text-right">
+                                <a class="btn btn-info btn-link btn-icon btn-sm" href="https://royaleapi.com/player/{{ candidate.tag | slice:"1:" }}" target="_blank">
+                                    <i class="tim-icons icon-single-02"></i>
+                                </a>
+                                <button data-toggle="modal" data-target="#confirmDeleteCandidate" data-name="{{ candidate.nickname }}" data-id="{{ candidate.id }}" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                </button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% if is_paginated %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center pagination-lg">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{page_obj.previous_page_number}}"
+                            >&laquo;</a
+                        >
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">&laquo;</a>
+                    </li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="page-item"><a class="page-link active">{{ i }}</a></li>
+                    {% else %} 
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a href="?page={{page_obj.next_page_number}}" class="page-link"
+                        >&raquo;</a
+                        >
+                    </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">&raquo;</a>
+                  </li>
+                {% endif %}
+            </ul>
+        </nav>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+$('#confirmDeleteCandidate').on('show.bs.modal', function (event) {
+    console.log("called")
+    var button = $(event.relatedTarget);
+    var candidateId = button.data('id');
+    var candidateName = button.data('name');
+    var modal = $(this);
+
+    modal.find('.modal-title').text('Gostaria realmente de remover ' + candidateName + ' ?');
+    var x = modal.find('#modal-confirm').attr("action");
+
+    let result = x.replace("-1", candidateId);
+    modal.find('#modal-confirm').attr("action", result);   
+  });
+
+</script>
+
+{% endblock javascripts %}

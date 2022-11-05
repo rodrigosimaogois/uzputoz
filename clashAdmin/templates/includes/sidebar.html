@@ -41,6 +41,14 @@
                 <p>Histórico Membros</p>
               </a>
             </li>
+            {% if user.is_authenticated %}
+              <li class="">
+                <a href="{% url 'recrut:candidates' %}">
+                  <i class="tim-icons icon-chat-33"></i>
+                  <p>Recrutamento</p>
+                </a>
+              </li>
+            {% endif %}
           </div>
           
           <li class="">
@@ -88,6 +96,13 @@
               </a>
             </li>
           </div>
+
+          <li>
+            <a href="{% url 'recrut:register' %}" >
+              <!-- <i class="tim-icons icon-button-power"></i> -->
+              <p>Faça Parte da Família</p>
+            </a>
+          </li>
           
           <!--<li class="">
             <a data-toggle="collapse" href="#join" role="button" aria-expanded="false" aria-controls="join">
