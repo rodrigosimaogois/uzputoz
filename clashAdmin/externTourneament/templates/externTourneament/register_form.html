@@ -18,6 +18,12 @@
   margin-top: 5px;
 }
 
+.cardimg{
+  max-width: 100%;
+  max-height: 50%;
+  margin-bottom: 15px;
+}
+
 #name{
   font-weight: bold;
   color: #e14eca;
@@ -70,7 +76,7 @@
             <img class="win" src="/static/assets/img/win_condition.png"/>
           </ul> 
       </div>
-  </div>
+    </div>
 
     <div class="card">
         <form role="form" method="post" action="">
@@ -87,16 +93,94 @@
 
         <div class="card-body">
             {% bootstrap_form form %}   
-            <button type="submit" name="add" class="btn btn-fill btn-primary">Inscrever</button>           
+            <button type="submit" name="add" class="btn btn-fill btn-primary">Inscrever</button>
+            <br>
+            <small>* Respeitamos o acordo entre clãs e nenhum player pertencente a outro clã será aliciado.</small>
+            <br>
+            <small>* Caso tenha algum problema, entre em contato com o email torneiogladiadores@gmail.com</small>
         </div>
-
         </form>
     </div>
-    <small>* Respeitamos o acordo entre clãs e nenhum player pertencente a outro clã será aliciado.</small>
-    <br>
-    <small>* Caso tenha algum problema, entre em contato com o email torneiogladiadores@gmail.com</small>
   </div>
-</div>  
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="card">
+      <img class="card-img-top cardimg" target="_blank" src="/static/assets/img/armageddon.png" alt="Armageddon">
+      <div class="card-body">
+        <p class="card-text"><a href="https://royaleapi.com/f/armageddon">Armageddon</a></p>
+        <p class="card-text">Siga-nos no <a href="https://www.instagram.com/armageddon_cr_clan/">Instagram</a> para mais eventos</p>
+        <p class="card-text">Participe do nosso <a href="https://discord.gg/nCBSysWBSr">Discord</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <img class="card-img-top cardimg" target="_blank" src="/static/assets/img/uzputoz.png" alt="UZPUTOZ">
+      <div class="card-body">
+        <p class="card-text"><a href="https://royaleapi.com/clan/20RGVR8">UZPUTOZ</a></p>
+        <p class="card-text">Siga-nos no <a href="https://instagram.com/uzputoz">Instagram</a> para mais eventos</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <img class="card-img-top cardimg" target="_blank" src="/static/assets/img/bielvnis.png" alt="Bielvnis">
+      <div class="card-body">
+        <p class="card-text">Siga no <a href="https://www.youtube.com/c/BielvinisCR">Youtube</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <img class="card-img-top cardimg" target="_blank" src="/static/assets/img/lucas.png" alt="Lucas">
+      <div class="card-body">
+        <p class="card-text">Siga no <a href="https://www.instagram.com/lucasaraujo.dsg/?igshid=YmMyMTA2M2Y">Instragram</a></p>
+        <p class="card-text">Conheca o <a href="https://linktr.ee/lucasaraujodsg">Site</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <img class="card-img-top cardimg" target="_blank" src="/static/assets/img/lucas.png" alt="Lucas">
+      <div class="card-body">
+        <p class="card-text">Siga no <a href="https://www.instagram.com/lucasaraujo.dsg/?igshid=YmMyMTA2M2Y">Instragram</a></p>
+        <p class="card-text">Conheca o <a href="https://linktr.ee/lucasaraujodsg">Site</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <img class="card-img-top cardimg" target="_blank" src="/static/assets/img/clashroyalebrasil.png" alt="ClashRoyaleNewsBrasil">
+      <div class="card-body">
+        <p class="card-text">Siga no <a href="https://www.instagram.com/clashroyalenewsbrasil/">Facebook</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <img class="card-img-top cardimg" target="_blank" src="/static/assets/img/panda.png" alt="Panda">
+      <div class="card-body">
+        <p class="card-text">Siga no <a href="https://www.youtube.com/c/BoBCaster">Youtube</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <img class="card-img-top cardimg" target="_blank" src="/static/assets/img/bob.png" alt="Bob">
+      <div class="card-body">
+        <p class="card-text">Siga no <a href="https://www.youtube.com/c/BielvinisCR">Youtube</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
 
 {% endblock content %}
 
