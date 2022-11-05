@@ -55,8 +55,8 @@ class RegisteredPlayerForm(forms.ModelForm):
 
         whatsapp = self.cleaned_data.get('whatsapp')
 
-        validate_phone_number_pattern = "^\\+?[1-9][0-9]{7,14}$"
-        if re.match(validate_phone_number_pattern, whatsapp) is None:
-            self._errors['whatsapp'] = self.error_class(['Use apenas números e opcionalmente +. Exemplo: +5511971112222'])
+        #validate_phone_number_pattern = "^\\+?[1-9][0-9]{7,14}$"
+        #if re.match(validate_phone_number_pattern, whatsapp) is None:
+            #self._errors['whatsapp'] = self.error_class(['Use apenas números e opcionalmente +. Exemplo: +5511971112222'])
 
         return self.cleaned_data
