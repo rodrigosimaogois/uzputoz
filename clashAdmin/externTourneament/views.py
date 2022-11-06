@@ -30,6 +30,7 @@ class RegisterParticipantView(generic.CreateView):
             registered.save()
             return render(request, 'externTourneament/confirmRegistration.html', {'msg': 'Obrigado pela inscrição !!!'})
         else:
+            print(form.errors)
             return render(request, 'externTourneament/register_form.html', {'form': form, 'erro': True})
             # token = str(registered.pk) + str(registered.tag)
             # token_bytes = token.encode('ascii')

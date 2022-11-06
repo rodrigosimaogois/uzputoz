@@ -43,7 +43,8 @@
 
     {% if erro %}
       <div class="alert alert-danger" role="alert">
-        Erro durante inscrição. Verifique seus dados !!!
+        Error durante inscrição !!! Dados inválidos:
+        {{ form.errors }}
       </div>
     {% endif %}
 
