@@ -29,7 +29,8 @@ class RegisterParticipantView(generic.CreateView):
             registered = form.save()
             registered.save()
             return render(request, 'externTourneament/confirmRegistration.html', {'msg': 'Obrigado pela inscrição !!!'})
-
+        else:
+            return render(request, 'externTourneament/register_form.html', {'form': form, 'erro': True})
             # token = str(registered.pk) + str(registered.tag)
             # token_bytes = token.encode('ascii')
             # b64 = urlsafe_b64encode(token_bytes)
@@ -47,7 +48,7 @@ class RegisterParticipantView(generic.CreateView):
             #email.send() 
 
             #return HttpResponseRedirect(reverse_lazy('externTourneament:email', kwargs={'to': registered.email}))
-        return render(request, 'externTourneament/register_form.html', {'form': form})
+        
 
 def confirm(request, token):
     try:

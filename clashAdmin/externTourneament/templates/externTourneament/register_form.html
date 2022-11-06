@@ -40,6 +40,13 @@
 
 <div class="row">
   <div class="col-md-12">
+
+    {% if erro %}
+      <div class="alert alert-danger" role="alert">
+        Erro durante inscrição. Verifique seus dados !!!
+      </div>
+    {% endif %}
+
     <img class="logo" src="/static/assets/img/gladiators_logo.png"/>
 
     <div class="card">      
