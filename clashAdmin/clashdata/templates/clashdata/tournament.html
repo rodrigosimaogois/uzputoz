@@ -108,6 +108,20 @@
         ]]
     }
 
+    var week5 = {
+        teams : [
+            ["MARIA&MOISES", "Zeus"],
+            ["Feltrin", "SkuLLL"],
+            ["Alan", "Son MajinBoo"],
+            ["YT Bielvinis", "Takasugi"],
+        ],
+        results : [[ /* WINNER BRACKET */
+            [ [0,2], [2,1], [2,0], [2,1] ],
+            [ [2,0], [2,1] ],
+            [ [null,null] ]
+        ]]
+    }
+
     var notDefined = {
         teams : [
             ["1º Acessos", "1º UZP"],
@@ -179,7 +193,7 @@
             matchMargin: 30,
             roundMargin: 30,
 
-            init: notDefined 
+            init: week5 
         })
 
         $('#finals').bracket({
