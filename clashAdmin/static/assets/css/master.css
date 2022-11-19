@@ -1,7 +1,3 @@
-.logo-central{
-    color: white;
-    text-align: center;
-}
 
 .logo-menu{
     text-align: center;
@@ -15,4 +11,9 @@
 #uzp-logo{
   font-weight: bold;
   color: #8064A2;
+  border-top: 0em;
+  border-bottom: 0cm;
+  padding-top: 0%;
+  padding-bottom: 0em;
+  
 }

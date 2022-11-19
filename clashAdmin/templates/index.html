@@ -1,7 +1,107 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block stylesheets %}
+<link href="/static/assets/css/style.css" rel="stylesheet" />
+{% endblock stylesheets %}
 
 {% block content %}
-    <h1 class="logo-central">Maior família de Clash Royale do Brasil
-        <img src="/static/assets/img/logo.png" class="img-fluid" alt="Responsive image">
-    </h1>
+    
+    <div>
+        <h3 class="text-center">Maior família de Clash Royale do Brasil </h3> 
+        <img src="/static/assets/img/logo.png" class="center" alt="Responsive image">
+    </div>
+    <div class="slide-container swiper">
+        <h4 class="text-center patrocinadores">Patrocinadores</h4>
+        <div class="slide-content">
+            <div class="card-wrapper swiper-wrapper">
+                <div class="card swiper-slide">
+                    <div class="image-content">
+                        <span class="overlay"></span>
+                        <div class="card-image">
+                            <img src="/static/assets/img/patrocinadores/edmar.jpg" alt="" class="card-img">
+                        </div>
+                    </div>
+
+                    <div class="card-content">
+                        <h2 class="name">Dr. Edmar</h2>
+                    </div>
+                </div>
+                <div class="card swiper-slide">
+                    <div class="image-content">
+                        <span class="overlay"></span>
+                        <div class="card-image">
+                            <img src="/static/assets/img/patrocinadores/lello.jpg" alt="" class="card-img">
+                        </div>
+                    </div>
+
+                    <div class="card-content">
+                        <h2 class="name">Lello</h2>
+                    </div>
+                </div>
+                <div class="card swiper-slide">
+                    <div class="image-content">
+                        <span class="overlay"></span>
+
+                        <div class="card-image">
+                            <img src="/static/assets/img/patrocinadores/felps.jpg" alt="" class="card-img">
+                        </div>
+                    </div>
+
+                    <div class="card-content">
+                        <h2 class="name">Felps</h2>
+                    </div>
+                </div>
+                <div class="card swiper-slide">
+                    <div class="image-content">
+                        <span class="overlay"></span>
+
+                        <div class="card-image">
+                            <img src="/static/assets/img/patrocinadores/aron.jpg" alt="" class="card-img">
+                        </div>
+                    </div>
+
+                    <div class="card-content">
+                        <h2 class="name">Aron</h2>
+                    </div>
+                </div>
+                <div class="card swiper-slide">
+                    <div class="image-content">
+                        <span class="overlay"></span>
+
+                        <div class="card-image">
+                            <img src="/static/assets/img/patrocinadores/allan_sensei.jpg" alt="" class="card-img">
+                        </div>
+                    </div>
+
+                    <div class="card-content">
+                        <h2 class="name">Allan Sensei</h2>
+                    </div>
+                </div>
+                <div class="card swiper-slide">
+                    <div class="image-content">
+                        <span class="overlay"></span>
+
+                        <div class="card-image">
+                            <img src="/static/assets/img/patrocinadores/vagner.jpg" alt="" class="card-img">
+                        </div>
+                    </div>
+
+                    <div class="card-content">
+                        <h2 class="name">Vagner Guazzini</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swiper-button-next swiper-navBtn"></div>
+        <div class="swiper-button-prev swiper-navBtn"></div>
+        <div class="swiper-pagination"></div>
+
+        
+    </div>
+    
+
+    
 {% endblock content %}
