@@ -15,117 +15,55 @@
     <div class="slide-container swiper">
         <h4 class="text-center patrocinadores">Patrocinadores</h4>
         <div class="slide-content">
-            <div class="card-wrapper swiper-wrapper">
-                <div class="card swiper-slide">
-                    <div class="image-content">
-                        <span class="overlay"></span>
-                        <div class="card-image">
-                            <img src="/static/assets/img/patrocinadores/edmar.jpg" alt="" class="card-img">
-                        </div>
-                    </div>
-
-                    <div class="card-content">
-                        <h2 class="name">Dr. Edmar</h2>
-                    </div>
-                </div>
-                <div class="card swiper-slide">
-                    <div class="image-content">
-                        <span class="overlay"></span>
-                        <div class="card-image">
-                            <img src="/static/assets/img/patrocinadores/sednanref.jpg" alt="" class="card-img">
-                        </div>
-                    </div>
-
-                    <div class="card-content">
-                        <h2 class="name">Sednanref</h2>
-                    </div>
-                </div>
-                <div class="card swiper-slide">
-                    <div class="image-content">
-                        <span class="overlay"></span>
-                        <div class="card-image">
-                            <img src="/static/assets/img/patrocinadores/lello.jpg" alt="" class="card-img">
-                        </div>
-                    </div>
-
-                    <div class="card-content">
-                        <h2 class="name">Lello</h2>
-                    </div>
-                </div>
-                <div class="card swiper-slide">
-                    <div class="image-content">
-                        <span class="overlay"></span>
-                        <div class="card-image">
-                            <img src="/static/assets/img/patrocinadores/simao.jpg" alt="" class="card-img">
-                        </div>
-                    </div>
-
-                    <div class="card-content">
-                        <h2 class="name">Simao</h2>
-                    </div>
-                </div>
-                <div class="card swiper-slide">
-                    <div class="image-content">
-                        <span class="overlay"></span>
-
-                        <div class="card-image">
-                            <img src="/static/assets/img/patrocinadores/felps.jpg" alt="" class="card-img">
-                        </div>
-                    </div>
-
-                    <div class="card-content">
-                        <h2 class="name">Felps</h2>
-                    </div>
-                </div>
-                <div class="card swiper-slide">
-                    <div class="image-content">
-                        <span class="overlay"></span>
-
-                        <div class="card-image">
-                            <img src="/static/assets/img/patrocinadores/aron.jpg" alt="" class="card-img">
-                        </div>
-                    </div>
-
-                    <div class="card-content">
-                        <h2 class="name">Aron</h2>
-                    </div>
-                </div>
-                <div class="card swiper-slide">
-                    <div class="image-content">
-                        <span class="overlay"></span>
-
-                        <div class="card-image">
-                            <img src="/static/assets/img/patrocinadores/allan_sensei.jpg" alt="" class="card-img">
-                        </div>
-                    </div>
-
-                    <div class="card-content">
-                        <h2 class="name">Allan Sensei</h2>
-                    </div>
-                </div>
-                <div class="card swiper-slide">
-                    <div class="image-content">
-                        <span class="overlay"></span>
-
-                        <div class="card-image">
-                            <img src="/static/assets/img/patrocinadores/gnerva.jpg" alt="" class="card-img">
-                        </div>
-                    </div>
-
-                    <div class="card-content">
-                        <h2 class="name">Gnerva</h2>
-                    </div>
-                </div>
+            <div class="card-wrapper swiper-wrapper" id="mainBase">
             </div>
         </div>
 
         <div class="swiper-button-next swiper-navBtn"></div>
         <div class="swiper-button-prev swiper-navBtn"></div>
         <div class="swiper-pagination"></div>
-
-        
     </div>
     
-
-    
 {% endblock content %}
+
+{% block javascripts %}
+
+<script>
+    const base = document.querySelector("#mainBase");
+    
+    function add(name){
+        let row = '<div class="card swiper-slide"> \
+                <div class="image-content"> \
+                    <span class="overlay"></span>\
+                    <div class="card-image"> \
+                        <img src="/static/assets/img/patrocinadores/' + name + '.jpg" alt="' + name + '" class="card-img"> \
+                    </div> \
+                </div> \
+                <div class="card-content"> \
+                    <h2 class="name">' + name + '</h2> \
+                </div> \
+            </div>';
+
+        base.innerHTML += row
+    }
+
+    function shuffle(a) {
+        var j, x, i;
+        for (i = a.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            x = a[i];
+            a[i] = a[j];
+            a[j] = x;
+        }
+        return a;
+    }
+
+    $(document).ready(function () {
+        const patrocinadores = ['edmar', 'simao', 'sednanref', 'lello', 'felps', 'aron', 'allan sensei', 'gnerva'];
+        shuffle(patrocinadores);
+        patrocinadores.forEach(element => add(element));
+    });
+    
+</script>
+
+{% endblock javascripts %}
