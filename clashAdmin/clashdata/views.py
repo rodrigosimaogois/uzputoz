@@ -214,3 +214,17 @@ class Tournament(generic.View):
     
     def get(self, request):
         return render(request, "clashdata/tournament.html")
+
+class Dima(generic.View):
+
+    def get(self, request):
+        if is_ajax(request):
+            clanTag = request.GET.get('tag_id')
+            warInfo = clashapi.getCurrentWarInfo(clanTag)
+            missing = clashapi.whoIsMissing(clanTag, [])
+
+            return JsonResponse({'warInfo': warInfo, 'missingInfo': missing}, status=200)
+        
+        isColosseum = clashapi.isColosseum()
+        clanTags = ['#YU9GRGG']
+        return render(request, "clashdata/dima.html", { 'clanTags': clanTags, 'isColosseum': isColosseum})
