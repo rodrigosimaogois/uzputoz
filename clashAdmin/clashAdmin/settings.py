@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'clashdata',
     'externTourneament',
     'recrut',
-    'django_filters'
+    'django_filters',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -80,39 +81,13 @@ WSGI_APPLICATION = 'clashAdmin.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-# }
-
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'uzputoz',
-#        'USER': 'rodrigosimaogois',
-#        'PASSWORD': 'Tman000@040',
-#        'HOST': 'localhost',
-#        'PORT': '3306',
-#        'OPTIONS': {
-#             'charset': 'utf8mb4'  # This is the relevant line
-#         }
-#    }
-# }
-
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.mysql',
-       'NAME': 'rodrigosimaogois$uzputoz',
-       'USER': 'rodrigosimaogois',
-       'PASSWORD': 'Tman000@040',
-       'HOST': 'rodrigosimaogois.mysql.pythonanywhere-services.com',
-       'PORT': '3306',
-       'OPTIONS': {
-            'charset': 'utf8mb4'  # This is the relevant line
-        }
-   }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': os.path.join(BASE_DIR,'my.cnf'),
+        },
+    }
 }
 
 # Password validation
