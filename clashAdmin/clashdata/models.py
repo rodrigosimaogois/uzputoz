@@ -99,4 +99,19 @@ class Rival(models.Model):
     def __str__(self) -> str:
         return self.tag
 
+class War(models.Model):
+    identifier = models.CharField(max_length=255)
+    clan = models.ForeignKey(Clan, related_name='war_clan', on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return self.identifier
+
+class TrainingDay(models.Model):
+    war = models.ForeignKey(War, related_name='trainingday_war', on_delete=models.CASCADE)
+    tag = models.CharField(max_length=255, blank=True)
+    decksUsed = models.IntegerField(default=0)        
+    decksUsedToday = models.IntegerField(default=0)
+    decksTraining = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return self.tag

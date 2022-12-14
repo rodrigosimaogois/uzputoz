@@ -225,4 +225,42 @@ def getPlayerInfo(playerTag):
                 "name": "" 
             }
         }
-    
+
+def getCurrentSeason(clanTag):
+    tag = clanTag.replace("#","")
+
+    currentRiverRace = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace")
+    riverraceLog = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/riverracelog")
+
+    seasonId = riverraceLog["items"][0]["seasonId"]
+    index = riverraceLog["items"][0]["sectionIndex"]
+    if currentRiverRace["sectionIndex"] == 0:
+        index = 0
+        seasonId += 1
+    else:
+        index +=1
+
+    return f"{seasonId}-{index}"
+
+def getTrainingDays(clanTag):
+    tag = clanTag.replace("#","")
+    currentRiverRace = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace")
+
+    periodIndex = currentRiverRace["periodIndex"]
+    if not periodIndex % 7 == 3:
+        return
+
+    trainingInfo = []
+
+    for participant in currentRiverRace["clan"]["participants"]:
+        participantInfo = {
+            "Name": participant["name"],
+            "Tag": participant["tag"],
+            "DecksUsed": participant["decksUsed"],
+            "DecksUsedToday": participant["decksUsedToday"],
+            "DecksTraining": participant["decksUsed"] - participant["decksUsedToday"] 
+        }
+        
+        trainingInfo.append(participantInfo)
+
+    return trainingInfo
