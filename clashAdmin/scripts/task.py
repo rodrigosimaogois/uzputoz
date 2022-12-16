@@ -1,24 +1,30 @@
 from clashdata import clashapi
 from clashdata import models
 
-def run():
-    ourClanTags = ["#20RGVR8", "#9PGQJCRR", "#YPU0GJUV", "#PULQCRCP", "#YYQGVLV9"]
+import requests
 
-    currentSeason = clashapi.getCurrentSeason("#20RGVR8")
-    print(currentSeason)
+def getTrainingDays(tag):
+    response = requests.get(f"https://www.uzputoz.com.br/clashdata/getTrainingDays/{tag}")
+    if response.status_code != 200:
+        print(f"error: {response.status_code}: {response._content}")
+    return response.json()
+
+def run():
+    ourClanTags = ["20RGVR8", "9PGQJCRR", "YPU0GJUV", "PULQCRCP", "YYQGVLV9"]
 
     for i in range(len(ourClanTags)):
-        clanInfoi = clashapi.getTrainingDays(ourClanTags[i])
 
-        if clanInfoi is None:
+        clanInfoi = getTrainingDays(ourClanTags[i])["json"]
+        print(clanInfoi)
+
+        if clanInfoi["data"] is None:
             print("still training day")
         else:
-            
-            clan = models.Clan.objects.get(tag=ourClanTags[i])
-            war, created = models.War.objects.get_or_create(identifier=currentSeason, clan=clan)
+            clan = models.Clan.objects.get(tag=clanInfoi["tag"])
+            war, created = models.War.objects.get_or_create(identifier=clanInfoi["season"], clan=clan)
             war.save()
 
-            for training in clanInfoi:
+            for training in clanInfoi["data"]:
                 playerTag = training["Tag"]
                 decksUsed = training["DecksUsed"]
                 decksUsedToday = training["DecksUsedToday"]
