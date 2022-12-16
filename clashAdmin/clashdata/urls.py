@@ -25,4 +25,5 @@ urlpatterns = [
     path("missingplayers/", views.MissingPlayers.as_view(), name="missingplayers"),
     path("tournament/", views.Tournament.as_view(), name="tournament"),
     path("dima/", views.Dima.as_view(), name="dima"),
+    path("getTrainingDays/", views.getTrainingDays, name="getTrainingDays"),
 ]

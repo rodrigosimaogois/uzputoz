@@ -228,3 +228,18 @@ class Dima(generic.View):
         isColosseum = clashapi.isColosseum()
         clanTags = ['#YU9GRGG']
         return render(request, "clashdata/dima.html", { 'clanTags': clanTags, 'isColosseum': isColosseum})
+
+def getTrainingDays(request):
+
+    ourClanTags = ["#20RGVR8", "#9PGQJCRR", "#YPU0GJUV", "#PULQCRCP", "#YYQGVLV9"]
+
+    currentSeason = clashapi.getCurrentSeason("#20RGVR8")
+    clanInfo = {}
+
+    clanInfo["season"] = currentSeason
+
+    for i in range(len(ourClanTags)):
+        clanInfoi = clashapi.getTrainingDays(ourClanTags[i])
+        clanInfo[ourClanTags[i]] = clanInfoi
+
+    return JsonResponse({'json': clanInfo}, status=200)
