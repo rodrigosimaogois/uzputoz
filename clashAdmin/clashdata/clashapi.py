@@ -169,19 +169,28 @@ def whoIsMissing(clanTag, currentLine):
         found = [x for x in currentMembers["items"] if x["tag"] == participant["tag"]]
 
         if len(found) > 0:
-            lastSeen = found[0]["lastSeen"]
-            dt_obj = datetime.strptime(lastSeen, '%Y%m%dT%H%M%S.%fZ')
+            try:
+                lastSeen = found[0]["lastSeen"]
+                dt_obj = datetime.strptime(lastSeen, '%Y%m%dT%H%M%S.%fZ')
 
-            utc = dt_obj.replace(tzinfo=from_zone)
-            local = utc.astimezone(to_zone)
+                utc = dt_obj.replace(tzinfo=from_zone)
+                local = utc.astimezone(to_zone)
 
-            allConsideredPlayers.append(participant["tag"])
-            missingPlayers.append({
-                "name": participant["name"],
-                "missingDecks": 4 - participant["decksUsedToday"],
-                "lastSeen": local.strftime("%d-%m-%Y %H:%M:%S"),
-                "inClan": True
-            })
+                allConsideredPlayers.append(participant["tag"])
+                missingPlayers.append({
+                    "name": participant["name"],
+                    "missingDecks": 4 - participant["decksUsedToday"],
+                    "lastSeen": local.strftime("%d-%m-%Y %H:%M:%S"),
+                    "inClan": True
+                })
+            except Exception as error:
+                allConsideredPlayers.append(participant["tag"])
+                missingPlayers.append({
+                    "name": participant["name"],
+                    "missingDecks": 4 - participant["decksUsedToday"],
+                    "lastSeen": {},
+                    "inClan": True
+                })
         else:
             if decksUsedToday > 0:
                 allConsideredPlayers.append(participant["tag"])
