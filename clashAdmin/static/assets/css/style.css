@@ -120,6 +120,15 @@
   color: goldenrod;
 }
 
+.videoframe{
+  width: 95%;
+  height: 345px;
+  border: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media screen and (max-width: 768px) {
   .slide-content{
     margin: 0 10px;
