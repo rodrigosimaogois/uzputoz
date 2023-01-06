@@ -239,3 +239,27 @@ def getTrainingDays(request, tag):
     trainingInfo["data"] = clashapi.getTrainingDays(tag)
 
     return JsonResponse({'json': trainingInfo}, status=200)
+
+def getTrainingDaysBySeason(request, tag, season):
+
+    trainingInfo = []
+
+    try:
+        tag = "#" + tag
+        clan = models.Clan.objects.get(tag=tag)
+        war = models.War.objects.get(clan_id=clan.id,identifier=season)
+        trainingDays = models.TrainingDay.objects.filter(war_id=war.id)
+
+        for i in trainingDays:
+            trainingInfo.append(
+                {
+                    "Tag": i.tag,
+                    "DecksUsed": i.decksUsed,
+                    "DecksUsedToday": i.decksUsedToday,
+                    "DecksTraining": i.decksTraining
+                }
+            )
+    except Exception as error:
+        trainingInfo = []
+
+    return JsonResponse({'json': trainingInfo}, status=200)

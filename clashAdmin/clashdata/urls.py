@@ -26,4 +26,5 @@ urlpatterns = [
     path("tournament/", views.Tournament.as_view(), name="tournament"),
     path("dima/", views.Dima.as_view(), name="dima"),
     path("getTrainingDays/<tag>", views.getTrainingDays, name="getTrainingDays"),
+    path("getTrainingDaysBySeason/<tag>/<season>", views.getTrainingDaysBySeason, name="getTrainingDaysBySeason"),
 ]

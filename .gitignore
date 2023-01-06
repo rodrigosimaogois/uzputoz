@@ -1,2 +1,3 @@
 clashAdmin/db.sqlite3
 clashAdmin/my.cnf
+*.pyc
