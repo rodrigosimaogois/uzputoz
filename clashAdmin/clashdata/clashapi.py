@@ -30,7 +30,7 @@ def getClanMembers(clanTag):
     currentMembers = jsonResponse["items"]
     return currentMembers
 
-def __getClanInfo(clanData, maxAttacks, isColosseum):
+def __getClanInfo(clanData, maxAttacks, isColosseum, boatInfo):
         usedDecksCount = 0
         usedDecksTodayCount = 0
         peopleTodayCount = 0
@@ -72,6 +72,14 @@ def __getClanInfo(clanData, maxAttacks, isColosseum):
         maxPossiblePoints = (pessoasFaltando * 900) + maxPossiblePointsPlayersMissingAttacks + periodPoints
         minPossiblePoints = (missingDecksToday * 100) + periodPoints
 
+        boat = boatInfo[clanData["tag"]]
+        defenses = 0
+        boatPoints = 0
+
+        if not isColosseum:
+            defenses = boat["Defenses"]
+            boatPoints = boat["BoatPoints"]
+
         clanInfo = { 
                 "Tag": clanData["tag"], 
                 "Name": clanData["name"],
@@ -85,7 +93,9 @@ def __getClanInfo(clanData, maxAttacks, isColosseum):
                 "Average": "{:.2f}".format(average),
                 "MinPoints": minPossiblePoints,
                 "MaxPoints": maxPossiblePoints,
-                "Estimation": periodPoints + (missingDecksToday * int(average))
+                "Estimation": periodPoints + (missingDecksToday * int(average)),
+                "Defenses": defenses,
+                "BoatPoints": boatPoints
             }
         
         return clanInfo
@@ -106,8 +116,27 @@ def getCurrentWarInfo(clanTag):
         if not isColosseum:
             maxAttacks = 0
 
+        boatInfo = dict()
+        boatPrize = [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59]
+
+        if(currentRiverRace["periodType"] == "warDay"):
+            periods = currentRiverRace["periodLogs"][-1:]
+            for period in periods:                
+                for item in period["items"]:
+                    tag = item["clan"]["tag"]
+                    defenses = item["numOfDefensesRemaining"]
+                    
+                    totalBoatPoints = 0
+                    for i in range(defenses):
+                        totalBoatPoints += boatPrize[i]
+
+                    boatInfo[tag] = {
+                        "Defenses": defenses,
+                        "BoatPoints": totalBoatPoints
+                    }
+
         for clan in currentRiverRace["clans"]:
-            clanInfo = __getClanInfo(clan, maxAttacks, isColosseum)
+            clanInfo = __getClanInfo(clan, maxAttacks, isColosseum, boatInfo)
             clansInfos.append(clanInfo)
         
         clansInfos.sort(key=lambda x: x["Total"], reverse=True)

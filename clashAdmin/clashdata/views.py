@@ -174,7 +174,6 @@ class CurrentWarRival(generic.View):
         if is_ajax(request):
             clanTag = request.GET.get('tag_id')
             warInfo = clashapi.getCurrentWarInfo(clanTag)
-
             return JsonResponse({'warInfo': warInfo}, status=200)
         
         isColosseum = clashapi.isColosseum()
