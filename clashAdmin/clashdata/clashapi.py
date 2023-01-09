@@ -71,12 +71,12 @@ def __getClanInfo(clanData, maxAttacks, isColosseum, boatInfo):
         pessoasFaltando = 50 - peopleTodayCount
         maxPossiblePoints = (pessoasFaltando * 900) + maxPossiblePointsPlayersMissingAttacks + periodPoints
         minPossiblePoints = (missingDecksToday * 100) + periodPoints
-
-        boat = boatInfo[clanData["tag"]]
+        
         defenses = 0
         boatPoints = 0
 
-        if not isColosseum:
+        if not isColosseum and clanData["tag"] in boatInfo:
+            boat = boatInfo[clanData["tag"]]
             defenses = boat["Defenses"]
             boatPoints = boat["BoatPoints"]
 
