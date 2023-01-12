@@ -121,7 +121,7 @@ def getCurrentWarInfo(clanTag):
 
         if(currentRiverRace["periodType"] == "warDay"):
             periods = currentRiverRace["periodLogs"][-1:]
-            for period in periods:                
+            for period in periods:             
                 for item in period["items"]:
                     tag = item["clan"]["tag"]
                     defenses = item["numOfDefensesRemaining"]
@@ -129,6 +129,10 @@ def getCurrentWarInfo(clanTag):
                     totalBoatPoints = 0
                     for i in range(defenses):
                         totalBoatPoints += boatPrize[i]
+                    
+                    if period["periodIndex"] !=  periodIndex:
+                        defenses = 15
+                        totalBoatPoints = 435
 
                     boatInfo[tag] = {
                         "Defenses": defenses,
