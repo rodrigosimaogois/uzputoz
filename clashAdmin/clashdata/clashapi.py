@@ -130,7 +130,7 @@ def getCurrentWarInfo(clanTag):
                     for i in range(defenses):
                         totalBoatPoints += boatPrize[i]
                     
-                    if period["periodIndex"] !=  periodIndex:
+                    if weekDay == 3:
                         defenses = 15
                         totalBoatPoints = 435
 
