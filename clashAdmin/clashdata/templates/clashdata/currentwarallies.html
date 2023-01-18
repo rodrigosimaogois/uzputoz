@@ -50,6 +50,14 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+    <h5>Carregando...</h5>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+    </div></div>
+</div>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
@@ -75,65 +83,6 @@
         }
     }
 
-    function myFunction(tag, id){
-        $.ajax({
-            url: "{% url 'clashdata:currentwar' %}",
-            type: "GET",
-            data: {
-                tag_id: tag
-            },
-            error: function(response){
-                console.log("error");
-            },
-            success: function(response){
-                let clanRows = ''
-                let points = [3000, 1800, 1000, 600, 400];
-                let colosseum = response.warInfo.colosseum;
-
-                //console.log(colosseum);
-
-                response.warInfo.clansInfos.forEach(function(item, index, arr){
-                    //console.log(item.ClanScore)
-                    let total = parseInt(item.Fame) + points[index] + parseInt(item.BoatPoints)
-                    clanRow = '<tr class="rowcolor"> \
-                                <td class="col-2"> \
-                                    <div>' + item.Name + '</div> \
-                                    <div><img src="/static/assets/img/trophy.png"/> ' + item.ClanScore + '</div> \
-                                </td> \
-                                <td class="text-nowrap"> \
-                                    <div><img src="/static/assets/img/medals.png"/> ' + item.Total + '</div> \
-                                    <div style="font-weight: bold;">' + item.Average + '</div> \
-                                </td>\
-                                <td class="text-nowrap"> \
-                                    <div><img src="/static/assets/img/contact.png"/> ' + item.PlayersToday + '/50</div> \
-                                    <div><img src="/static/assets/img/green_check.png"/> ' + item.DecksToday + '</div> \
-                                    <div><img src="/static/assets/img/red_clock.png"/> ' + item.MissingAttacksToday +  '</div> \
-                                </td> \
-                                <td class="text-nowrap"> \
-                                    <div><img src="/static/assets/img/yellow_ball.png"/> ' + item.Estimation + '</div> \
-                                    <div><img src="/static/assets/img/red_ball.png"/> ' + item.MinPoints + '</div> \
-                                    <div><img src="/static/assets/img/green_ball.png"/> ' + item.MaxPoints + '</div> \
-                                </td>';
-                    
-                    if(!colosseum){
-                        clanRow += '<td class="text-nowrap text-right text-md-center"> \
-                                        <div><img src="/static/assets/img/green_check.png"/> ' + item.Fame + '</div> \
-                                        <div>+' + points[index] + '</div> \
-                                        <div>+' + item.BoatPoints + '</div> \
-                                        <div><img src="/static/assets/img/red_clock.png"/> ' + total + '</div> \
-                                    </td>';
-                    }
-
-                    closeTr = '</tr>';
-                    clanRows = clanRows + clanRow + closeTr;
-                });
-
-                $(id).append(clanRows);
-                setProgressBar();
-            }
-        });
-    }
-
     $(document).ready(function () {
 
         var count = {{ clanTags|length }};
@@ -142,13 +91,12 @@
         const bar = document.querySelector(".progress-bar");
         let currentProgress = 0;
 
-        {% for clan in clanTags %}
-        
+        {% for clan in clanTags %}    
             $.ajax({
                 url: "{% url 'clashdata:currentwarallies' %}",
                 type: "GET",
-                data: {
-                    tag_id: "{{ clan.tag }}"
+                data: {  
+                    tag_id: "{{ clan }}"
                 },
                 error: function(response){
                     console.log("error");
