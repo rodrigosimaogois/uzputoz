@@ -22,6 +22,7 @@ urlpatterns = [
     path("currentwar/", views.CurrentWar.as_view(), name="currentwar"),
     path("getLines/", views.getLines, name="getLines"),
     path("currentwarrival/", views.CurrentWarRival.as_view(), name="currentwarrival"),
+    path("currentwarallies/", views.CurrentWarAllies.as_view(), name="currentwarallies"),
     path("missingplayers/", views.MissingPlayers.as_view(), name="missingplayers"),
     path("tournament/", views.Tournament.as_view(), name="tournament"),
     path("dima/", views.Dima.as_view(), name="dima"),

@@ -70,11 +70,19 @@
               </a>
             </li>
             <li class="">
-              <a href="{% url 'clashdata:currentwarrival' %}">
-                <i class="tim-icons icon-atom"></i>
-                <p>Guerra Atual Rivais</p>
+              <a href="{% url 'clashdata:currentwarallies' %}">
+                <i class="tim-icons icon-shape-star"></i>
+                <p>Guerra Aliados</p>
               </a>
             </li>
+            {% if user.is_authenticated %}
+              <li class="">
+                <a href="{% url 'clashdata:currentwarrival' %}">
+                  <i class="tim-icons icon-atom"></i>
+                  <p>Guerra Rivais</p>
+                </a>
+              </li>
+            {%endif%}
           </div>
           
           <li class="">

@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<style>
+    td > div > img {
+        height: 1em;
+        width: auto;
+        display: inline-block;
+    }
+
+    .rowcolor
+    {
+        background-color:#2C3F50;
+    }
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+{% if error %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">Erro</h6>
+            </div>
+            <div class="card-body">   
+                <h6 style="color:#FF726F;">{{ error }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">Quer se aliar e monitorar seu Clã gratuitamente?</h6>
+            </div>
+            <div class="card-body">   
+                <h6>Entre em contato no whats <span style="color:#00B050;">+55 21 99752-5033</span></h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+
+    const bar = document.querySelector(".progress-bar");
+    let currentProgress = 0;
+
+    function setProgressBar(){
+        currentProgress = currentProgress + 20;
+        if (currentProgress > 100){
+            currentProgress = 100;
+        }
+
+        bar.style.width = currentProgress + "%";
+        bar.innerText = currentProgress + "%";
+
+        if (currentProgress >= 100){
+            $(".progress").css("display", "none");
+            $("h5").css("display", "none");
+        }
+    }
+
+    function myFunction(tag, id){
+        $.ajax({
+            url: "{% url 'clashdata:currentwar' %}",
+            type: "GET",
+            data: {
+                tag_id: tag
+            },
+            error: function(response){
+                console.log("error");
+            },
+            success: function(response){
+                let clanRows = ''
+                let points = [3000, 1800, 1000, 600, 400];
+                let colosseum = response.warInfo.colosseum;
+
+                //console.log(colosseum);
+
+                response.warInfo.clansInfos.forEach(function(item, index, arr){
+                    //console.log(item.ClanScore)
+                    let total = parseInt(item.Fame) + points[index] + parseInt(item.BoatPoints)
+                    clanRow = '<tr class="rowcolor"> \
+                                <td class="col-2"> \
+                                    <div>' + item.Name + '</div> \
+                                    <div><img src="/static/assets/img/trophy.png"/> ' + item.ClanScore + '</div> \
+                                </td> \
+                                <td class="text-nowrap"> \
+                                    <div><img src="/static/assets/img/medals.png"/> ' + item.Total + '</div> \
+                                    <div style="font-weight: bold;">' + item.Average + '</div> \
+                                </td>\
+                                <td class="text-nowrap"> \
+                                    <div><img src="/static/assets/img/contact.png"/> ' + item.PlayersToday + '/50</div> \
+                                    <div><img src="/static/assets/img/green_check.png"/> ' + item.DecksToday + '</div> \
+                                    <div><img src="/static/assets/img/red_clock.png"/> ' + item.MissingAttacksToday +  '</div> \
+                                </td> \
+                                <td class="text-nowrap"> \
+                                    <div><img src="/static/assets/img/yellow_ball.png"/> ' + item.Estimation + '</div> \
+                                    <div><img src="/static/assets/img/red_ball.png"/> ' + item.MinPoints + '</div> \
+                                    <div><img src="/static/assets/img/green_ball.png"/> ' + item.MaxPoints + '</div> \
+                                </td>';
+                    
+                    if(!colosseum){
+                        clanRow += '<td class="text-nowrap text-right text-md-center"> \
+                                        <div><img src="/static/assets/img/green_check.png"/> ' + item.Fame + '</div> \
+                                        <div>+' + points[index] + '</div> \
+                                        <div>+' + item.BoatPoints + '</div> \
+                                        <div><img src="/static/assets/img/red_clock.png"/> ' + total + '</div> \
+                                    </td>';
+                    }
+
+                    closeTr = '</tr>';
+                    clanRows = clanRows + clanRow + closeTr;
+                });
+
+                $(id).append(clanRows);
+                setProgressBar();
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        var count = {{ clanTags|length }};
+        var eachProgress = 100;
+
+        const bar = document.querySelector(".progress-bar");
+        let currentProgress = 0;
+
+        {% for clan in clanTags %}
+        
+            $.ajax({
+                url: "{% url 'clashdata:currentwarallies' %}",
+                type: "GET",
+                data: {
+                    tag_id: "{{ clan.tag }}"
+                },
+                error: function(response){
+                    console.log("error");
+                },
+                success: function(response){
+
+                    currentProgress = currentProgress + eachProgress;
+                    
+                    if (currentProgress > 100){
+                        currentProgress = 100;
+                    }
+
+                    bar.style.width = currentProgress + "%";
+              	    bar.innerText = currentProgress + "%";
+
+                    if (currentProgress >= 100){
+                        $(".progress").css("display", "none");
+                        $("h5").css("display", "none");
+                    }
+
+                    let clanRows = ''
+                    let points = [3000, 1800, 1000, 600, 400];
+                    let colosseum = response.warInfo.colosseum;
+        
+                    response.warInfo.clansInfos.forEach(function(item, index, arr){
+
+                        let total = parseInt(item.Fame) + points[index] + parseInt(item.BoatPoints)
+                        clanRow = '<tr class="rowcolor"> \
+                                    <td class="col-2"> \
+                                        <div>' + item.Name + '</div> \
+                                        <div><img src="/static/assets/img/trophy.png"/> ' + item.ClanScore + '</div> \
+                                    </td> \
+                                    <td class="text-nowrap"> \
+                                        <div><img src="/static/assets/img/medals.png"/> ' + item.Total + '</div> \
+                                        <div style="font-weight: bold;">' + item.Average + '</div> \
+                                    </td>\
+                                    <td class="text-nowrap"> \
+                                        <div><img src="/static/assets/img/contact.png"/> ' + item.PlayersToday + '/50</div> \
+                                        <div><img src="/static/assets/img/green_check.png"/> ' + item.DecksToday + '</div> \
+                                        <div><img src="/static/assets/img/red_clock.png"/> ' + item.MissingAttacksToday +  '</div> \
+                                    </td> \
+                                    <td class="text-nowrap"> \
+                                        <div><img src="/static/assets/img/yellow_ball.png"/> ' + item.Estimation + '</div> \
+                                        <div><img src="/static/assets/img/red_ball.png"/> ' + item.MinPoints + '</div> \
+                                        <div><img src="/static/assets/img/green_ball.png"/> ' + item.MaxPoints + '</div> \
+                                    </td>';
+                        
+                        if(!colosseum){
+                            clanRow += '<td class="text-nowrap text-right text-md-center"> \
+                                            <div><img src="/static/assets/img/green_check.png"/> ' + item.Fame + '</div> \
+                                            <div>+' + points[index] + '</div> \
+                                            <div>+' + item.BoatPoints + '</div> \
+                                            <div><img src="/static/assets/img/red_clock.png"/> ' + total + '</div> \
+                                        </td>';
+                        }
+    
+                        closeTr = '</tr>';
+                        clanRows = clanRows + clanRow + closeTr;
+                    });
+
+                    let openTable = '<div class="row"> \
+                        <div class="col-md-12"> \
+                            <div class="card test"> \
+                                <div class="card-body"> \
+                                    <h4 class="card-title text-center">' + response.warInfo.clanName + '</h4> \
+                                    <div class="table-responsive ps"> \
+                                        <table class="table table-sm table-striped"> \
+                                            <thead> \
+                                                <tr> \
+                                                    <th class="">Nome</th> \
+                                                    <th class="">Atual</th> \
+                                                    <th class="">Decks</th> \
+                                                    <th class="">Persp.</th> \
+                                                    {% if not isColosseum %} \
+                                                        <th class="text-right text-md-center">Geral</th> \
+                                                    {% endif %} \
+                                                </tr> \
+                                            </thead> \
+                                            <tbody>';
+                    let closeTable = '</tbody></table></div></div></div></div></div>';
+                    let newTable = openTable + clanRows + closeTable;
+                    $(".content").append(newTable);
+    
+                    //$(id).append(clanRows);
+                    //setProgressBar();
+                } 
+            });
+
+        {% endfor %}
+
+        //if(count > 0){
+            //eachProgress = 100/count;
+        //}
+
+        //myFunction("#20RGVR8", "#uzputozContent");             
+    });
+</script>
+
+{% endblock javascripts %}
