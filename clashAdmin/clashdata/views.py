@@ -177,7 +177,7 @@ class CurrentWarAllies(generic.View):
             return JsonResponse({'warInfo': warInfo}, status=200)
         
         isColosseum = clashapi.isColosseum()
-        clanTags = ["#QQ00QQRL", "#22J0P82V"]
+        clanTags = ["#QQ00QQRL", "#22J0P82V", "#QCRRJP9L", "#9G9R0Q8R"]
         return render(request, "clashdata/currentwarallies.html", { 'clanTags': clanTags, 'isColosseum': isColosseum})
 
 class CurrentWarRival(LoginRequiredMixin, generic.View):
