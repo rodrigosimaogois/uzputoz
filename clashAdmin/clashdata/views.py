@@ -278,7 +278,7 @@ def getTrainingDaysBySeason(request, tag, season):
 class CreateClanBR(LoginRequiredMixin, generic.CreateView):
     form_class = forms.ClanBRCreateForm
     success_url = reverse_lazy('clashdata:clansBR')
-    template_name = 'clashdata/clanBR_form.html'
+    template_name = 'clashdata/clanbr_form.html'
 
 class DeleteClanBR(LoginRequiredMixin, generic.DeleteView):
     model = models.ClanBR
@@ -288,7 +288,7 @@ class UpdateClanBR(LoginRequiredMixin, generic.UpdateView):
     model = models.ClanBR
     form_class = forms.ClanCreateForm
     success_url = reverse_lazy('clashdata:clansBR')
-    template_name = 'clashdata/clanBR_form.html'
+    template_name = 'clashdata/clanbr_form.html'
 
 class ListClansBR(generic.ListView):
     model = models.ClanBR
