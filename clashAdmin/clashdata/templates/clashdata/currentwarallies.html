@@ -41,7 +41,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h6 class="card-title">Quer se aliar e monitorar seu Clã gratuitamente?</h6>
+                <h6 class="card-title">Quer monitorar seu Clã gratuitamente?</h6>
             </div>
             <div class="card-body">   
                 <h6>Entre em contato no whats <span style="color:#00B050;">+55 21 99752-5033</span></h6>
@@ -96,7 +96,7 @@
                 url: "{% url 'clashdata:currentwarallies' %}",
                 type: "GET",
                 data: {  
-                    tag_id: "{{ clan }}"
+                    tag_id: "{{ clan.tag }}"
                 },
                 error: function(response){
                     console.log("error");

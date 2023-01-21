@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="row">
+    <div class="col-md-12">
+
+        <!-- Modal -->
+        <div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <form id= "modal-confirm" method="POST" action="{% url 'clashdata:deleteclanBR' pk=-1 %}" >
+                      {% csrf_token %}
+                      <input type="submit" value="Confirm Delete" class="btn btn-danger btn-large">
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+      <div class="card ">
+        <div class="card-header">
+          <h4 class="card-title">Clãs BR</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table tablesorter " id="">
+              <thead class=" text-primary">
+                <tr>
+                  <th>Nome</th>
+                  {% if user.is_authenticated %}
+                    <th class="text-right">Ações</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for clan in object_list %}
+                    <tr>
+                        <td>{{ clan.name }}</td>
+                        {% if user.is_authenticated %}
+                            <td class="td-actions text-right">
+                                <button onclick="window.location.href='{% url 'clashdata:editclanBR' pk=clan.id %}';" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm">
+                                    <i class="tim-icons icon-single-02"></i>
+                                </button>
+                                <button data-toggle="modal" data-target="#confirmDelete" data-clanname="{{ clan.name }}" data-clanid="{{ clan.id }}" type="button" rel="tooltip" class="btn btn-danger btn-link btn-icon btn-sm">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                </button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table> 
+          </div>
+          {% if user.is_authenticated %}
+            <a href="{% url 'clashdata:createclanBR' %}" class="btn btn-primary" role="button">Novo</a>
+          {% endif %}
+        </div>
+    </div>
+</div> 
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+$('#confirmDelete').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var clanid = button.data('clanid');
+    var clanname = button.data('clanname');
+    var modal = $(this);
+
+    modal.find('.modal-title').text('Gostaria realmente de remover ' + clanname + ' ?');
+    var x = modal.find('#modal-confirm').attr("action");
+
+    let result = x.replace("-1", clanid);
+    modal.find('#modal-confirm').attr("action", result);   
+  });
+</script>
+
+{% endblock javascripts %}

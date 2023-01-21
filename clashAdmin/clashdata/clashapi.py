@@ -306,3 +306,13 @@ def getTrainingDays(clanTag):
         trainingInfo.append(participantInfo)
 
     return trainingInfo
+
+def getClanData(clanTag):
+    try:
+        tag = clanTag.replace("#","")
+        clanInfo = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}")
+        return clanInfo
+    except Exception as error:
+        return {
+            "name": "",
+        }

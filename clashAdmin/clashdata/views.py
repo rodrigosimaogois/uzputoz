@@ -177,7 +177,7 @@ class CurrentWarAllies(generic.View):
             return JsonResponse({'warInfo': warInfo}, status=200)
         
         isColosseum = clashapi.isColosseum()
-        clanTags = ["#QQ00QQRL", "#22J0P82V", "#QCRRJP9L", "#9G9R0Q8R"]
+        clanTags = models.ClanBR.objects.exclude(tag__exact='')
         return render(request, "clashdata/currentwarallies.html", { 'clanTags': clanTags, 'isColosseum': isColosseum})
 
 class CurrentWarRival(LoginRequiredMixin, generic.View):
@@ -274,3 +274,21 @@ def getTrainingDaysBySeason(request, tag, season):
         trainingInfo = []
 
     return JsonResponse({'json': trainingInfo}, status=200)
+
+class CreateClanBR(LoginRequiredMixin, generic.CreateView):
+    form_class = forms.ClanBRCreateForm
+    success_url = reverse_lazy('clashdata:clansBR')
+    template_name = 'clashdata/clanBR_form.html'
+
+class DeleteClanBR(LoginRequiredMixin, generic.DeleteView):
+    model = models.ClanBR
+    success_url = reverse_lazy("clashdata:clansBR")
+        
+class UpdateClanBR(LoginRequiredMixin, generic.UpdateView):
+    model = models.ClanBR
+    form_class = forms.ClanCreateForm
+    success_url = reverse_lazy('clashdata:clansBR')
+    template_name = 'clashdata/clanBR_form.html'
+
+class ListClansBR(generic.ListView):
+    model = models.ClanBR

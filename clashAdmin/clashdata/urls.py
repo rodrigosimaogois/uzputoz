@@ -28,4 +28,8 @@ urlpatterns = [
     path("dima/", views.Dima.as_view(), name="dima"),
     path("getTrainingDays/<tag>", views.getTrainingDays, name="getTrainingDays"),
     path("getTrainingDaysBySeason/<tag>/<season>", views.getTrainingDaysBySeason, name="getTrainingDaysBySeason"),
+    path("clanBRList/", views.ListClansBR.as_view(), name="clansBR"),
+    path("newclanBR/", views.CreateClanBR.as_view(), name="createclanBR"),
+    path("editclanBR/<pk>/",views.UpdateClanBR.as_view(),name="editclanBR"),
+    path("deleteclanBR/<pk>/",views.DeleteClanBR.as_view(),name="deleteclanBR"),
 ]

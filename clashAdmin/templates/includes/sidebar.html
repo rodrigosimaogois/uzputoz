@@ -18,7 +18,7 @@
             <li>
               <a href="{% url 'clashdata:clans' %}">
                 <i class="tim-icons icon-bank"></i>
-                <p id="test">Clas</p>
+                <p id="test">Clãs</p>
               </a>
             </li>
             <li class="">
@@ -48,6 +48,12 @@
                   <p>Recrutamento</p>
                 </a>
               </li>
+              <li>
+                <a href="{% url 'clashdata:clansBR' %}">
+                  <i class="tim-icons icon-vector"></i>
+                  <p id="test">Clãs BR</p>
+                </a>
+              </li>
             {% endif %}
           </div>
           
@@ -72,7 +78,7 @@
             <li class="">
               <a href="{% url 'clashdata:currentwarallies' %}">
                 <i class="tim-icons icon-shape-star"></i>
-                <p>Guerra Aliados</p>
+                <p>Clãs BR</p>
               </a>
             </li>
             {% if user.is_authenticated %}

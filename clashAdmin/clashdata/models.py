@@ -115,3 +115,10 @@ class TrainingDay(models.Model):
 
     def __str__(self) -> str:
         return self.tag
+
+class ClanBR(models.Model):
+    tag = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True)
+
+    def __str__(self) -> str:
+        return self.tag
