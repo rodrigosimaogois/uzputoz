@@ -2,11 +2,14 @@ import requests
 import json
 from . import models
 from django.shortcuts import get_object_or_404
-from datetime import datetime
+from datetime import datetime, timezone
 from dateutil import tz
 
 from_zone = tz.gettz('UTC')
 to_zone = tz.gettz('America/Sao_Paulo')
+
+def days_hours_minutes(td):
+    return td.days, td.seconds//3600, (td.seconds//60)%60
 
 def __callEndPoint(url):
     token = get_object_or_404(models.Config, name="clashapi")
@@ -205,18 +208,33 @@ def whoIsMissing(clanTag, currentLine):
             try:
                 lastSeen = found[0]["lastSeen"]
                 dt_obj = datetime.strptime(lastSeen, '%Y%m%dT%H%M%S.%fZ')
+                currentTime = datetime.utcnow()               
+                lastTime = dt_obj.replace(tzinfo=None)
+                diff = currentTime - lastTime
 
-                utc = dt_obj.replace(tzinfo=from_zone)
-                local = utc.astimezone(to_zone)
+                days, hours, minutes = days_hours_minutes(diff)
+                strMessage = ""
+                if days > 0:
+                    strMessage = f"há {days} dia(s), {hours} hora(s) e {minutes} minuto(s)"
+                else:
+                    if hours > 0:
+                        strMessage = f"há {hours} hora(s) e {minutes} minuto(s)"
+                    else:
+                        if minutes > 0:
+                            strMessage = f"há {minutes} minuto(s)"
+                        else:
+                            strMessage = f"há menos de 1 minuto"
+                
 
                 allConsideredPlayers.append(participant["tag"])
                 missingPlayers.append({
                     "name": participant["name"],
                     "missingDecks": 4 - participant["decksUsedToday"],
-                    "lastSeen": local.strftime("%d-%m-%Y %H:%M:%S"),
+                    "lastSeen": strMessage,
                     "inClan": True
                 })
             except Exception as error:
+                print(str(error))
                 allConsideredPlayers.append(participant["tag"])
                 missingPlayers.append({
                     "name": participant["name"],
