@@ -194,6 +194,7 @@ def whoIsMissing(clanTag, currentLine):
     totalMissingDecks = 200 - decksMissingParticipants - totalUsedDecks
 
     missingPlayers = []
+    invalidTotalSeconds = 864000
 
     for participant in currentRiverRace["clan"]["participants"]:
         decksUsedToday = participant["decksUsedToday"]
@@ -212,18 +213,19 @@ def whoIsMissing(clanTag, currentLine):
                 lastTime = dt_obj.replace(tzinfo=None)
                 diff = currentTime - lastTime
 
+                totalSeconds = diff.total_seconds()
                 days, hours, minutes = days_hours_minutes(diff)
                 strMessage = ""
                 if days > 0:
-                    strMessage = f"há {days} dia(s), {hours} hora(s) e {minutes} minuto(s)"
+                    strMessage = f"há {days} dia(s), {hours}h e {minutes}min"
                 else:
                     if hours > 0:
-                        strMessage = f"há {hours} hora(s) e {minutes} minuto(s)"
+                        strMessage = f"há {hours}h e {minutes}min"
                     else:
                         if minutes > 0:
-                            strMessage = f"há {minutes} minuto(s)"
+                            strMessage = f"há {minutes}min"
                         else:
-                            strMessage = f"há menos de 1 minuto"
+                            strMessage = f"há menos de 1min"
                 
 
                 allConsideredPlayers.append(participant["tag"])
@@ -231,7 +233,8 @@ def whoIsMissing(clanTag, currentLine):
                     "name": participant["name"],
                     "missingDecks": 4 - participant["decksUsedToday"],
                     "lastSeen": strMessage,
-                    "inClan": True
+                    "inClan": True,
+                    "totalSeconds": totalSeconds
                 })
             except Exception as error:
                 print(str(error))
@@ -240,7 +243,8 @@ def whoIsMissing(clanTag, currentLine):
                     "name": participant["name"],
                     "missingDecks": 4 - participant["decksUsedToday"],
                     "lastSeen": {},
-                    "inClan": True
+                    "inClan": True,
+                    "totalSeconds": invalidTotalSeconds
                 })
         else:
             if decksUsedToday > 0:
@@ -249,7 +253,8 @@ def whoIsMissing(clanTag, currentLine):
                     "name": participant["name"],
                     "missingDecks": 4 - participant["decksUsedToday"],
                     "lastSeen": {},
-                    "inClan": False
+                    "inClan": False,
+                    "totalSeconds": invalidTotalSeconds
                 })
 
     for expectedMember in currentLine:
@@ -258,10 +263,11 @@ def whoIsMissing(clanTag, currentLine):
                 "name": expectedMember["name"],
                 "missingDecks": 4,
                 "lastSeen": {},
-                "inClan": False
+                "inClan": False,
+                "totalSeconds": invalidTotalSeconds
             })
                 
-    missingPlayers.sort(key=lambda x: x["missingDecks"], reverse=False)
+    missingPlayers.sort(key=lambda x: (x["missingDecks"], x["totalSeconds"]), reverse=False)
 
     clanInfo = {
         "clanName": currentRiverRace["clan"]["name"],
