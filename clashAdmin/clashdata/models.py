@@ -124,6 +124,10 @@ class ClanBR(models.Model):
         return self.tag
 
 class LogClansWar(models.Model):
+
+    class Meta:
+        ordering = ["-date"]
+
     tag = models.CharField(max_length=255, blank=True)
     name = models.CharField(max_length=255, blank=True)
     date = models.DateTimeField(auto_now=True)
