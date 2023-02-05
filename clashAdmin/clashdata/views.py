@@ -314,10 +314,13 @@ class ClanWar(generic.View):
             tag = request.GET.get('clan')
             tag = "#" + tag
             isColosseum = clashapi.isColosseumNew(tag)
+            name = clashapi.getClanData(tag)["name"]
+
+            log = models.LogClansWar(tag=tag, name=name)
+            log.save()
+
         except Exception as error:
-            print("ERROR")
             errorMsg = f"Não foi possível carregar clã com a TAG {tag}"
             bError = 1
 
-        
         return render(request, "clashdata/clanwar.html", { 'clan': tag, 'isColosseum': isColosseum, 'error': errorMsg, 'hasError': bError})

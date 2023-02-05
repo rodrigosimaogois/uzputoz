@@ -122,3 +122,11 @@ class ClanBR(models.Model):
 
     def __str__(self) -> str:
         return self.tag
+
+class LogClansWar(models.Model):
+    tag = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True)
+    date = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.name
