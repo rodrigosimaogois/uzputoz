@@ -324,3 +324,16 @@ class ClanWar(generic.View):
             bError = 1
 
         return render(request, "clashdata/clanwar.html", { 'clan': tag, 'isColosseum': isColosseum, 'error': errorMsg, 'hasError': bError})
+
+class ListLogClansWar(LoginRequiredMixin, generic.ListView):
+    model = models.LogClansWar
+    paginate_by = 50
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return filters.LogClansWarFilter(self.request.GET, queryset=queryset).qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = filters.LogClansWarFilter(self.request.GET, queryset=self.get_queryset())
+        return context

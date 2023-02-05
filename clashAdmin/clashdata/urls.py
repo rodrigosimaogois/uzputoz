@@ -34,4 +34,5 @@ urlpatterns = [
     path("deleteclanBR/<pk>/",views.DeleteClanBR.as_view(),name="deleteclanBR"),
     path("clanswar/", views.ClansWar.as_view(), name="clanswar"),
     path("clanwar/", views.ClanWar.as_view(), name="clanwar"),
+    path("clanswarlog/", views.ListLogClansWar.as_view(), name="clanswarlog"),
 ]

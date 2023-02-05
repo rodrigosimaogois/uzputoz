@@ -23,3 +23,12 @@ class ClanHistoryFilter(django_filters.FilterSet):
         model = models.ClanMemberHistory
         fields = '__all__'
         exclude = ['date', 'clanSource', 'clanDestiny']
+
+class LogClansWarFilter(django_filters.FilterSet):
+    name = CharFilter(field_name="name", lookup_expr='icontains', label="Nome")
+    tag = CharFilter(field_name="tag", lookup_expr='icontains', label="Tag")
+
+    class Meta:
+        model = models.LogClansWar
+        fields = '__all__'
+        exclude = ['date']
