@@ -223,7 +223,7 @@
     
                 $("#clanName").text(clanName);
 
-                $("#clanMissing").text(clanName + " - Faltam " + response.missingInfo.totalMissingParticipants + " jog. + " + response.missingInfo.totalMissing + " decks");
+                $("#clanMissing").text("Faltam " + response.missingInfo.totalMissingParticipants + " jog. + " + response.missingInfo.totalMissing + " decks");
                 $("#clanMissingContent").append(rows);
                 setProgressBar(100);
             } 
