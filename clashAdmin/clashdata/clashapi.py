@@ -161,6 +161,12 @@ def isColosseum():
     isColosseum = currentRiverRace["periodType"] == "colosseum"
     return isColosseum
 
+def isColosseumNew(clanTag):
+    tag = clanTag.replace("#","")
+    currentRiverRace = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace")
+    isColosseum = currentRiverRace["periodType"] == "colosseum"
+    return isColosseum
+
 def whoIsMissing(clanTag, currentLine):
     tag = clanTag.replace("#","")
 

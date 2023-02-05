@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<style>
+    #clanfilter{
+        background-color: #27293D;
+    }
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+{% if error %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 style="color:#FF726F;" class="card-title">Erro</h6>
+            </div>
+            <div class="card-body">   
+                <h6 >{{ error }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">Quer adicionar seu Clã na lista gratuitamente?</h6>
+            </div>
+            <div class="card-body">   
+                <h6>Entre em contato no whats <span style="color:#00B050;">+55 21 99752-5033</span></h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">Clans</h6>
+            </div>
+            <div class="card-body">   
+                <div>
+                    <form class="" method="get" action="{% url 'clashdata:clanwar' %}">
+                        <select class="form-control" id="clanfilter" name="clan">
+                            {% for clan in clans %}
+                                <option class="optionvalue" {% if clan.tag == sel_clantag %} selected {% endif %} value="{{ clan.tag|slice:"1:" }}">{{ clan.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" class="btn btn-primary" value="Carregar Dados">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">Pesquisar usando Tag do clã</h6>
+            </div>
+            <div class="card-body">   
+                <div>
+                    <form class="" method="get" action="{% url 'clashdata:clanwar' %}">
+                        <label for="validationCustomTag" class="form-label">TAG</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">#</span>
+                            <input type="text" name="clan" class="form-control" id="validationCustomTag" aria-describedby="inputGroupPrepend" required>
+                            <div class="invalid-feedback">
+                              Insira a TAG do clã
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Carregar Dados">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+
+    function test() {
+        document.getElementById('tag').value = "122";
+        document.searchWithTag.submit();
+    }
+</script>
+{% endblock javascripts %}

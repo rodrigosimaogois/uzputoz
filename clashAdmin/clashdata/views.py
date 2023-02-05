@@ -292,3 +292,32 @@ class UpdateClanBR(LoginRequiredMixin, generic.UpdateView):
 
 class ListClansBR(generic.ListView):
     model = models.ClanBR
+
+class ClansWar(generic.ListView):
+    model = models.ClanBR
+    context_object_name = 'clans'
+    template_name = 'clashdata/clanswar.html'
+
+class ClanWar(generic.View):
+    def get(self, request):
+        if is_ajax(request):
+            clanTag = request.GET.get('tag_id')
+            warInfo = clashapi.getCurrentWarInfo(clanTag)
+            missing = clashapi.whoIsMissing(clanTag, [])
+            return JsonResponse({'warInfo': warInfo, 'missingInfo': missing}, status=200)
+        
+        errorMsg = None
+        bError = 0
+        isColosseum = False
+
+        try:
+            tag = request.GET.get('clan')
+            tag = "#" + tag
+            isColosseum = clashapi.isColosseumNew(tag)
+        except Exception as error:
+            print("ERROR")
+            errorMsg = f"Não foi possível carregar clã com a TAG {tag}"
+            bError = 1
+
+        
+        return render(request, "clashdata/clanwar.html", { 'clan': tag, 'isColosseum': isColosseum, 'error': errorMsg, 'hasError': bError})
