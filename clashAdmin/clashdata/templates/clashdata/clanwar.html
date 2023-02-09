@@ -160,7 +160,7 @@
         
                 response.warInfo.clansInfos.forEach(function(item, index, arr){
 
-                    let total = parseInt(item.Fame) + points[index]
+                    let total = parseInt(item.Fame) + points[index] + parseInt(item.BoatPoints)
                     clanRow = '<tr class="rowcolor"> \
                                 <td class="col-2"> \
                                     <div>' + item.Name + '</div> \
@@ -185,6 +185,7 @@
                         clanRow += '<td class="text-nowrap text-right text-md-center"> \
                                         <div><img src="/static/assets/img/green_check.png"/> ' + item.Fame + '</div> \
                                         <div>+' + points[index] + '</div> \
+                                        <div>+' + item.BoatPoints + '</div> \
                                         <div><img src="/static/assets/img/red_clock.png"/> ' + total + '</div> \
                                     </td>';
                     }

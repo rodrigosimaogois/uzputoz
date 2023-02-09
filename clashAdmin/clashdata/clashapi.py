@@ -78,10 +78,14 @@ def __getClanInfo(clanData, maxAttacks, isColosseum, boatInfo):
         defenses = 0
         boatPoints = 0
 
-        if not isColosseum and clanData["tag"] in boatInfo:
-            boat = boatInfo[clanData["tag"]]
-            defenses = boat["Defenses"]
-            boatPoints = boat["BoatPoints"]
+        if not isColosseum:
+            if clanData["tag"] in boatInfo:
+                boat = boatInfo[clanData["tag"]]
+                defenses = boat["Defenses"]
+                boatPoints = boat["BoatPoints"]
+            else:
+                defenses = 15
+                boatPoints = 435
 
         clanInfo = { 
                 "Tag": clanData["tag"], 
@@ -124,12 +128,7 @@ def getCurrentWarInfo(clanTag):
 
         if(currentRiverRace["periodType"] == "warDay"):
 
-            if not "periodLogs" in currentRiverRace:
-                boatInfo[tag] = {
-                        "Defenses": 15,
-                        "BoatPoints": 435
-                    }
-            else:
+            if "periodLogs" in currentRiverRace:
                 periods = currentRiverRace["periodLogs"][-1:]
                 for period in periods:             
                     for item in period["items"]:
