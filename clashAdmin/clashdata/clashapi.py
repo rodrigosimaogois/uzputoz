@@ -123,24 +123,31 @@ def getCurrentWarInfo(clanTag):
         boatPrize = [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59]
 
         if(currentRiverRace["periodType"] == "warDay"):
-            periods = currentRiverRace["periodLogs"][-1:]
-            for period in periods:             
-                for item in period["items"]:
-                    tag = item["clan"]["tag"]
-                    defenses = item["numOfDefensesRemaining"]
-                    
-                    totalBoatPoints = 0
-                    for i in range(defenses):
-                        totalBoatPoints += boatPrize[i]
-                    
-                    if weekDay == 3:
-                        defenses = 15
-                        totalBoatPoints = 435
 
-                    boatInfo[tag] = {
-                        "Defenses": defenses,
-                        "BoatPoints": totalBoatPoints
+            if not "periodLogs" in currentRiverRace:
+                boatInfo[tag] = {
+                        "Defenses": 15,
+                        "BoatPoints": 435
                     }
+            else:
+                periods = currentRiverRace["periodLogs"][-1:]
+                for period in periods:             
+                    for item in period["items"]:
+                        tag = item["clan"]["tag"]
+                        defenses = item["numOfDefensesRemaining"]
+                        
+                        totalBoatPoints = 0
+                        for i in range(defenses):
+                            totalBoatPoints += boatPrize[i]
+                        
+                        if weekDay == 3:
+                            defenses = 15
+                            totalBoatPoints = 435
+
+                        boatInfo[tag] = {
+                            "Defenses": defenses,
+                            "BoatPoints": totalBoatPoints
+                        }
 
         for clan in currentRiverRace["clans"]:
             clanInfo = __getClanInfo(clan, maxAttacks, isColosseum, boatInfo)
