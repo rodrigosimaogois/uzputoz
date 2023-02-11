@@ -337,3 +337,13 @@ class ListLogClansWar(LoginRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context['filter'] = filters.LogClansWarFilter(self.request.GET, queryset=self.get_queryset())
         return context
+
+def getLastSeason(request, clanTag):
+    clanTag = "#" + clanTag
+    lastSeason = clashapi.getLastSeason(clanTag)
+    return JsonResponse({'json': lastSeason}, status=200)
+
+def getPlayersWarInfo(request, clanTag, season):
+    clanTag = "#" + clanTag
+    playersWarInfo = clashapi.getPlayersWarInfo(clanTag, season)
+    return JsonResponse({'json': playersWarInfo}, status=200)

@@ -134,3 +134,15 @@ class LogClansWar(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+class PlayersWarInfo(models.Model):
+    war = models.ForeignKey(War, related_name='playerswarinfo_war', on_delete=models.CASCADE)
+    tag = models.CharField(max_length=255, blank=True) 
+    fame = models.IntegerField(default=0)
+    boats = models.IntegerField(default=0)
+    atksTotal = models.IntegerField(default=0)  
+    atksTraining = models.IntegerField(default=0)
+    atksWar = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return self.tag

@@ -3,7 +3,7 @@ import json
 from . import models
 from django.shortcuts import get_object_or_404
 from datetime import datetime, timezone
-from dateutil import tz
+from dateutil import tz, parser
 
 from_zone = tz.gettz('UTC')
 to_zone = tz.gettz('America/Sao_Paulo')
@@ -106,7 +106,6 @@ def __getClanInfo(clanData, maxAttacks, isColosseum, boatInfo):
             }
         
         return clanInfo
-
 
 def getCurrentWarInfo(clanTag):
         tag = clanTag.replace("#","")
@@ -352,3 +351,64 @@ def getClanData(clanTag):
         return {
             "name": "",
         }
+
+def getPlayersWarInfo(clanTag, searchedSeason):
+    
+    clanPlayersInfo = {
+        "finishedBefore" : False,
+        "playersInfo": []
+    }
+
+    try:
+        tag = clanTag.replace("#","")
+        riverraceLog = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/riverracelog")                
+
+        for item in riverraceLog["items"]:
+            seasonId = item["seasonId"]
+            sectionIndex = item["sectionIndex"]
+            createdDate = item["createdDate"]
+
+            season = f"{seasonId}-{sectionIndex}"
+
+            if not season == searchedSeason:
+                continue                        
+            
+            for standing in item["standings"]:
+                if standing["clan"]["tag"] == f"#{tag}":
+
+                    finishTime = standing["clan"]["finishTime"]
+                    createdLog = parser.isoparse(createdDate)
+                    finishedRace = parser.isoparse(finishTime)
+                    diff = createdLog - finishedRace
+
+                    if diff.days == 1:
+                        clanPlayersInfo["finishedBefore"] = True
+
+                    for participant in standing["clan"]["participants"]:
+                        
+                        if participant["fame"] == 0:
+                            continue
+
+                        data = {
+                            "Tag": participant["tag"],
+                            "Fame": participant["fame"],
+                            "Attacks": participant["decksUsed"],
+                            "Boat": participant["boatAttacks"]
+                        }
+
+                        clanPlayersInfo["playersInfo"].append(data)                    
+                
+                    return clanPlayersInfo
+            
+        return clanPlayersInfo
+    
+    except Exception as error:
+        print(error.args)
+        return clanPlayersInfo
+    
+def getLastSeason(clanTag):
+    tag = clanTag.replace("#","")
+    riverraceLog = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/riverracelog")
+    seasonId = riverraceLog["items"][0]["seasonId"]
+    index = riverraceLog["items"][0]["sectionIndex"]
+    return f"{seasonId}-{index}"

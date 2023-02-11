@@ -35,4 +35,6 @@ urlpatterns = [
     path("clanswar/", views.ClansWar.as_view(), name="clanswar"),
     path("clanwar/", views.ClanWar.as_view(), name="clanwar"),
     path("clanswarlog/", views.ListLogClansWar.as_view(), name="clanswarlog"),
+    path("getLastSeason/<clanTag>/", views.getLastSeason, name="getLastSeason"),
+    path("getPlayersWarInfo/<clanTag>/<season>/", views.getPlayersWarInfo, name="getPlayersWarInfo"),
 ]
