@@ -351,6 +351,7 @@ def getPlayersWarInfo(request, clanTag, season):
 def searchPlayersWarInfo(request):
     selectedClanId = request.GET.get('clan', None)
     selectedSeasons = request.GET.get('seasons', None)
+    selectedOrderBy = request.GET.get('inlineOrderBy', None)
     clans = models.Clan.objects.all().exclude(name="Aposentados").exclude(tag="")
     seasons = models.War.objects.all().order_by('-identifier').values('identifier').distinct()[:5]
 
@@ -373,8 +374,6 @@ def searchPlayersWarInfo(request):
 
     playersToBeAnalyed = models.ClanMember.objects.filter(clan_id=selectedClanId)
     allPlayersInfo = []
-
-    print(selectedClanId)
 
     for player in playersToBeAnalyed:
         totalFame = 0
@@ -431,7 +430,20 @@ def searchPlayersWarInfo(request):
             "Seasons": seasonsInfo
         })
     
-    allPlayersInfo.sort(key=lambda x: x["Average"], reverse=True)
+    if selectedOrderBy == "fame":
+        conditions = len(lstSeasons)
+        if conditions == 4:
+            allPlayersInfo.sort(key=lambda x: (x["Seasons"][0]["Fame"], x["Seasons"][1]["Fame"], x["Seasons"][2]["Fame"], x["Seasons"][3]["Fame"]), reverse=True)
+        elif conditions == 3:
+            allPlayersInfo.sort(key=lambda x: (x["Seasons"][0]["Fame"], x["Seasons"][1]["Fame"], x["Seasons"][2]["Fame"]), reverse=True)
+        elif conditions == 2:
+            allPlayersInfo.sort(key=lambda x: (x["Seasons"][0]["Fame"], x["Seasons"][1]["Fame"]), reverse=True)
+        else:
+            allPlayersInfo.sort(key=lambda x: x["Seasons"][0]["Fame"], reverse=True)
+    elif selectedOrderBy == "atks":
+        allPlayersInfo.sort(key=lambda x: x["Atks"], reverse=False)
+    else:
+        allPlayersInfo.sort(key=lambda x: x["Average"], reverse=True)
 
     return render(request, "clashdata/playerswarinfo_list.html", {
         'clanName': selectedClanInfo.name,
