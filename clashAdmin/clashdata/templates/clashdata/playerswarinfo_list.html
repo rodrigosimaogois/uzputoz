@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<style>
+  #clan {
+    background-color: #27293D;
+  }
+
+  .green {
+    color: #000000;
+    background: linear-gradient(to bottom, #00cc99 0%, #ccffcc 100%);
+  }
+
+  .yellow {
+    background: linear-gradient(to bottom, #ffcc00 0%, #ffffff 100%);
+  }
+
+  .red {
+    background: linear-gradient(to bottom, #ff3300 0%, #ffffff 100%);
+  }
+
+  .purple {
+    background: linear-gradient(to bottom, #6600cc 0%, #ffffff 100%);
+  }
+
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row" id="filters">
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header">
+          <h6 class="card-title">Criterias</h6>
+        </div>
+        <div class="card-body">
+
+          <form class="" method="get">
+            <div class="form-group">
+              <label for="clans">Clan:</label>
+              <select class="form-control" id="clan" name="clan">
+                {% for clan in clans %}
+                    <option class="optionvalue" {% if clan.id|slugify == sel_clan_id %} selected {% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="seasons">Season(s):</label>
+              <select class="selectpicker" multiple data-live-search="true" id="seasonIds">
+                {% for season in seasons %}
+                    <option value="{{ season.identifier }}">{{ season.identifier }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" name="scorefromothers" type="checkbox" value="">
+                <span class="form-check-sign">
+                  <span class="check">Consider score from other clans ?</span>
+                </span>
+              </label>
+            </div>
+            <!--<div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" name="allplayers" type="checkbox" value="">
+                <span class="form-check-sign">
+                  <span class="check">Get all players (includes who are not in the squad) ?</span>
+                </span>
+              </label>
+            </div>-->
+            <input type="hidden" id="seasons" name="seasons" value="">
+            <button type="submit" class="btn btn-primary">Search</button>
+          </form>
+           
+          {% comment %} <form class="" method="get" action="{% url 'clashdata:members' %}">
+            <select id="example-getting-started" multiple="multiple">
+              {% for clan in clans %}
+                <option value="{{ clan.id }}">{{ clan.name }}</option>
+              {% endfor %}
+            </select>
+            <label class="form-label select-label">Clans</label>
+            <button type="submit" class="btn btn-outline-success btn-primary">Search</button>
+          </form> {% endcomment %}
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title text-center">{{ clanName }}</h4>
+          {% if result %}
+            <div class="table-responsive">
+              <table class="table table-sm tablesorter" id="">
+                <thead class=" text-primary">
+                  <!--<tr>
+                    <th colspan="5"></th>
+                    {% for season in lstSeasons %}
+                      <th colspan="2" class="text-center">{{ season }}</th>
+                    {% endfor %}-->
+                  </tr>
+                  <tr>
+                      <th class="col-1 text-center">POS</th>
+                      <th class="col-1 text-center">Avg</th>
+                      <th class="col-1">Name</th>
+                      <!--<th class="col-1">Tag</th>-->
+                      <th class="col-1 text-center">Atks</th>
+                      {% for season in lstSeasons %}
+                        <th class="col-1 text-center">{{ season }}</th>
+                        <!--<th class="">Atks</th>-->
+                      {% endfor %}
+                  </tr>
+                </thead>
+                <tbody id="myTable">
+                  {% for data in result %}
+                      <tr class="{% if data.Average >= 180 %}green{% elif data.Average >= 170 %}yellow{% elif data.Average >= 160 %}red{% else %}purple{% endif %}">
+                          <td class="col-1 text-center">{{ forloop.counter }}</td>
+                          <td class="col-1 text-center">{{ data.Average|floatformat:2 }}</td>
+                          <td class="col-1">{{ data.Name }}</td>
+                          <!--<td class="col-1">{{ data.Tag }}</td>-->
+                          <td class="col-1 text-center">{{ data.Atks }}</td>
+                          
+                          {% for seasonData in data.Seasons %}
+                            <td class="col-1 text-center">{{ seasonData.Fame }}</td>
+                            <!--<td class="col-1">{{ seasonData.Atks }}</td>-->
+                          {% endfor %}
+                          
+                          {% if user.is_authenticated %}
+                              {% comment %} <td class="td-actions text-right">
+                                  <button onclick="window.location.href='{% url 'clashdata:editwarinfo' pk=clanmember.id %}';" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm">
+                                      <i class="tim-icons icon-single-02"></i>
+                                  </button>
+                              </td> {% endcomment %}
+                          {% endif %}
+                      </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script>
+
+$('.selectpicker').change(function () {
+      var selectedItem = $('.selectpicker').val();
+      $('#seasons').val(selectedItem);
+});
+
+</script>
+{% endblock javascripts %}

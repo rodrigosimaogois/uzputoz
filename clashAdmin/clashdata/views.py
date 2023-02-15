@@ -347,3 +347,95 @@ def getPlayersWarInfo(request, clanTag, season):
     clanTag = "#" + clanTag
     playersWarInfo = clashapi.getPlayersWarInfo(clanTag, season)
     return JsonResponse({'json': playersWarInfo}, status=200)
+
+def searchPlayersWarInfo(request):
+    selectedClanId = request.GET.get('clan', None)
+    selectedSeasons = request.GET.get('seasons', None)
+    clans = models.Clan.objects.all().exclude(name="Aposentados").exclude(tag="")
+    seasons = models.War.objects.all().order_by('-identifier').values('identifier').distinct()[:5]
+
+    if selectedClanId is None or selectedSeasons is None or selectedSeasons == "":
+        return render(request, "clashdata/playerswarinfo_list.html", {'clans': clans, 'seasons': seasons, 'sel_clan_id': selectedClanId })
+    
+    selectedClanInfo = models.Clan.objects.filter(id=selectedClanId).first()
+
+    scoreFromOtherClans = request.GET.get('scorefromothers', None)
+    allPlayers = request.GET.get('allplayers', None)
+
+    bScore = False
+    bAllPlayers = False
+    lstSeasons = selectedSeasons.split(',')
+
+    if not scoreFromOtherClans is None:
+        bScore = True
+    if not allPlayers is None:
+        bAllPlayers = True
+
+    playersToBeAnalyed = models.ClanMember.objects.filter(clan_id=selectedClanId)
+    allPlayersInfo = []
+
+    for player in playersToBeAnalyed:
+        totalFame = 0
+        totalAtks = 0
+        seasonsInfo = []
+
+        for season in lstSeasons:
+            war = models.War.objects.filter(identifier=season, clan_id=selectedClanId).first()
+            playerInfo = models.PlayersWarInfo.objects.filter(war=war, tag=player.tag).first()
+
+            otherClans = []
+            atksSeason = 0
+            fameSeason = 0
+            avgSeason = 0
+
+            if not playerInfo is None:
+                atksSeason = playerInfo.atksWar
+                fameSeason = playerInfo.fame
+
+            if bScore: # get other clans infos
+                for clan in clans:
+                    if clan.id == selectedClanId:
+                        continue
+                    warOtherClan = models.War.objects.filter(identifier=season, clan_id=clan.id).first()
+                    playerInfoOtherClan = models.PlayersWarInfo.objects.filter(war=warOtherClan, tag=player.tag).first()
+
+                    if not playerInfoOtherClan is None:
+                        atksSeason = atksSeason + playerInfoOtherClan.atksWar
+                        fameSeason = fameSeason + playerInfoOtherClan.fame
+                        otherClans.append(clan.name)
+            
+            totalAtks = totalAtks + atksSeason
+            totalFame = totalFame + fameSeason
+            if fameSeason > 0:
+                avgSeason = fameSeason / atksSeason
+
+            seasonsInfo.append({
+                "Name": season,
+                "Atks": atksSeason,
+                "Fame": fameSeason,
+                "Average": avgSeason,
+                "OtherClans": otherClans
+            })
+
+        avg = 0
+        if totalFame > 0:
+            avg = totalFame / totalAtks
+
+        allPlayersInfo.append({
+            "Average": avg,
+            "Name": player.name,
+            "Tag": player.tag,
+            "Atks": totalAtks,
+            "Seasons": seasonsInfo
+        })
+    
+    allPlayersInfo.sort(key=lambda x: x["Average"], reverse=True)
+
+    return render(request, "clashdata/playerswarinfo_list.html", {
+        'clanName': selectedClanInfo.name,
+        'clans': clans, 
+        'sel_clan_id': selectedClanId, 
+        'seasons': seasons,
+        'lstSeasons': lstSeasons,
+        "result": allPlayersInfo
+    })

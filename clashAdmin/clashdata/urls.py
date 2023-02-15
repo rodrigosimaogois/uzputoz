@@ -37,4 +37,5 @@ urlpatterns = [
     path("clanswarlog/", views.ListLogClansWar.as_view(), name="clanswarlog"),
     path("getLastSeason/<clanTag>/", views.getLastSeason, name="getLastSeason"),
     path("getPlayersWarInfo/<clanTag>/<season>/", views.getPlayersWarInfo, name="getPlayersWarInfo"),
+    path("playerswarinfo/", views.searchPlayersWarInfo, name="playerswarinfo"),
 ]
