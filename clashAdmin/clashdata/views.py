@@ -451,5 +451,7 @@ def searchPlayersWarInfo(request):
         'sel_clan_id': selectedClanId, 
         'seasons': seasons,
         'lstSeasons': lstSeasons,
-        "result": allPlayersInfo
+        "result": allPlayersInfo,
+        "scoreFromOtherClans": bScore,
+        "orderby": selectedOrderBy
     })

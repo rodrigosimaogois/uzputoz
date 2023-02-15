@@ -66,13 +66,13 @@
               <label for="seasons">Season(s):</label>
               <select class="selectpicker" multiple data-live-search="true" id="seasonIds">
                 {% for season in seasons %}
-                    <option value="{{ season.identifier }}">{{ season.identifier }}</option>
+                    <option {% if season.identifier in lstSeasons %}selected{% endif %} value="{{ season.identifier }}">{{ season.identifier }}</option>
                 {% endfor %}
               </select>
             </div>
             <div class="form-check">
               <label class="form-check-label">
-                <input class="form-check-input" name="scorefromothers" type="checkbox" value="">
+                <input class="form-check-input" name="scorefromothers" type="checkbox" value="" {% if scoreFromOtherClans %}checked="true"{% endif %}>
                 <span class="form-check-sign">
                   <span class="check">Consider score from other clans ?</span>
                 </span>
@@ -85,11 +85,11 @@
                 <label class="form-check-label" for="inlineRadio1">order by avg desc</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineOrderBy" id="orderby" value="fame">
+                <input class="form-check-input" type="radio" name="inlineOrderBy" id="orderby" value="fame" {% if orderby == "fame" %}checked="true"{% endif %}>
                 <label class="form-check-label" for="inlineRadio2">order by fame desc</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="inlineOrderBy" id="orderby" value="atks">
+                <input class="form-check-input" type="radio" name="inlineOrderBy" id="orderby" value="atks" {% if orderby == "atks" %}checked="true"{% endif %}>
                 <label class="form-check-label" for="inlineRadio2">order by atks</label>
               </div>
             </div>
@@ -184,6 +184,11 @@
 {% block javascripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <script>
+
+$( document ).ready(function() {
+    var selectedItem = $('.selectpicker').val();
+    $('#seasons').val(selectedItem);
+});
 
 $('.selectpicker').change(function () {
       var selectedItem = $('.selectpicker').val();
