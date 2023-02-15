@@ -60,6 +60,12 @@
                   <p>Log Clãs War</p>
                 </a>
               </li>
+              <li>
+                <a href="{% url 'clashdata:playerswarinfo' %}">
+                  <i class="tim-icons icon-tv-2"></i>
+                  <p>War Analyse</p>
+                </a>
+              </li>
             {% endif %}
           </div>
           
@@ -92,12 +98,6 @@
                 <a href="{% url 'clashdata:currentwarrival' %}">
                   <i class="tim-icons icon-atom"></i>
                   <p>Guerra Rivais</p>
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'clashdata:playerswarinfo' %}">
-                  <i class="tim-icons icon-tv-2"></i>
-                  <p>Analyse</p>
                 </a>
               </li>
             {%endif%}
