@@ -374,6 +374,8 @@ def searchPlayersWarInfo(request):
     playersToBeAnalyed = models.ClanMember.objects.filter(clan_id=selectedClanId)
     allPlayersInfo = []
 
+    print(selectedClanId)
+
     for player in playersToBeAnalyed:
         totalFame = 0
         totalAtks = 0
@@ -394,8 +396,8 @@ def searchPlayersWarInfo(request):
 
             if bScore: # get other clans infos
                 for clan in clans:
-                    if clan.id == selectedClanId:
-                        continue
+                    if clan.id == int(selectedClanId):
+                        continue 
                     warOtherClan = models.War.objects.filter(identifier=season, clan_id=clan.id).first()
                     playerInfoOtherClan = models.PlayersWarInfo.objects.filter(war=warOtherClan, tag=player.tag).first()
 
