@@ -352,6 +352,8 @@ def searchPlayersWarInfo(request):
     selectedClanId = request.GET.get('clan', None)
     selectedSeasons = request.GET.get('seasons', None)
     selectedOrderBy = request.GET.get('inlineOrderBy', None)
+    includeplayers = request.GET.get('includeplayers', None)
+    source = request.GET.get('source', 'line')
     clans = models.Clan.objects.all().exclude(name="Aposentados").exclude(tag="")
     seasons = models.War.objects.all().order_by('-identifier').values('identifier').distinct()[:5]
 
@@ -365,15 +367,41 @@ def searchPlayersWarInfo(request):
 
     bScore = False
     bAllPlayers = False
+    bIncludePlayers = False
     lstSeasons = selectedSeasons.split(',')
 
     if not scoreFromOtherClans is None:
         bScore = True
     if not allPlayers is None:
         bAllPlayers = True
+    if not includeplayers is None:
+        bIncludePlayers = True
 
-    playersToBeAnalyed = models.ClanMember.objects.filter(clan_id=selectedClanId)
-    allPlayersInfo = []
+    allPlayersInfo = [] 
+    playersToBeAnalyed = []
+
+    if source == "line":
+        playersToBeAnalyed = models.ClanMember.objects.filter(clan_id=selectedClanId)
+    else:    
+        tagList = []
+        for season in lstSeasons:
+            war = models.War.objects.filter(identifier=season, clan_id=selectedClanId).first()
+            playerInfoList = models.PlayersWarInfo.objects.filter(war=war)
+            tagList.extend(x.tag for x in playerInfoList if x.tag not in tagList)
+        
+        for tagPlayer in tagList:
+            info = models.ClanMember.objects.filter(tag=tagPlayer).first()
+            if info is None:
+                if source == "all":
+                    playerData = clashapi.getPlayerInfo(tagPlayer)
+                    if not playerData["name"] == "":
+                        clanMember = models.ClanMember(
+                            tag=tagPlayer,
+                            name=playerData["name"]
+                        )
+                        playersToBeAnalyed.append(clanMember)    
+            else:
+                playersToBeAnalyed.append(info)
 
     for player in playersToBeAnalyed:
         totalFame = 0
@@ -422,6 +450,9 @@ def searchPlayersWarInfo(request):
         if totalFame > 0:
             avg = totalFame / totalAtks
 
+        if not bIncludePlayers and totalFame == 0:
+            continue
+
         allPlayersInfo.append({
             "Average": avg,
             "Name": player.name,
@@ -431,15 +462,7 @@ def searchPlayersWarInfo(request):
         })
     
     if selectedOrderBy == "fame":
-        conditions = len(lstSeasons)
-        if conditions == 4:
-            allPlayersInfo.sort(key=lambda x: (x["Seasons"][0]["Fame"], x["Seasons"][1]["Fame"], x["Seasons"][2]["Fame"], x["Seasons"][3]["Fame"]), reverse=True)
-        elif conditions == 3:
-            allPlayersInfo.sort(key=lambda x: (x["Seasons"][0]["Fame"], x["Seasons"][1]["Fame"], x["Seasons"][2]["Fame"]), reverse=True)
-        elif conditions == 2:
-            allPlayersInfo.sort(key=lambda x: (x["Seasons"][0]["Fame"], x["Seasons"][1]["Fame"]), reverse=True)
-        else:
-            allPlayersInfo.sort(key=lambda x: x["Seasons"][0]["Fame"], reverse=True)
+        allPlayersInfo.sort(key=lambda x: [p["Fame"] for p in x["Seasons"]], reverse=True)
     elif selectedOrderBy == "atks":
         allPlayersInfo.sort(key=lambda x: x["Atks"], reverse=False)
     else:
@@ -453,5 +476,7 @@ def searchPlayersWarInfo(request):
         'lstSeasons': lstSeasons,
         "result": allPlayersInfo,
         "scoreFromOtherClans": bScore,
-        "orderby": selectedOrderBy
+        "orderby": selectedOrderBy,
+        "includePlayers": bIncludePlayers,
+        "source": source
     })

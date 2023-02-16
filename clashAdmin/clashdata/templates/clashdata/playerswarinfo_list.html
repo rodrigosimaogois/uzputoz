@@ -78,42 +78,47 @@
                 </span>
               </label>
             </div>
-            
             <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" name="includeplayers" type="checkbox" value="" {% if includeplayers %}checked="true"{% endif %}>
+                <span class="form-check-sign">
+                  <span class="check">Include players without score ?</span>
+                </span>
+              </label>
+            </div>
+            <div class="form-check">
+              <label for="clans">Order by:</label><br>
               <div class="form-check-inline">
                 <input class="form-check-input" type="radio" name="inlineOrderBy" id="orderby" value="avg" checked="true">
-                <label class="form-check-label" for="inlineRadio1">order by avg desc</label>
+                <label class="form-check-label" for="inlineRadio1">Avg</label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="inlineOrderBy" id="orderby" value="fame" {% if orderby == "fame" %}checked="true"{% endif %}>
-                <label class="form-check-label" for="inlineRadio2">order by fame desc</label>
+                <label class="form-check-label" for="inlineRadio2">Fame</label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="inlineOrderBy" id="orderby" value="atks" {% if orderby == "atks" %}checked="true"{% endif %}>
-                <label class="form-check-label" for="inlineRadio2">order by atks</label>
+                <label class="form-check-label" for="inlineRadio3">Atks</label>
               </div>
             </div>
-            <!--<div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" name="allplayers" type="checkbox" value="">
-                <span class="form-check-sign">
-                  <span class="check">Get all players (includes who are not in the squad) ?</span>
-                </span>
-              </label>
-            </div>-->
+            <div class="form-check">
+              <label for="clans">Player List:</label><br>
+              <div class="form-check-inline">
+                <input class="form-check-input" type="radio" name="source" id="source" value="line" checked="true">
+                <label class="form-check-label" for="inlineRadio4">Line</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="source" id="source" value="family" {% if source == "family" %}checked="true"{% endif %}>
+                <label class="form-check-label" for="inlineRadio5">Family</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="source" id="source" value="all" {% if source == "all" %}checked="true"{% endif %}>
+                <label class="form-check-label" for="inlineRadio5">All</label>
+              </div>
+            </div>
             <input type="hidden" id="seasons" name="seasons" value="">
             <button type="submit" class="btn btn-primary">Search</button>
           </form>
-           
-          {% comment %} <form class="" method="get" action="{% url 'clashdata:members' %}">
-            <select id="example-getting-started" multiple="multiple">
-              {% for clan in clans %}
-                <option value="{{ clan.id }}">{{ clan.name }}</option>
-              {% endfor %}
-            </select>
-            <label class="form-label select-label">Clans</label>
-            <button type="submit" class="btn btn-outline-success btn-primary">Search</button>
-          </form> {% endcomment %}
         </div>
       </div>
     </div>
