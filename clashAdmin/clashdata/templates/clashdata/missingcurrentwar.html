@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<style>
+    td > div > img {
+        height: 1em;
+        width: auto;
+        display: inline-block;
+    }
+
+    .rowcolor
+    {
+        background-color:#2C3F50;
+    }
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+{% if error %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title">Erro</h6>
+            </div>
+            <div class="card-body">   
+                <h6 style="color:#FF726F;">{{ error }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+    <h5>Carregando...</h5>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+    </div></div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">UZPUTOZ</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col6">Name</th>
+                            <th class="col2">Missing Decks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="uzputozContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">BRJP.FR.ELITE</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col6">Name</th>
+                            <th class="col2">Missing Decks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="brjpContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">BisTuRi</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col6">Name</th>
+                            <th class="col2">Missing Decks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bisturiContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">Get Øut Alive</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col6">Name</th>
+                            <th class="col2">Missing Decks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="goaContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">BisTuRi Access</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col6">Name</th>
+                            <th class="col2">Missing Decks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bisturiAccessContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+
+    const bar = document.querySelector(".progress-bar");
+    let currentProgress = 0;
+
+    function setProgressBar(){
+        currentProgress = currentProgress + 20;
+        if (currentProgress > 100){
+            currentProgress = 100;
+        }
+
+        bar.style.width = currentProgress + "%";
+        bar.innerText = currentProgress + "%";
+
+        if (currentProgress >= 100){
+            $(".progress").css("display", "none");
+            $("h5").css("display", "none");
+        }
+    }
+
+    function myFunction(tag, id){
+        $.ajax({
+            url: "{% url 'clashdata:missingcurrentwar' %}",
+            type: "GET",
+            data: {
+                tag_id: tag
+            },
+            error: function(response){
+                console.log("error");
+            },
+            success: function(response){
+                let rows = ''
+                
+                response.missingInfo.players.forEach(function(item, index, arr){
+                    let row = '<tr class="rowcolor"> \
+                        <td class="col-6"> \
+                            <div>' + item.Name + '</div> \
+                        </td> \
+                        <td class="col-2"> \
+                            <div>' + item.Missing + '</div> \
+                        </td>';
+                    
+                    closeTr = '</tr>'; 
+                    rows += row + closeTr;
+                });
+
+                $(id+"Content").append(rows);
+                setProgressBar();
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        myFunction("#20RGVR8", "#uzputoz");
+        myFunction("#9PGQJCRR", "#brjp");
+        myFunction("#YPU0GJUV", "#bisturi");
+        myFunction("#PULQCRCP", "#goa");
+        myFunction("#YYQGVLV9", "#bisturiAccess");                
+    });
+</script>
+
+{% endblock javascripts %}

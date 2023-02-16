@@ -412,3 +412,52 @@ def getLastSeason(clanTag):
     seasonId = riverraceLog["items"][0]["seasonId"]
     index = riverraceLog["items"][0]["sectionIndex"]
     return f"{seasonId}-{index}"
+
+def getWhoMissedCurrentWar(clanTag):
+    tag = clanTag.replace("#","")
+
+    currentRiverRace = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace")
+
+    periodIndex = currentRiverRace["periodIndex"]
+        
+    weekDay = periodIndex % 7
+    expectedAttacks = 4 * (weekDay - 3) # 3 == first war day
+
+    isColosseum = currentRiverRace["periodType"] == "colosseum"
+
+    if currentRiverRace["clan"]["fame"] > 10000 and not isColosseum:
+        expectedAttacks = 12
+
+    currentSeason = getCurrentSeason(clanTag)
+    clan = models.Clan.objects.filter(tag=clanTag).first()
+    war = models.War.objects.filter(identifier=currentSeason, clan=clan).first()
+
+    missingInfo = {
+        "name": currentRiverRace["clan"]["name"],
+        "players": []
+    }
+
+    if war is None or expectedAttacks == 0:
+        return missingInfo
+    
+    for participant in currentRiverRace["clan"]["participants"]:
+        isMember = models.ClanMember.objects.filter(clan=clan, tag=participant["tag"]).first()
+
+        if isMember is None:
+            continue
+
+        usedDecks = participant["decksUsed"]
+        usedDecksToday = participant["decksUsedToday"]
+        trainingInfo = models.TrainingDay.objects.filter(war=war, tag=participant["tag"]).first()
+        usedDecks = usedDecks - usedDecksToday
+
+        if not trainingInfo is None:
+            usedDecks = usedDecks - trainingInfo.decksTraining
+
+        if usedDecks < expectedAttacks:
+            missingInfo["players"].append({
+                "Name": participant["name"],
+                "Missing": expectedAttacks - usedDecks
+            })
+
+    return missingInfo

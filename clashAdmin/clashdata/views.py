@@ -495,3 +495,14 @@ def searchPlayersWarInfo(request):
         "clanAverage": clanAvg,
         "clanFame": clanFame
     })
+
+class CurrentWarMissed(generic.View):
+
+    def get(self, request):
+        if is_ajax(request):
+            clanTag = request.GET.get('tag_id')
+            missing = clashapi.getWhoMissedCurrentWar(clanTag)
+            return JsonResponse({'missingInfo': missing}, status=200)
+        
+        clanTags = models.Clan.objects.exclude(tag__exact='')
+        return render(request, "clashdata/missingcurrentwar.html", { 'clanTags': clanTags })

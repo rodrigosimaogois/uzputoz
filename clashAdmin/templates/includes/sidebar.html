@@ -87,6 +87,14 @@
                 <p>Quem Falta na Guerra?</p>
               </a>
             </li>
+            {% if user.is_authenticated %}
+              <li class="">
+                <a href="{% url 'clashdata:missingcurrentwar' %}">
+                  <i class="tim-icons icon-puzzle-10"></i>
+                  <p>Missing War</p>
+                </a>
+              </li>
+            {%endif%}
             <li class="">
               <a href="{% url 'clashdata:clanswar' %}">
                 <i class="tim-icons icon-shape-star"></i>
