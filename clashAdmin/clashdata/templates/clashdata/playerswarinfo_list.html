@@ -35,6 +35,7 @@
   #analyseCard .card-header .card-title,
   .table > thead > tr > th,
   .table > tbody > tr > td,
+  .card h5,
   #new
   {
     color: #000000;
@@ -176,6 +177,9 @@
                   {% endfor %}
                 </tbody>
               </table>
+            </div>
+            <div>
+              <h5>Clan Average: {{ clanAverage|floatformat:2 }}</h5>
             </div>
           {% endif %}
         </div>

@@ -403,6 +403,9 @@ def searchPlayersWarInfo(request):
             else:
                 playersToBeAnalyed.append(info)
 
+    clanAvg = 0
+    clanFame = 0
+
     for player in playersToBeAnalyed:
         totalFame = 0
         totalAtks = 0
@@ -420,6 +423,8 @@ def searchPlayersWarInfo(request):
             if not playerInfo is None:
                 atksSeason = playerInfo.atksWar
                 fameSeason = playerInfo.fame
+
+                clanFame = clanFame + fameSeason
 
             if bScore: # get other clans infos
                 for clan in clans:
@@ -450,6 +455,8 @@ def searchPlayersWarInfo(request):
         if totalFame > 0:
             avg = totalFame / totalAtks
 
+        clanAvg = clanAvg + avg
+
         if not bIncludePlayers and totalFame == 0:
             continue
 
@@ -468,6 +475,9 @@ def searchPlayersWarInfo(request):
     else:
         allPlayersInfo.sort(key=lambda x: x["Average"], reverse=True)
 
+    if clanAvg > 0:
+        clanAvg = clanAvg / len(allPlayersInfo)
+
     return render(request, "clashdata/playerswarinfo_list.html", {
         'clanName': selectedClanInfo.name,
         'clans': clans, 
@@ -478,5 +488,7 @@ def searchPlayersWarInfo(request):
         "scoreFromOtherClans": bScore,
         "orderby": selectedOrderBy,
         "includePlayers": bIncludePlayers,
-        "source": source
+        "source": source,
+        "clanAverage": clanAvg,
+        "clanFame": clanFame
     })
