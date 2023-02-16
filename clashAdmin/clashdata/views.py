@@ -397,7 +397,7 @@ def searchPlayersWarInfo(request):
                     if not playerData["name"] == "":
                         clanMember = models.ClanMember(
                             tag=tagPlayer,
-                            name=playerData["name"]
+                            name=playerData["name"] + "(not found)"
                         )
                         playersToBeAnalyed.append(clanMember)    
             else:
