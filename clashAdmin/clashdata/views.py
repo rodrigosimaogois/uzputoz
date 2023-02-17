@@ -352,6 +352,7 @@ def searchPlayersWarInfo(request):
     selectedClanId = request.GET.get('clan', None)
     selectedSeasons = request.GET.get('seasons', None)
     selectedOrderBy = request.GET.get('inlineOrderBy', None)
+    additionalClans = request.GET.get('additionalClans', None)
     includeplayers = request.GET.get('includeplayers', None)
     source = request.GET.get('source', 'line')
     clans = models.Clan.objects.all().exclude(name="Aposentados").exclude(tag="")
@@ -365,18 +366,14 @@ def searchPlayersWarInfo(request):
     
     selectedClanInfo = models.Clan.objects.filter(id=selectedClanId).first()
 
-    scoreFromOtherClans = request.GET.get('scorefromothers', None)
-    allPlayers = request.GET.get('allplayers', None)
-
     bScore = False
-    bAllPlayers = False
     bIncludePlayers = False
     lstSeasons = selectedSeasons.split(',')
+    lstAdditionalClans = []
+    
+    if not additionalClans == "" and not additionalClans is None:
+        lstAdditionalClans = additionalClans.split(',')
 
-    if not scoreFromOtherClans is None:
-        bScore = True
-    if not allPlayers is None:
-        bAllPlayers = True
     if not includeplayers is None:
         bIncludePlayers = True
 
@@ -429,17 +426,18 @@ def searchPlayersWarInfo(request):
 
                 clanFame = clanFame + fameSeason
 
-            if bScore: # get other clans infos
-                for clan in clans:
-                    if clan.id == int(selectedClanId):
-                        continue 
-                    warOtherClan = models.War.objects.filter(identifier=season, clan_id=clan.id).first()
-                    playerInfoOtherClan = models.PlayersWarInfo.objects.filter(war=warOtherClan, tag=player.tag).first()
+            for additionalClanId in lstAdditionalClans: # get other clans infos
+                if additionalClanId == selectedClanId:
+                    continue
+                
+                additionalClan = models.Clan.objects.filter(id=additionalClanId).first()
+                warOtherClan = models.War.objects.filter(identifier=season, clan_id=additionalClanId).first()
+                playerInfoOtherClan = models.PlayersWarInfo.objects.filter(war=warOtherClan, tag=player.tag).first()
 
-                    if not playerInfoOtherClan is None:
-                        atksSeason = atksSeason + playerInfoOtherClan.atksWar
-                        fameSeason = fameSeason + playerInfoOtherClan.fame
-                        otherClans.append(clan.name)
+                if not playerInfoOtherClan is None:
+                    atksSeason = atksSeason + playerInfoOtherClan.atksWar
+                    fameSeason = fameSeason + playerInfoOtherClan.fame
+                    otherClans.append(additionalClan.name)
             
             totalAtks = totalAtks + atksSeason
             totalFame = totalFame + fameSeason
@@ -486,9 +484,9 @@ def searchPlayersWarInfo(request):
         'clans': clans, 
         'sel_clan_id': selectedClanId, 
         'seasons': seasons,
+        'lstAdditionalClans': lstAdditionalClans,
         'lstSeasons': lstSeasons,
         "result": allPlayersInfo,
-        "scoreFromOtherClans": bScore,
         "orderby": selectedOrderBy,
         "includePlayers": bIncludePlayers,
         "source": source,

@@ -71,13 +71,13 @@
                 {% endfor %}
               </select>
             </div>
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" name="scorefromothers" type="checkbox" value="" {% if scoreFromOtherClans %}checked="true"{% endif %}>
-                <span class="form-check-sign">
-                  <span class="check">Consider score from other clans ?</span>
-                </span>
-              </label>
+            <div class="form-group">
+              <label for="clans">Add score from clan(s):</label>
+              <select class="selectpicker" multiple data-live-search="true" id="additionalClanIds">
+                {% for clan in clans %}
+                    <option {% if clan.id|slugify in lstAdditionalClans %}selected{% endif %} value="{{ clan.id }}">{{ clan.name }}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="form-check">
               <label class="form-check-label">
@@ -118,6 +118,7 @@
               </div>
             </div>
             <input type="hidden" id="seasons" name="seasons" value="">
+            <input type="hidden" id="additionalClans" name="additionalClans" value="">
             <button type="submit" class="btn btn-primary">Search</button>
           </form>
         </div>
@@ -195,13 +196,23 @@
 <script>
 
 $( document ).ready(function() {
-    var selectedItem = $('.selectpicker').val();
-    $('#seasons').val(selectedItem);
+    var seasons = $('#seasonIds').val();
+    $('#seasons').val(seasons);
+
+    var additionalClans = $('#additionalClanIds').val();
+    $('#additionalClans').val(additionalClans);
 });
 
-$('.selectpicker').change(function () {
-      var selectedItem = $('.selectpicker').val();
+$('#seasonIds').change(function () {
+      var selectedItem = $('#seasonIds').val();
       $('#seasons').val(selectedItem);
+      console.log("changed");
+});
+
+$('#additionalClanIds').change(function () {
+      var selectedItem = $('#additionalClanIds').val();
+      $('#additionalClans').val(selectedItem);
+      console.log("changed");
 });
 
 </script>
