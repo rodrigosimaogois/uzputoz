@@ -35,6 +35,20 @@ class CreateClanMember(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy('clashdata:members')
     template_name = 'clashdata/clanmember_form.html'
 
+@login_required
+def updateMemberNames(request):
+    members = models.ClanMember.objects.all()
+
+    for member in members:
+        memberInfo = clashapi.getPlayerInfo(member.tag)
+        nameInGame = memberInfo["name"]
+        if nameInGame == "" or nameInGame == member.name:
+            continue
+        member.name = nameInGame
+        member.save()
+
+    return redirect('/clashdata/memberList/')
+
 class UpdateClanMember(LoginRequiredMixin, generic.UpdateView):
     model = models.ClanMember
     form_class = forms.ClanMemberCreateForm
@@ -429,7 +443,7 @@ def searchPlayersWarInfo(request):
             for additionalClanId in lstAdditionalClans: # get other clans infos
                 if additionalClanId == selectedClanId:
                     continue
-                
+
                 additionalClan = models.Clan.objects.filter(id=additionalClanId).first()
                 warOtherClan = models.War.objects.filter(identifier=season, clan_id=additionalClanId).first()
                 playerInfoOtherClan = models.PlayersWarInfo.objects.filter(war=warOtherClan, tag=player.tag).first()
