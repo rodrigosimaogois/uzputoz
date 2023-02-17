@@ -97,7 +97,6 @@
     </button>
     {% if user.is_authenticated %}
         <a href="{% url 'clashdata:createmember' %}" class="btn btn-primary" role="button">Novo</a>
-        <a onclick="return updateNames();" class="btn btn-primary" role="button">Atualizar Nomes</a>
     {% endif %}
 </p>
 
@@ -260,6 +259,12 @@
       {% endif %}
     </div>
   </div>
+
+  <p>
+    {% if user.is_authenticated %}
+        <a onclick="return updateNames();" class="btn btn-primary" role="button">Atualizar Nomes</a>
+    {% endif %}
+    </p>
 
 {% endblock content %}
 
