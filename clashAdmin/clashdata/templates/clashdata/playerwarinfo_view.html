@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+  #playersView {
+    bordercolor: #FF0000;
+  }
+
+  .green {
+    color: #000000;
+    background: linear-gradient(to bottom, #66ff33 0%, #ccffcc 100%);
+  }
+
+  .yellow {
+    background: linear-gradient(to bottom, #ffcc00 0%, #ffffff 100%);
+  }
+
+  .red {
+    background: linear-gradient(to bottom, #ff3300 0%, #ffffff 100%);
+  }
+
+  .purple {
+    background: linear-gradient(to bottom, #6600cc 0%, #ffffff 100%);
+  }
+
+  .card{
+    background-color: #FFFFFF;
+    border-radius: 10px;
+  }
+
+  #analyseCard .card-body .card-title,
+  #analyseCard .card-header .card-title,
+  .table > thead > tr > th,
+  .table > tbody > tr > td,
+  .card h5,
+  .card .card-body .card-title,
+  #new
+  {
+    color: #000000;
+  }
+
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h4 class="card-title text-center">{{ data.name }} ({{ data.tag }})</h4>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+              <table class="table" id="playersView">
+                <thead class=" text-primary">
+                  <tr style="border-bottom: 2px solid black;">
+                    <th class="text-center">Season</th>
+                    <th>Clan</th>
+                    <th class="text-center">Fame</th>
+                    <th class="text-center">Atks</th>
+                    <th class="text-center">Boat</th>
+                    <th class="text-center">Training</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for info in warInfo %}
+                        <tr style="border-bottom: 2px solid black;">
+                            <td class="text-center" style="color:{% if info.war.clan.name|lower == "bisturi" %}green{% elif info.war.clan.name|lower == "uzputoz" %}purple{% elif info.war.clan.name|lower == "brjp.fr.elite" %}red{% elif info.war.clan.name|lower == "get øut alive" %}orange{% else %}black{% endif %}">{{ info.war }}</td>
+                            <td style="color:{% if info.war.clan.name|lower == "bisturi" %}green{% elif info.war.clan.name|lower == "uzputoz" %}purple{% elif info.war.clan.name|lower == "brjp.fr.elite" %}red{% elif info.war.clan.name|lower == "get øut alive" %}orange{% else %}black{% endif %}">{{ info.war.clan }}</td>
+                            <td class="text-center" style="color:{% if info.war.clan.name|lower == "bisturi" %}green{% elif info.war.clan.name|lower == "uzputoz" %}purple{% elif info.war.clan.name|lower == "brjp.fr.elite" %}red{% elif info.war.clan.name|lower == "get øut alive" %}orange{% else %}black{% endif %}"><div contenteditable onclick="edit(this)" onblur="leave(this,{{ info.id }})">{{ info.fame }}</div></td>
+                            <td class="text-center" style="color:{% if info.war.clan.name|lower == "bisturi" %}green{% elif info.war.clan.name|lower == "uzputoz" %}purple{% elif info.war.clan.name|lower == "brjp.fr.elite" %}red{% elif info.war.clan.name|lower == "get øut alive" %}orange{% else %}black{% endif %}"><div contenteditable>{{ info.atksWar }}</div></td>
+                            <td class="text-center" style="color:{% if info.war.clan.name|lower == "bisturi" %}green{% elif info.war.clan.name|lower == "uzputoz" %}purple{% elif info.war.clan.name|lower == "brjp.fr.elite" %}red{% elif info.war.clan.name|lower == "get øut alive" %}orange{% else %}black{% endif %}">{{ info.boats }}</td>
+                            <td class="text-center" style="color:{% if info.war.clan.name|lower == "bisturi" %}green{% elif info.war.clan.name|lower == "uzputoz" %}purple{% elif info.war.clan.name|lower == "brjp.fr.elite" %}red{% elif info.war.clan.name|lower == "get øut alive" %}orange{% else %}black{% endif %}">{{ info.atksTraining }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+              </table>  
+        </div>
+    </div>
+  </div>
+</div>  
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+  
+  var originalValue = 0
+
+  function edit(el) {
+    console.log("edit " + el.textContent);
+    originalValue = el.textContent
+  }
+
+  function leave(el, playerInfoId) {
+    if (isNaN(el.textContent) || el.textContent == ""){
+      el.textContent = originalValue;
+      return;
+    }
+
+    if (el.textContent != originalValue) {
+      console.log(playerInfoId + ": changed from " + originalValue + " to " + el.textContent);
+
+        $.ajax({
+          url: "{% url 'clashdata:updateplayerwarinfo' %}",
+          type: "GET",
+          data: {
+              playerInfoId: playerInfoId,
+              fame: el.textContent
+          },
+          error: function(response){
+              console.log("error");
+          },
+          success: function(response){
+            console.log("success");
+          }
+      });
+
+      location.reload()
+    }
+  }
+</script>
+{% endblock javascripts %}

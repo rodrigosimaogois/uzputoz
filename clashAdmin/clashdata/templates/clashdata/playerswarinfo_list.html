@@ -158,22 +158,12 @@
                       <tr class="{% if data.Average >= 180 %}green{% elif data.Average >= 170 %}yellow{% elif data.Average >= 160 %}red{% else %}purple{% endif %}">
                           <td class="text-center">{{ forloop.counter }}</td>
                           <td class="text-center">{{ data.Average|floatformat:2 }}</td>
-                          <td class="col-2">{{ data.Name }}</td>
-                          <!--<td class="col-1">{{ data.Tag }}</td>-->
+                          <td class="col-2"><a href="{% url 'clashdata:viewplayerwarinfo' playerTag=data.Tag %}" style="color:black">{{ data.Name }}</a></td>
                           <td class="text-center">{{ data.Atks }}</td>
                           
                           {% for seasonData in data.Seasons %}
                             <td class="text-center">{{ seasonData.Fame }}</td>
-                            <!--<td class="col-1">{{ seasonData.Atks }}</td>-->
                           {% endfor %}
-                          
-                          {% if user.is_authenticated %}
-                              {% comment %} <td class="td-actions text-right">
-                                  <button onclick="window.location.href='{% url 'clashdata:editwarinfo' pk=clanmember.id %}';" type="button" rel="tooltip" class="btn btn-info btn-link btn-icon btn-sm">
-                                      <i class="tim-icons icon-single-02"></i>
-                                  </button>
-                              </td> {% endcomment %}
-                          {% endif %}
                       </tr>
                   {% endfor %}
                 </tbody>

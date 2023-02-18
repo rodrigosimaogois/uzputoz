@@ -425,6 +425,7 @@ def searchPlayersWarInfo(request):
         totalFame = 0
         totalAtks = 0
         seasonsInfo = []
+        tag = player.tag.replace("#","")
 
         for season in lstSeasons:
             war = models.War.objects.filter(identifier=season, clan_id=selectedClanId).first()
@@ -479,7 +480,7 @@ def searchPlayersWarInfo(request):
         allPlayersInfo.append({
             "Average": avg,
             "Name": player.name,
-            "Tag": player.tag,
+            "Tag": tag,
             "Atks": totalAtks,
             "Seasons": seasonsInfo
         })
@@ -519,3 +520,24 @@ class CurrentWarMissed(generic.View):
         
         clanTags = models.Clan.objects.exclude(tag__exact='')
         return render(request, "clashdata/missingcurrentwar.html", { 'clanTags': clanTags })
+
+@login_required
+def playersWarInfoView(request, playerTag):
+    tag = "#" + playerTag
+    playerData = models.ClanMember.objects.filter(tag=tag).first()
+    playersWarInfo = models.PlayersWarInfo.objects.filter(tag=tag).order_by("-id")[:10]
+
+    return render(request, "clashdata/playerwarinfo_view.html", {'data': playerData, 'warInfo': playersWarInfo})
+
+@login_required
+def updatePlayersWarInfoView(request):
+        
+    playerInfoId = request.GET.get('playerInfoId')
+    fame = request.GET.get('fame')
+    playerInfo = get_object_or_404(models.PlayersWarInfo, id=playerInfoId)
+    playerInfo.fame = fame
+    playerInfo.save()
+    return JsonResponse({}, status=200)
+
+
+    
