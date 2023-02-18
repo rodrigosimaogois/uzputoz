@@ -135,6 +135,23 @@ class LogClansWar(models.Model):
     def __str__(self) -> str:
         return self.name
     
+class WarClans(models.Model):
+    identifier = models.CharField(max_length=255)
+    clan = models.ForeignKey(ClanBR, related_name='war_clan_br', on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.identifier
+    
+class TrainingDayClans(models.Model):
+    war = models.ForeignKey(WarClans, related_name='trainingday_warclans', on_delete=models.CASCADE)
+    tag = models.CharField(max_length=255, blank=True)
+    decksUsed = models.IntegerField(default=0)        
+    decksUsedToday = models.IntegerField(default=0)
+    decksTraining = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return self.tag
+    
 class PlayersWarInfo(models.Model):
     war = models.ForeignKey(War, related_name='playerswarinfo_war', on_delete=models.CASCADE)
     tag = models.CharField(max_length=255, blank=True) 

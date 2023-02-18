@@ -136,7 +136,7 @@ def missingMembers(request):
     else:
         try:
             clanTag = get_object_or_404(models.Clan, pk=selectedClanId)
-            currentMembers = clashapi.getClanMembers(clanTag)
+            currentMembers = clashapi.getClanMembers(clanTag.tag)
         except Exception as error:
             print(error.args)
             return render(request, "clashdata/whoisout.html", {'clans': clans, 'error': error.args, 'sel_clan_id': selectedClanId})
@@ -318,7 +318,8 @@ class ClanWar(generic.View):
             clanTag = request.GET.get('tag_id')
             warInfo = clashapi.getCurrentWarInfo(clanTag)
             missing = clashapi.whoIsMissing(clanTag, [])
-            return JsonResponse({'warInfo': warInfo, 'missingInfo': missing}, status=200)
+            missed = clashapi.getWhoMissedCurrentWarForClanBrs(clanTag, missing["currentMembers"])
+            return JsonResponse({'warInfo': warInfo, 'missingInfo': missing, 'missed': missed}, status=200)
         
         errorMsg = None
         bError = 0

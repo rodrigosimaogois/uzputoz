@@ -28,7 +28,7 @@ def __callEndPoint(url):
     return response.json()
 
 def getClanMembers(clanTag):
-    tag = clanTag.tag.replace("#","")
+    tag = clanTag.replace("#","")
     jsonResponse = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/members")
     currentMembers = jsonResponse["items"]
     return currentMembers
@@ -186,7 +186,8 @@ def whoIsMissing(clanTag, currentLine):
             "totalDecks": 200,
             "totalMissing": 0,
             "totalMissingParticipants": 0,
-            "missingPlayers": []
+            "missingPlayers": [],
+            "currentMembers": currentMembers
         }
 
     totalUsedDecks = 0
@@ -285,7 +286,8 @@ def whoIsMissing(clanTag, currentLine):
         "totalDecks": totalUsedDecks,
         "totalMissing": totalMissingDecks,
         "totalMissingParticipants": totalMissingParticipants,
-        "missingPlayers": missingPlayers
+        "missingPlayers": missingPlayers,
+        "currentMembers": currentMembers
     }
 
     return clanInfo
@@ -449,6 +451,65 @@ def getWhoMissedCurrentWar(clanTag):
         usedDecks = participant["decksUsed"]
         usedDecksToday = participant["decksUsedToday"]
         trainingInfo = models.TrainingDay.objects.filter(war=war, tag=participant["tag"]).first()
+        usedDecks = usedDecks - usedDecksToday
+
+        if not trainingInfo is None:
+            usedDecks = usedDecks - trainingInfo.decksTraining
+
+        if usedDecks < expectedAttacks:
+            missingInfo["players"].append({
+                "Name": participant["name"],
+                "Missing": expectedAttacks - usedDecks
+            })
+
+    return missingInfo
+
+def getWhoMissedCurrentWarForClanBrs(clanTag, currentMembers):
+    tag = clanTag.replace("#","")
+
+    clan = models.ClanBR.objects.filter(tag=clanTag).first()
+
+    if clan is None:
+        return {
+            "name": "",
+            "players": []
+        }
+
+    currentRiverRace = __callEndPoint(f"https://api.clashroyale.com/v1/clans/%23{tag}/currentriverrace")
+
+    periodIndex = currentRiverRace["periodIndex"]
+        
+    weekDay = periodIndex % 7
+    expectedAttacks = 4 * (weekDay - 3) # 3 == first war day
+
+    isColosseum = currentRiverRace["periodType"] == "colosseum"
+
+    if currentRiverRace["clan"]["fame"] > 10000 and not isColosseum:
+        expectedAttacks = 12
+
+    missingInfo = {
+        "name": currentRiverRace["clan"]["name"],
+        "players": []
+    }
+
+    if expectedAttacks == 0:
+        return missingInfo
+
+    war = models.WarClans.objects.filter(clan=clan).order_by("-id").first()
+
+    if war is None:
+        return missingInfo
+        
+    for participant in currentRiverRace["clan"]["participants"]:
+        usedDecks = participant["decksUsed"]
+
+        if usedDecks == 0:
+            found = [x for x in currentMembers["items"] if x["tag"] == participant["tag"]]
+            if len(found) == 0:
+                continue
+
+        usedDecksToday = participant["decksUsedToday"]
+        trainingInfo = models.TrainingDayClans.objects.filter(war=war, tag=participant["tag"]).first()
         usedDecks = usedDecks - usedDecksToday
 
         if not trainingInfo is None:

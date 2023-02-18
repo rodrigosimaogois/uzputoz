@@ -89,6 +89,28 @@
     </div>
 </div>
 
+<div class="row" id="divMissed" hidden>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">Ataques pendentes</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                        <th class="col4">Nome</th>
+                        <th class="col2">Missed Decks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clanMissedContent">
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
@@ -194,7 +216,7 @@
                     clanRows = clanRows + clanRow + closeTr;
                 });
 
-                setProgressBar(80);
+                setProgressBar(60);
                 $("#clanContent").append(clanRows);
 
                 let rows = '';
@@ -223,9 +245,29 @@
                 });
     
                 $("#clanName").text(clanName);
-
                 $("#clanMissing").text("Faltam " + response.missingInfo.totalMissingParticipants + " jog. + " + response.missingInfo.totalMissing + " decks");
                 $("#clanMissingContent").append(rows);
+                setProgressBar(80);
+
+                let missedRows = ''
+
+                response.missed.players.forEach(function(item, index, arr){
+                    let missedRow = '<tr class="rowcolor"> \
+                        <td class="col-6"> \
+                            <div>' + item.Name + '</div> \
+                        </td> \
+                        <td class="col-2"> \
+                            <div>' + item.Missing + '</div> \
+                        </td>';
+                    closeTr = '</tr>'; 
+                    missedRows += missedRow + closeTr;
+                });
+
+                if (missedRows != '') {
+                    $('#divMissed').removeAttr('hidden');
+                }
+
+                $("#clanMissedContent").append(missedRows);
                 setProgressBar(100);
             } 
         });        
