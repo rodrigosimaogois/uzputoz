@@ -525,7 +525,7 @@ class CurrentWarMissed(generic.View):
 def playersWarInfoView(request, playerTag):
     tag = "#" + playerTag
     playerData = models.ClanMember.objects.filter(tag=tag).first()
-    playersWarInfo = models.PlayersWarInfo.objects.filter(tag=tag).order_by("-id")[:15]
+    playersWarInfo = models.PlayersWarInfo.objects.filter(tag=tag).order_by("-id")[:8]
 
     dummyTotal = { "Fame": { "Min": 0, "Max": 0 }, "Avg": 0, "AtksAvg": 0}
 
