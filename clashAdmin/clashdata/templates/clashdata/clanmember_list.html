@@ -142,7 +142,7 @@
               <tbody id="myTable">
                 {% for clanmember in object_list %}
                     <tr>
-                        <td>{{ clanmember.name }}</td>
+                        <td><a href="{% url 'clashdata:viewplayerwarinfo' playerTag=clanmember.tag|slice:"1:" %}" style="color:#e14eca">{{ clanmember.name }}</a></td>
                         <td style="display:none;">{{ clanmember.clan.name }}</td>
                         <td style="display:none;">{{ clanmember.tag }}</td>
                         <td class="nosearch">

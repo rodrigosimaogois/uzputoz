@@ -525,9 +525,70 @@ class CurrentWarMissed(generic.View):
 def playersWarInfoView(request, playerTag):
     tag = "#" + playerTag
     playerData = models.ClanMember.objects.filter(tag=tag).first()
-    playersWarInfo = models.PlayersWarInfo.objects.filter(tag=tag).order_by("-id")[:10]
+    playersWarInfo = models.PlayersWarInfo.objects.filter(tag=tag).order_by("-id")[:15]
 
-    return render(request, "clashdata/playerwarinfo_view.html", {'data': playerData, 'warInfo': playersWarInfo})
+    dummyTotal = { "Fame": { "Min": 0, "Max": 0 }, "Avg": 0, "AtksAvg": 0}
+
+    if len(playersWarInfo) == 0:
+        return render(request, "clashdata/playerwarinfo_view.html", {'data': playerData, 'warInfo': [], 'summary': [], 'total': dummyTotal })
+
+    print(playersWarInfo)
+
+    seasonSummary = []
+
+    for playerWar in playersWarInfo:
+        
+        fame = playerWar.fame + playerWar.boats * 75
+        atks = playerWar.atksWar
+        avg = 0
+
+        found = [x for x in seasonSummary if x["Name"] == playerWar.war.identifier]
+
+        if len(found) > 0:
+            found[0]["Fame"] = found[0]["Fame"] + fame
+            found[0]["Atks"] = found[0]["Atks"] + atks
+
+            if found[0]["Fame"] > 0:
+                avg = found[0]["Fame"] / found[0]["Atks"]
+
+            found[0]["Avg"] = avg
+        else:
+
+            if fame > 0:
+                avg = fame / atks
+
+            seasonSummary.append({
+                "Name": playerWar.war.identifier,
+                "Fame": fame,
+                "Avg": avg,
+                "Atks": atks
+            })
+
+    seasonSummary.sort(key=lambda x: x["Name"], reverse=False)
+    
+    minFame = 0
+    maxFame = 0
+    totalAvg = 0
+    totalAtks = 0
+    totalFame = 0
+
+    for sum in seasonSummary:
+        fame = sum["Fame"]
+        totalFame = totalFame + fame
+        totalAtks = totalAtks + sum["Atks"]
+        totalAvg = totalAvg + sum["Avg"]
+        if minFame > fame or minFame == 0:
+            minFame = fame
+        if maxFame < fame:
+            maxFame = fame
+    
+    avgAtks = 0
+    if len(seasonSummary) > 0:
+        avgAtks = totalAtks / len(seasonSummary)
+
+    total = { "Fame": { "Min": minFame, "Max": maxFame }, "Avg": totalFame / totalAtks, "AtksAvg": avgAtks }
+
+    return render(request, "clashdata/playerwarinfo_view.html", {'data': playerData, 'warInfo': playersWarInfo, 'summary': seasonSummary, 'total': total })
 
 @login_required
 def updatePlayersWarInfoView(request):

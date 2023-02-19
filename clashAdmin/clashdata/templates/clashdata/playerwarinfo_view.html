@@ -25,7 +25,7 @@
     background: linear-gradient(to bottom, #6600cc 0%, #ffffff 100%);
   }
 
-  .card{
+  #tableCard{
     background-color: #FFFFFF;
     border-radius: 10px;
   }
@@ -35,21 +35,62 @@
   .table > thead > tr > th,
   .table > tbody > tr > td,
   .card h5,
-  .card .card-body .card-title,
-  #new
+  .card .card-body .card-title
   {
     color: #000000;
   }
-
 </style>
 {% endblock stylesheets %}
 
 {% block content %}
 
+<h4 class="card-title text-center">{{ data.name }} ({{ data.tag }})</h4>
+
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card card-chart">
+      <div class="card-header">
+        <h5 class="card-category">Average</h5>
+        <h4 class="card-title"><i class="tim-icons icon-bell-55 text-primary" style="color:black"></i> {{ total.Avg|floatformat:2 }} / atk</h4>
+      </div>
+      <div class="card-body">
+        <div class="chart-area">
+          <canvas id="chartAverage"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card card-chart">
+      <div class="card-header">
+        <h5 class="card-category">Fame</h5>
+        <h4 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> {{ total.Fame.Min }} - {{ total.Fame.Max }} </h4>
+      </div>
+      <div class="card-body">
+        <div class="chart-area">
+          <canvas id="chartFame"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card card-chart">
+      <div class="card-header">
+        <h5 class="card-category">Attacks</h5>
+        <h4 class="card-title"><i class="tim-icons icon-send text-success"></i> {{ total.AtksAvg|floatformat:2 }} / week</h4>
+      </div>
+      <div class="card-body">
+        <div class="chart-area">
+          <canvas id="chartAtks"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-12">
-    <h4 class="card-title text-center">{{ data.name }} ({{ data.tag }})</h4>
-    <div class="card">
+    <div class="card" id="tableCard">
         <div class="card-body">
             <div class="table-responsive">
               <table class="table" id="playersView">
@@ -75,19 +116,19 @@
                         </tr>
                     {% endfor %}
                 </tbody>
-              </table>  
+              </table>
+            </div>  
         </div>
     </div>
   </div>
-</div>  
+</div>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>
-  
-  var originalValue = 0
+   var originalValue = 0
 
   function edit(el) {
     console.log("edit " + el.textContent);
@@ -121,5 +162,271 @@
       location.reload()
     }
   }
+
+  function fillGraphics() {
+    
+    var avg_labels = [];
+    var avg_data = [];
+    var fame_data = [];
+    var atks_data = [];    
+
+    {{ summary|safe }}.forEach(item => {
+      avg_labels.push(item.Name);
+      avg_data.push(item.Avg.toFixed(2));
+      fame_data.push(item.Fame);
+      atks_data.push(item.Atks);
+    })
+
+    gradientChartOptionsConfigurationForAvg = {
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      },
+
+      tooltips: {
+        backgroundColor: '#ffffff',
+        titleFontColor: '#000000',
+        bodyFontColor: '#FF0000',
+        bodySpacing: 4,
+        xPadding: 12,
+        mode: "nearest",
+        intersect: 0,
+        position: "nearest"
+      },
+      responsive: true,
+      scales: {
+        yAxes: [{
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: 'rgba(29,140,248,0.0)',
+            zeroLineColor: "transparent",
+          },
+          ticks: {
+            suggestedMin: 100,
+            suggestedMax: 225,
+            padding: 5,
+            fontColor: "#9a9a9a"
+          }
+        }],
+
+        xAxes: [{
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: 'rgba(225,78,202,0.1)',
+            zeroLineColor: "transparent",
+          },
+          ticks: {
+            padding: 10,
+            fontColor: "#9a9a9a"
+          }
+        }]
+      }
+    };
+
+    gradientChartOptionsConfigurationForFame = {
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      },
+
+      tooltips: {
+        backgroundColor: '#f5f5f5',
+        titleFontColor: '#333',
+        bodyFontColor: '#666',
+        bodySpacing: 4,
+        xPadding: 12,
+        mode: "nearest",
+        intersect: 0,
+        position: "nearest"
+      },
+      responsive: true,
+      scales: {
+        yAxes: [{
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: 'rgba(29,140,248,0.0)',
+            zeroLineColor: "transparent",
+          },
+          ticks: {
+            suggestedMin: 0,
+            suggestedMax: 3600,
+            padding: 5,
+            fontColor: "#9a9a9a"
+          }
+        }],
+
+        xAxes: [{
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: 'rgba(225,78,202,0.1)',
+            zeroLineColor: "transparent",
+          },
+          ticks: {
+            padding: 10,
+            fontColor: "#9a9a9a"
+          }
+        }]
+      }
+    };
+
+    gradientChartOptionsConfigurationForAtks = {
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      },
+
+      tooltips: {
+        backgroundColor: '#f5f5f5',
+        titleFontColor: '#333',
+        bodyFontColor: '#666',
+        bodySpacing: 4,
+        xPadding: 12,
+        mode: "nearest",
+        intersect: 0,
+        position: "nearest"
+      },
+      responsive: true,
+      scales: {
+        yAxes: [{
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: 'rgba(29,140,248,0.0)',
+            zeroLineColor: "transparent",
+          },
+          ticks: {
+            suggestedMin: 0,
+            suggestedMax: 16,
+            padding: 5,
+            fontColor: "#9a9a9a"
+          }
+        }],
+
+        xAxes: [{
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: 'rgba(225,78,202,0.1)',
+            zeroLineColor: "transparent",
+          },
+          ticks: {
+            padding: 10,
+            fontColor: "#9a9a9a"
+          }
+        }]
+      }
+    };
+
+    var ctxAvg = document.getElementById("chartAverage").getContext("2d");
+    var gradientStrokeAvg = ctxAvg.createLinearGradient(0, 230, 0, 50);
+
+    gradientStrokeAvg.addColorStop(1, 'rgba(72,72,176,0.2)');
+    gradientStrokeAvg.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+    gradientStrokeAvg.addColorStop(0, 'rgba(119,52,169,0)');
+
+    var dataAvg = {
+      labels: avg_labels,
+      datasets: [{
+        label: "Average",
+        fill: true,
+        backgroundColor: gradientStrokeAvg,
+        borderColor: '#d048b6',
+        borderWidth: 2,
+        borderDash: [],
+        borderDashOffset: 0.0,
+        pointBackgroundColor: '#d048b6',
+        pointBorderColor: 'rgba(255,255,255,0)',
+        pointHoverBackgroundColor: '#d048b6',
+        pointBorderWidth: 20,
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 15,
+        pointRadius: 4,
+        data: avg_data,
+      }]
+    };
+
+    new Chart(ctxAvg, {
+      type: 'line',
+      data: dataAvg,
+      options: gradientChartOptionsConfigurationForAvg
+    });
+
+    var ctxFame = document.getElementById("chartFame").getContext("2d");
+    var gradientStrokeFame = ctxFame.createLinearGradient(0, 230, 0, 50);
+
+    gradientStrokeFame.addColorStop(1, 'rgba(72,72,176,0.2)');
+    gradientStrokeFame.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+    gradientStrokeFame.addColorStop(0, 'rgba(119,52,169,0)');
+
+    var dataFame = {
+      labels: avg_labels,
+      datasets: [{
+        label: "Fame",
+        fill: true,
+        backgroundColor: gradientStrokeFame,
+        borderColor: '#d048b6',
+        borderWidth: 2,
+        borderDash: [],
+        borderDashOffset: 0.0,
+        pointBackgroundColor: '#d048b6',
+        pointBorderColor: 'rgba(255,255,255,0)',
+        pointHoverBackgroundColor: '#d048b6',
+        pointBorderWidth: 20,
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 15,
+        pointRadius: 4,
+        data: fame_data,
+      }]
+    };
+
+    new Chart(ctxFame, {
+      type: 'line',
+      data: dataFame,
+      options: gradientChartOptionsConfigurationForFame
+    });
+
+    var ctxAtks = document.getElementById("chartAtks").getContext("2d");
+    var gradientStrokeAtks = ctxAtks.createLinearGradient(0, 230, 0, 50);
+
+    gradientStrokeAtks.addColorStop(1, 'rgba(72,72,176,0.2)');
+    gradientStrokeAtks.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+    gradientStrokeAtks.addColorStop(0, 'rgba(119,52,169,0)');
+
+    var dataAtks = {
+      labels: avg_labels,
+      datasets: [{
+        label: "Average",
+        fill: true,
+        backgroundColor: gradientStrokeAtks,
+        borderColor: '#d048b6',
+        borderWidth: 2,
+        borderDash: [],
+        borderDashOffset: 0.0,
+        pointBackgroundColor: '#d048b6',
+        pointBorderColor: 'rgba(255,255,255,0)',
+        pointHoverBackgroundColor: '#d048b6',
+        pointBorderWidth: 20,
+        pointHoverRadius: 4,
+        pointHoverBorderWidth: 15,
+        pointRadius: 4,
+        data: atks_data,
+      }]
+    };
+
+    new Chart(ctxAtks, {
+      type: 'line',
+      data: dataAtks,
+      options: gradientChartOptionsConfigurationForAtks
+    });
+  }
+
+  $(document).ready(function() {
+    fillGraphics();
+  });
+
 </script>
 {% endblock javascripts %}
