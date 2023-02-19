@@ -521,7 +521,6 @@ class CurrentWarMissed(generic.View):
         clanTags = models.Clan.objects.exclude(tag__exact='')
         return render(request, "clashdata/missingcurrentwar.html", { 'clanTags': clanTags })
 
-@login_required
 def playersWarInfoView(request, playerTag):
     tag = "#" + playerTag
     playerData = models.ClanMember.objects.filter(tag=tag).first()
@@ -531,8 +530,6 @@ def playersWarInfoView(request, playerTag):
 
     if len(playersWarInfo) == 0:
         return render(request, "clashdata/playerwarinfo_view.html", {'data': playerData, 'warInfo': [], 'summary': [], 'total': dummyTotal })
-
-    print(playersWarInfo)
 
     seasonSummary = []
 
