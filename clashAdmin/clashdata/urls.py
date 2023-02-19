@@ -42,4 +42,5 @@ urlpatterns = [
     path("missingcurrentwar/", views.CurrentWarMissed.as_view(), name="missingcurrentwar"),
     path("viewplayerwarinfo/<playerTag>/", views.playersWarInfoView, name="viewplayerwarinfo"),
     path("updateplayerwarinfo/", views.updatePlayersWarInfoView, name="updateplayerwarinfo"),
+    path("performanceclan/", views.clanWarInfoView, name="performanceclan"),
 ]

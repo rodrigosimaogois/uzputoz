@@ -597,5 +597,71 @@ def updatePlayersWarInfoView(request):
     playerInfo.save()
     return JsonResponse({}, status=200)
 
+def clanWarInfoView(request):
 
+    if not is_ajax(request):
+        allClans = models.Clan.objects.exclude(tag__exact='')
+        return render(request, "clashdata/clanwarinfo_view.html", {'clans': allClans })
+
+    clanTag = request.GET.get('clanTag')
+    tag = "#" + clanTag
+
+    clan = models.Clan.objects.filter(tag=tag).first()
+
+    if clan is None:
+        return JsonResponse({'data': []}, status=200)
+
+    wars = models.War.objects.filter(clan=clan).order_by("-id")[1:8]
+    
+    info = {
+        "Name": clan.name,
+        "Tag": clan.tag,
+        "Seasons": [],
+        "AllSeasonsFame": {
+            "Min": 0,
+            "Max": 0
+        },
+        "AllSeasonsAvg": 0
+    }
+
+    allSeasonsFame = 0
+    allSeasonsAtks = 0
+    allSeasonsFameMin = 0
+    allSeasonsFameMax = 0
+
+    for war in wars:
+        playerInfo = models.PlayersWarInfo.objects.filter(war=war)
+        totalFame = sum(x.fame for x in playerInfo)
+        totalAtks = sum(x.atksWar for x in playerInfo)
+        avg = 0
+
+        allSeasonsFame = allSeasonsFame + totalFame
+        allSeasonsAtks = allSeasonsAtks + totalAtks
+
+        if allSeasonsFameMin > totalFame or allSeasonsFameMin == 0:
+            allSeasonsFameMin = totalFame
+        if allSeasonsFameMax < totalFame:
+            allSeasonsFameMax = totalFame
+
+        if totalAtks > 0:
+            avg = totalFame / totalAtks
+    
+        info["Seasons"].append({
+            "Name": war.identifier,
+            "Fame": totalFame,
+            "Atks": totalAtks,
+            "Avg": avg
+        })
+    
+    totalAverage = 0
+    if allSeasonsAtks > 0:
+        totalAverage = allSeasonsFame / allSeasonsAtks
+
+    info["AllSeasonsFame"]["Min"] = allSeasonsFameMin
+    info["AllSeasonsFame"]["Max"] = allSeasonsFameMax
+    info["AllSeasonsAvg"] = totalAverage
+
+    info["Seasons"].sort(key=lambda x: x["Name"], reverse=False)
+   
+    return JsonResponse({'data': info}, status=200)
     
