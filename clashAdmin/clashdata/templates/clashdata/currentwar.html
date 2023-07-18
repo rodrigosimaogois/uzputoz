@@ -130,6 +130,33 @@
     <div class="col-md-12">
         <div class="card test">
             <div class="card-body">
+                <h4 class="card-title text-center">ELITE UZPUTOZ</h4>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                      <thead>
+                        <tr>
+                          <th class="">Nome</th>
+                          <th class="">Atual</th>
+                          <th class="">Decks</th>
+                          <th class="">Persp.</th>
+                          {% if not isColosseum %}
+                            <th class="text-right text-md-center">Geral</th>
+                          {% endif %}
+                        </tr>
+                      </thead>
+                      <tbody id="elite">
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card test">
+            <div class="card-body">
                 <h4 class="card-title text-center">Get Øut Alive</h4>
                 <div class="table-responsive">
                     <table class="table table-sm table-striped">
@@ -269,6 +296,7 @@
         myFunction("#20RGVR8", "#uzputozContent");
         myFunction("#9PGQJCRR", "#brjpContent");
         myFunction("#YPU0GJUV", "#bisturiContent");
+        myFunction("#YVUQ0G9U", "#elite")
         myFunction("#PULQCRCP", "#goaContent");
         myFunction("#YYQGVLV9", "#bisturiAccessContent");                
     });

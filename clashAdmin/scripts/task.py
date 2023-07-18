@@ -10,7 +10,7 @@ def getTrainingDays(tag):
     return response.json()
 
 def run():
-    ourClanTags = ["20RGVR8", "9PGQJCRR", "YPU0GJUV", "PULQCRCP", "YYQGVLV9"]
+    ourClanTags = ["20RGVR8", "9PGQJCRR", "YPU0GJUV", "PULQCRCP", "YYQGVLV9", "YVUQ0G9U"]
 
     for i in range(len(ourClanTags)):
 

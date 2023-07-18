@@ -16,7 +16,7 @@ def getPlayersWarInfo(tag, season):
     return response.json()
 
 def run():
-    ourClanTags = ["20RGVR8", "9PGQJCRR", "YPU0GJUV", "PULQCRCP", "YYQGVLV9"]
+    ourClanTags = ["20RGVR8", "9PGQJCRR", "YPU0GJUV", "PULQCRCP", "YYQGVLV9", "YVUQ0G9U"]
 
     lastSeason = getLastSeason(ourClanTags[0])
     
