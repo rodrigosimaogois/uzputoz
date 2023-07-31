@@ -10,7 +10,11 @@ def getTrainingDays(tag):
     return response.json()
 
 def run():
-    ourClanTags = ["20RGVR8", "9PGQJCRR", "YPU0GJUV", "PULQCRCP", "YYQGVLV9", "YVUQ0G9U"]
+    
+    ourClanTags = []
+    for clan in models.Clan.objects.all():
+        if clan.tag != "" and clan.tag != "#Q208V9R2":
+            ourClanTags.append(clan.tag.removeprefix("#"))
 
     for i in range(len(ourClanTags)):
 
