@@ -371,11 +371,13 @@ def searchPlayersWarInfo(request):
     includeplayers = request.GET.get('includeplayers', None)
     source = request.GET.get('source', 'line')
     clans = models.Clan.objects.all().exclude(name="Aposentados").exclude(tag="")
-    seasons = models.War.objects.all().order_by('-identifier').values('identifier').distinct()
+    seasons = models.War.objects.all().exclude(identifier="").order_by('-identifier').values('identifier').distinct()
+
+    seasons = seasons[::-1][:6]
 
     if selectedClanId is None or selectedSeasons is None or selectedSeasons == "":
         currentSeason = clashapi.getCurrentSeason(clans.first().tag)
-        if seasons.first()["identifier"] == currentSeason   :
+        if seasons[0]["identifier"] == currentSeason   :
             seasons = seasons[1:]
         return render(request, "clashdata/playerswarinfo_list.html", {'clans': clans, 'seasons': seasons, 'sel_clan_id': selectedClanId })
     
