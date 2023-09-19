@@ -383,11 +383,13 @@ def searchPlayersWarInfo(request):
         if not found:
             seasons.append(season)
 
+    print(seasons)
+
     if selectedClanId is None or selectedSeasons is None or selectedSeasons == "":
         currentSeason = clashapi.getCurrentSeason(clans.first().tag)
         if currentSeason in seasons:
             seasons = seasons[1:]
-        return render(request, "clashdata/playerswarinfo_list.html", {'clans': clans, 'seasons': seasons, 'sel_clan_id': selectedClanId })
+        return render(request, "clashdata/playerswarinfo_list.html", {'clans': clans, 'seasons': seasons[:6], 'sel_clan_id': selectedClanId })
     
     selectedClanInfo = models.Clan.objects.filter(id=selectedClanId).first()
 
