@@ -371,7 +371,7 @@ def searchPlayersWarInfo(request):
     includeplayers = request.GET.get('includeplayers', None)
     source = request.GET.get('source', 'line')
     clans = models.Clan.objects.all().exclude(name="Aposentados").exclude(tag="")
-    seasons = models.War.objects.all().order_by('-identifier').values('identifier').distinct()[:5]     
+    seasons = models.War.objects.all().order_by('-id').values('identifier').distinct()[:5]     
 
     if selectedClanId is None or selectedSeasons is None or selectedSeasons == "":
         currentSeason = clashapi.getCurrentSeason(clans.first().tag)
