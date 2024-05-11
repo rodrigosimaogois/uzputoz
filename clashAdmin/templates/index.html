@@ -16,58 +16,13 @@
         <h4 class="text-center" style="padding-top: 30px;">Nos siga no <a href="https://www.youtube.com/@uzputoz1338">Youtube</a></h4>
         <iframe class="videoframe" src="https://www.youtube.com/embed/OCsAT7UsPH4"></iframe>
     </div>
-    <div class="slide-container swiper">
-        <h4 class="text-center patrocinadores">Líderes</h4>
-        <div class="slide-content">
-            <div class="card-wrapper swiper-wrapper" id="mainBase">
-            </div>
-        </div>
-
-        <div class="swiper-button-next swiper-navBtn"></div>
-        <div class="swiper-button-prev swiper-navBtn"></div>
-        <div class="swiper-pagination"></div>
-    </div>
     
 {% endblock content %}
 
 {% block javascripts %}
 
 <script>
-    const base = document.querySelector("#mainBase");
-    
-    function add(name){
-        let row = '<div class="card swiper-slide"> \
-                <div class="image-content"> \
-                    <span class="overlay"></span>\
-                    <div class="card-image"> \
-                        <img src="/static/assets/img/patrocinadores/' + name.toLowerCase() + '.jpg" alt="' + name + '" class="card-img"> \
-                    </div> \
-                </div> \
-                <div class="card-content"> \
-                    <h2 class="name">' + name + '</h2> \
-                </div> \
-            </div>';
-
-        base.innerHTML += row
-    }
-
-    function shuffle(a) {
-        var j, x, i;
-        for (i = a.length - 1; i > 0; i--) {
-            j = Math.floor(Math.random() * (i + 1));
-            x = a[i];
-            a[i] = a[j];
-            a[j] = x;
-        }
-        return a;
-    }
-
-    $(document).ready(function () {
-        const patrocinadores = ['Edmar', 'Sednanref', 'Lello', 'Gnerva', 'Wanderson', 'Fernando', 'Maycon (Kirito)', 'Bruno (Tinhu)', 'Charlie', 'Guilherme (Lethal)', 'Caio', 'Guilherme (Hichigo)'];
-        shuffle(patrocinadores);
-        patrocinadores.forEach(element => add(element));
-    });
-    
+        
 </script>
 
 {% endblock javascripts %}

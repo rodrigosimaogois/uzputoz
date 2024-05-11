@@ -219,7 +219,7 @@
     let currentProgress = 0;
 
     function setProgressBar(){
-        currentProgress = currentProgress + 20;
+        currentProgress = currentProgress + 25;
         if (currentProgress > 100){
             currentProgress = 100;
         }
@@ -242,6 +242,7 @@
             },
             error: function(response){
                 console.log("error");
+                setProgressBar();
             },
             success: function(response){
                 let clanRows = ''
@@ -294,10 +295,10 @@
 
     $(document).ready(function () {
         myFunction("#20RGVR8", "#uzputozContent");
-        myFunction("#9PGQJCRR", "#brjpContent");
+        //myFunction("#9PGQJCRR", "#brjpContent");
         myFunction("#YPU0GJUV", "#bisturiContent");
         myFunction("#YVUQ0G9U", "#elite")
-        myFunction("#PULQCRCP", "#goaContent");
+        //myFunction("#PULQCRCP", "#goaContent");
         myFunction("#YYQGVLV9", "#bisturiAccessContent");                
     });
 </script>
