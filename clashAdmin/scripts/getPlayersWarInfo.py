@@ -26,51 +26,55 @@ def run():
     
     for ourClanTag in ourClanTags:
         clanTag = f"#{ourClanTag}"
+        print(clanTag)
         
-        clan = models.Clan.objects.get(tag=clanTag)
-        war, created = models.War.objects.get_or_create(identifier=lastSeason["json"], clan=clan)
-        war.save() 
+        try:
+            clan = models.Clan.objects.get(tag=clanTag)
+            war, created = models.War.objects.get_or_create(identifier=lastSeason["json"], clan=clan)
+            war.save() 
 
-        isDataAlreadyInserted = models.PlayersWarInfo.objects.filter(war=war).exists()
+            isDataAlreadyInserted = models.PlayersWarInfo.objects.filter(war=war).exists()
 
-        if isDataAlreadyInserted:
-            print("playerWarInfo already exists")
-            continue
+            if isDataAlreadyInserted:
+                print("playerWarInfo already exists")
+                continue
 
-        info = getPlayersWarInfo(ourClanTag, lastSeason["json"])["json"]
-        isFinishedBefore = info["finishedBefore"]
+            info = getPlayersWarInfo(ourClanTag, lastSeason["json"])["json"]
+            isFinishedBefore = info["finishedBefore"]
 
-        maxAttacks = 16
+            maxAttacks = 16
 
-        if isFinishedBefore:
-            maxAttacks = 12
+            if isFinishedBefore:
+                maxAttacks = 12
 
-        for playerInfo in info["playersInfo"]:
-            playerTag = playerInfo["Tag"]
-            atksTotal = playerInfo["Attacks"]
-            fame = playerInfo["Fame"]
-            boat = playerInfo["Boat"]
-            atksTraining = 0
-            atksWar = 0
+            for playerInfo in info["playersInfo"]:
+                playerTag = playerInfo["Tag"]
+                atksTotal = playerInfo["Attacks"]
+                fame = playerInfo["Fame"]
+                boat = playerInfo["Boat"]
+                atksTraining = 0
+                atksWar = 0
 
-            training = models.TrainingDay.objects.filter(war=war, tag=playerTag).first()
-            
-            if not training is None:
-                atksTraining = training.decksTraining
+                training = models.TrainingDay.objects.filter(war=war, tag=playerTag).first()
+                
+                if not training is None:
+                    atksTraining = training.decksTraining
 
-            atksWar = atksTotal - atksTraining
+                atksWar = atksTotal - atksTraining
 
-            if atksWar > maxAttacks:
-                atksWar = maxAttacks
+                if atksWar > maxAttacks:
+                    atksWar = maxAttacks
 
-            playerWarInfo = models.PlayersWarInfo(
-                war = war,
-                tag = playerTag,
-                fame = fame,
-                boats = boat,
-                atksTotal = atksTotal,  
-                atksTraining = atksTraining,
-                atksWar = atksWar
-            )
+                playerWarInfo = models.PlayersWarInfo(
+                    war = war,
+                    tag = playerTag,
+                    fame = fame,
+                    boats = boat,
+                    atksTotal = atksTotal,  
+                    atksTraining = atksTraining,
+                    atksWar = atksWar
+                )
 
-            playerWarInfo.save()
+                playerWarInfo.save()
+        except:
+            print("error")
