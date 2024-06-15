@@ -14,10 +14,11 @@ def run():
 
     for i in range(len(clansBrs)):
         tag = clansBrs[i].tag.replace("#","")
-        print(clanInfoi)
-        
+                
         try:
             clanInfoi = getTrainingDays(tag)["json"]
+
+            print(clanInfoi)
 
             if clanInfoi["data"] is None:
                 print("still training day")

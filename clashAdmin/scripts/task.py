@@ -18,11 +18,10 @@ def run():
 
     for i in range(len(ourClanTags)):
 
-        print(clanInfoi)
-
         try:
 
             clanInfoi = getTrainingDays(ourClanTags[i])["json"]
+            print(clanInfoi)
             
             if clanInfoi["data"] is None:
                 print("still training day")
